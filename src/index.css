@@ -1,0 +1,196 @@
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   VkArtBox — Global Styles (Sketchbook Redesign)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&family=Crimson+Pro:wght@200;300;400;500;600&family=Inter:wght@300;400;500;600&family=Gloria+Hallelujah&display=swap');
+
+:root {
+  --parchment: #1A1A1A;
+  --paper-white: #262626;
+  --charcoal: #F5F5F5;
+  --pencil: #A0A0A0;
+  --graphite: #777777;
+  --sienna: #C5A059;
+  /* Sophisticated Gold */
+  --sepia: #D4AF37;
+  /* Classic Metallic Gold */
+  --muted: rgba(245, 245, 245, 0.45);
+  --gold-dim: rgba(197, 160, 89, 0.2);
+  --gold-faint: rgba(197, 160, 89, 0.05);
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* Typography System */
+  --font-heading: 'Cormorant Garamond', serif;
+  --font-body: 'Crimson Pro', serif;
+  --font-ui: 'Inter', sans-serif;
+  --font-italic: 'Cormorant Garamond', serif;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--parchment);
+  color: var(--charcoal);
+  font-family: var(--font-body);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  position: relative;
+}
+
+/* Paper Texture Overlay */
+body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-image: url("https://www.transparenttextures.com/patterns/paper-fibers.png");
+  opacity: 0.15;
+  filter: invert(1);
+  pointer-events: none;
+  z-index: 9999;
+}
+
+button {
+  cursor: pointer;
+  font-family: var(--font-ui);
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+  font-family: var(--font-ui);
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+/* ── Shared Section Styles ── */
+.section-header {
+  text-align: center;
+  margin-bottom: 60px;
+}
+
+.section-eyebrow {
+  font-family: var(--font-ui);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.3em;
+  color: var(--sienna);
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-bottom: 14px;
+}
+
+.section-eyebrow::before,
+.section-eyebrow::after {
+  content: '';
+  width: 40px;
+  height: 1px;
+  background: var(--pencil);
+  opacity: 0.3;
+}
+
+.section-title {
+  font-family: var(--font-heading);
+  font-weight: 300;
+  font-size: clamp(2.2rem, 4vw, 3.5rem);
+  color: var(--charcoal);
+  line-height: 1.15;
+}
+
+.section-title em {
+  font-family: var(--font-italic);
+  font-style: italic;
+  font-weight: 500;
+  color: var(--sepia);
+  font-size: 1.05em;
+  vertical-align: baseline;
+  display: inline;
+  transform: none;
+}
+
+/* ── Reveal Animation ── */
+.reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.9s var(--ease), transform 0.9s var(--ease);
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.reveal-delay-1 {
+  transition-delay: 0.1s;
+}
+
+.reveal-delay-2 {
+  transition-delay: 0.2s;
+}
+
+.reveal-delay-3 {
+  transition-delay: 0.3s;
+}
+
+.reveal-delay-4 {
+  transition-delay: 0.4s;
+}
+
+/* ── Shared Buttons ── */
+.btn-gold {
+  font-family: var(--font-ui);
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  color: var(--parchment);
+  background: var(--charcoal);
+  border: none;
+  padding: 14px 32px;
+  cursor: pointer;
+  position: relative;
+  text-transform: uppercase;
+  transition: all 0.3s var(--ease);
+  box-shadow: 2px 2px 0px var(--pencil);
+}
+
+.btn-gold:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 4px 4px 0px var(--pencil);
+  background: var(--sienna);
+}
+
+.btn-outline {
+  font-family: var(--font-ui);
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  color: var(--charcoal);
+  background: transparent;
+  border: 1px solid var(--charcoal);
+  padding: 13px 32px;
+  cursor: pointer;
+  text-transform: uppercase;
+  transition: all 0.3s var(--ease);
+}
+
+.btn-outline:hover {
+  background: rgba(0, 0, 0, 0.05);
+  border-color: var(--sepia);
+  color: var(--sepia);
+}
