@@ -1,0 +1,62 @@
+.quote-band {
+  padding: 110px 60px;
+  background: var(--paper-white);
+  text-align: center;
+  position: relative;
+  z-index: 5;
+  overflow: hidden;
+  border-top: 1px solid rgba(245, 245, 245, 0.05);
+}
+
+.quote-band__inner {
+  max-width: 900px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 1;
+}
+
+.quote-band__mark {
+  display: block;
+  font-family: var(--font-heading);
+  font-size: 5rem;
+  line-height: 0.6;
+  color: var(--sepia);
+  opacity: 0.15;
+  font-weight: 300;
+  margin-bottom: 24px;
+}
+
+.quote-band__text {
+  font-family: var(--font-heading);
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(1.3rem, 2.5vw, 2.2rem);
+  color: var(--sepia);
+  line-height: 1.6;
+  opacity: 0.8;
+}
+
+.quote-band__author {
+  font-family: var(--font-ui);
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  color: var(--charcoal);
+  text-transform: uppercase;
+  margin-top: 32px;
+  opacity: 0.6;
+}
+
+.quote-band__line {
+  width: 40px;
+  height: 1.5px;
+  background: var(--pencil);
+  margin: 20px auto 0;
+  opacity: 0.2;
+}
+
+@media (max-width: 768px) {
+  .quote-band {
+    padding: 70px 24px;
+  }
+}
