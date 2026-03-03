@@ -1,95 +1,105 @@
-# VkArtBox — React Landing Page
+# VkArtBox
 
-A stunning, animated landing page for VkArtBox built with React.
+VkArtBox is a React-based portfolio and content website for an art brand, featuring an immersive home experience, a journal/blog section, and detailed article pages.
 
-## ✨ Features
+## Overview
 
-- **Hero Section** — Saraswati circular medallion with parallax mouse tracking, particle canvas, animated gold rays & mandala
-- **About** — Family story with Van Gogh quote card
-- **Portraits Gallery** — 8-card responsive grid with hover effects
-- **Wildlife Section** — Editorial asymmetric layout
-- **Collection Carousel** — 3 interactive cards (Portraits / Wildlife / Prints) with full hover-reveal photo grids
-- **Quote Band** — Full-bleed inspirational section
-- **Newsletter** — Email subscription with success state
-- **Footer** — 5-column with all links and socials
+- Built with React 18 and React Router
+- Multi-page routing for home, contact, blog listing, and blog details
+- Rich visual style with animated hero, particle background, and interactive collection cards
+- Responsive layout optimized for desktop, tablet, and mobile
 
-## 🚀 Getting Started
+## Routes
+
+- `/` -> Home
+- `/contact` -> Contact page
+- `/blogs` -> Blog listing
+- `/blog/:id` -> Blog detail page
+
+## Tech Stack
+
+- React 18
+- React Router DOM
+- React Scripts (Create React App)
+- Plain CSS modules by feature/page
+
+## Getting Started
 
 ### Prerequisites
-- Node.js 16+ installed
-- npm or yarn
+
+- Node.js 16+ (Node.js 18+ recommended)
+- npm
 
 ### Installation
 
 ```bash
-# 1. Navigate to the project folder
-cd vkartbox
-
-# 2. Install dependencies
 npm install
+```
 
-# 3. Start the development server
+### Run Development Server
+
+```bash
 npm start
 ```
 
-The app will open at **http://localhost:3000**
+Default local URL: `http://localhost:3000`
 
-### Build for Production
+### Create Production Build
 
 ```bash
 npm run build
 ```
 
-This creates an optimized production build in the `build/` folder.
+### Run Tests
 
-## 📁 Project Structure
-
+```bash
+npm test
 ```
+
+## Available Scripts
+
+- `npm start` - Starts the development server
+- `npm run build` - Builds optimized production assets into `build/`
+- `npm test` - Runs the test runner in watch mode
+- `npm run eject` - Ejects CRA configuration (irreversible)
+
+## Project Structure
+
+```text
 vkartbox/
 ├── public/
-│   └── index.html          # HTML template with Google Fonts
 ├── src/
 │   ├── assets/
-│   │   └── Saraswati.jpeg  # Hero image (embedded locally)
 │   ├── components/
-│   │   ├── Navbar.js / .css
-│   │   ├── Hero.js / .css
-│   │   ├── About.js / .css
-│   │   ├── Portraits.js / .css
-│   │   ├── Wildlife.js / .css
-│   │   ├── CollectionCarousel.js / .css   ← Main interactive feature
-│   │   ├── QuoteBand.js / .css
-│   │   ├── Newsletter.js / .css
-│   │   ├── Footer.js / .css
+│   │   ├── Navbar.js
+│   │   ├── Hero.js
+│   │   ├── About.js
+│   │   ├── CollectionCarousel.js
+│   │   ├── QuoteBand.js
+│   │   ├── Newsletter.js
+│   │   ├── Footer.js
 │   │   └── ParticleCanvas.js
+│   ├── data/
+│   │   └── blogData.js
 │   ├── hooks/
 │   │   └── useScrollReveal.js
+│   ├── pages/
+│   │   ├── Home.js
+│   │   ├── Contact.js
+│   │   ├── Blogs.js
+│   │   └── BlogDetail.js
 │   ├── App.js
 │   ├── index.js
-│   └── index.css           # Global styles & CSS variables
-└── package.json
+│   └── index.css
+├── package.json
+└── README.md
 ```
 
-## 🎨 Design System
+## Notes
 
-| Token | Value |
-|-------|-------|
-| `--gold` | `#C9A84C` |
-| `--gold-light` | `#F0D080` |
-| `--deep` | `#06061A` |
-| `--midnight` | `#0C0C28` |
-| Font Display | Cormorant Garamond |
-| Font UI | Cinzel / Cinzel Decorative |
-| Font Body | Crimson Pro |
+- Some content imagery is served from external URLs.
+- If running in a fully offline environment, replace external image URLs with local assets.
 
-## 🌐 Image Sources
+## License
 
-- **Saraswati** — Local asset (`src/assets/Saraswati.jpeg`)
-- **All other images** — Loaded from `https://www.vkartbox.com/assets/img/`
-
-To host fully offline, download those images and update the `src` paths in `Portraits.js`, `Wildlife.js`, and `CollectionCarousel.js`.
-
----
-
-*Handcrafted with love © 2026 VkArtBox*
-# VkArtBox
+This project is private and intended for VkArtBox use unless stated otherwise.
