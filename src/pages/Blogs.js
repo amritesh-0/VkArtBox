@@ -18,9 +18,6 @@ export default function Blogs() {
         return () => observer.disconnect();
     }, []);
 
-    const featured = BLOG_POSTS.find(p => p.featured);
-    const others = BLOG_POSTS.filter(p => !p.featured);
-
     return (
         <div className="blogs-page" ref={sectionRef}>
             <div className="blogs-container">
