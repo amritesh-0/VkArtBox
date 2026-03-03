@@ -5,25 +5,42 @@
 @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400&family=Crimson+Pro:wght@200;300;400;500;600&family=Inter:wght@300;400;500;600&family=Gloria+Hallelujah&display=swap');
 
 :root {
+  /* Shared Variables */
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --font-heading: 'Cormorant Garamond', serif;
+  --font-body: 'Crimson Pro', serif;
+  --font-ui: 'Inter', sans-serif;
+  --font-italic: 'Cormorant Garamond', serif;
+}
+
+[data-theme='dark'] {
   --parchment: #1A1A1A;
   --paper-white: #262626;
   --charcoal: #F5F5F5;
   --pencil: #A0A0A0;
   --graphite: #777777;
   --sienna: #C5A059;
-  /* Sophisticated Gold */
   --sepia: #D4AF37;
-  /* Classic Metallic Gold */
   --muted: rgba(245, 245, 245, 0.45);
   --gold-dim: rgba(197, 160, 89, 0.2);
   --gold-faint: rgba(197, 160, 89, 0.05);
-  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --navbar-bg: rgba(26, 26, 26, 0.85);
+  --paper-invert: 1;
+}
 
-  /* Typography System */
-  --font-heading: 'Cormorant Garamond', serif;
-  --font-body: 'Crimson Pro', serif;
-  --font-ui: 'Inter', sans-serif;
-  --font-italic: 'Cormorant Garamond', serif;
+[data-theme='light'] {
+  --parchment: #FDFCF8;
+  --paper-white: #FFFFFF;
+  --charcoal: #1A1A1A;
+  --pencil: #444444;
+  --graphite: #666666;
+  --sienna: #B8860B;
+  --sepia: #8B4513;
+  --muted: rgba(0, 0, 0, 0.45);
+  --gold-dim: rgba(184, 134, 11, 0.2);
+  --gold-faint: rgba(184, 134, 11, 0.05);
+  --navbar-bg: rgba(253, 252, 248, 0.85);
+  --paper-invert: 0;
 }
 
 * {
@@ -43,6 +60,7 @@ body {
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   position: relative;
+  transition: background-color 0.5s ease, color 0.5s ease;
 }
 
 /* Paper Texture Overlay */
@@ -54,8 +72,8 @@ body::before {
   width: 100vw;
   height: 100vh;
   background-image: url("https://www.transparenttextures.com/patterns/paper-fibers.png");
-  opacity: 0.15;
-  filter: invert(1);
+  opacity: 0.1;
+  filter: invert(var(--paper-invert));
   pointer-events: none;
   z-index: 9999;
 }
