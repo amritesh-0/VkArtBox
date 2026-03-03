@@ -161,7 +161,7 @@ function CollectionCard({ col }) {
 
   return (
     <div
-      className={`cc-card ${hovered ? 'cc-card--hovered' : ''}`}
+      className={`cc-card cc-card--${col.id} ${hovered ? 'cc-card--hovered' : ''}`}
       style={accentStyle}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}

@@ -364,16 +364,95 @@
 @media (max-width: 1024px) {
   .cc-track {
     grid-template-columns: 1fr;
-    gap: 40px;
+    gap: 28px;
   }
 
   .cc-card {
-    height: 540px;
+    height: 500px;
   }
 }
 
 @media (max-width: 768px) {
   .cc-section {
     padding: 80px 24px;
+  }
+
+  .cc-sub {
+    font-size: 1rem;
+  }
+
+  .cc-card {
+    height: 450px;
+  }
+
+  /* Source images include side margins on narrow cards; crop tighter on mobile. */
+  .cc-card--portraits .cc-card__bg,
+  .cc-card--wildlife .cc-card__bg {
+    background-size: 150% auto;
+    background-position: center 24%;
+  }
+
+  .cc-card--prints .cc-card__bg {
+    background-size: 125% auto;
+    background-position: center 35%;
+  }
+
+  .cc-card__face,
+  .cc-card__hover {
+    padding: 24px;
+  }
+
+  .cc-card__title {
+    font-size: 1.8rem;
+  }
+
+  .cc-card__desc {
+    max-width: none;
+    font-size: 0.95rem;
+  }
+
+  .cc-card__btn {
+    margin-top: 18px;
+    font-size: 0.85rem;
+    padding: 12px 20px;
+    width: 100%;
+    text-align: center;
+  }
+
+  .cc-prev-name {
+    font-size: 0.72rem;
+    padding: 9px 4px;
+  }
+
+  .cc-prev-print-img {
+    height: 190px;
+  }
+}
+
+@media (max-width: 480px) {
+  .cc-section {
+    padding: 64px 16px;
+  }
+
+  .cc-card {
+    height: 420px;
+  }
+
+  .cc-card--portraits .cc-card__bg,
+  .cc-card--wildlife .cc-card__bg {
+    background-size: 170% auto;
+  }
+
+  .cc-card--prints .cc-card__bg {
+    background-size: 140% auto;
+  }
+
+  .cc-card__title {
+    font-size: 1.6rem;
+  }
+
+  .cc-card__hover-label {
+    font-size: 0.68rem;
+    letter-spacing: 0.1em;
   }
 }
