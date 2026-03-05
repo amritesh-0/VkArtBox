@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { collection, getDocs, deleteDoc, doc, orderBy, query } from 'firebase/firestore';
 import { db } from '../firebase';
 import { Plus, Trash2 } from 'lucide-react';
+import toast from 'react-hot-toast';
 
 const ManageBlogs = () => {
     const navigate = useNavigate();
@@ -24,6 +25,7 @@ const ManageBlogs = () => {
             setBlogs(blogsData);
         } catch (error) {
             console.error("Error fetching blogs: ", error);
+            toast.error("Failed to load blogs.");
         } finally {
             setLoading(false);
         }
@@ -31,12 +33,14 @@ const ManageBlogs = () => {
 
     const handleDelete = async (id) => {
         if (window.confirm('Are you sure you want to delete this blog post?')) {
+            const toastId = toast.loading('Deleting blog...');
             try {
                 await deleteDoc(doc(db, 'blogs', id));
                 setBlogs(blogs.filter(blog => blog.id !== id));
+                toast.success('Blog deleted successfully', { id: toastId });
             } catch (error) {
                 console.error("Error deleting blog: ", error);
-                alert("Failed to delete blog.");
+                toast.error("Failed to delete blog.", { id: toastId });
             }
         }
     };
