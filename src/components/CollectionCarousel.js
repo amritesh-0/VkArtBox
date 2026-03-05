@@ -1,96 +1,36 @@
 import React, { useState, useRef, useEffect } from 'react';
 import './CollectionCarousel.css';
+import { useNavigate } from 'react-router-dom';
+import { collections } from '../data/collectionData';
 
-/* ── DATA ── */
-const collections = [
-  {
-    id: 'portraits',
-    number: '01',
-    accent: '#9B7DE8',
-    accentRgb: '155,125,232',
-    bgImage: 'https://www.vkartbox.com/assets/img/backgrounds/Keerthy.jpg',
-    gradientColor: 'rgba(80,50,160,0.7)',
-    title: 'Portraits',
-    desc: 'Celebrities, icons & timeless faces rendered in graphite precision',
-    count: '7 Artworks',
-    hoverLabel: 'Portraits Collection',
-    btnLabel: 'View All Portraits',
-    icon: (
-      <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
-        <circle cx="24" cy="18" r="8" stroke="currentColor" strokeWidth="1.2" />
-        <path d="M8 42c0-8.837 7.163-16 16-16s16 7.163 16 16" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
-      </svg>
-    ),
-    previewType: 'portraits',
-    previews: [
-      { img: 'https://www.vkartbox.com/assets/img/backgrounds/Keerthy.jpg', name: 'Keerthy Suresh' },
-      { img: 'https://www.vkartbox.com/assets/img/backgrounds/Rashmika.JPG', name: 'Rashmika' },
-      { img: 'https://www.vkartbox.com/assets/img/backgrounds/Tapsee.jpg', name: 'Tapsee Pannu' },
-      { img: 'https://www.vkartbox.com/assets/img/backgrounds/Kiara.jpg', name: 'Kiara Advani' },
-      { img: 'https://www.vkartbox.com/assets/img/backgrounds/Sushant.jpg', name: 'Sushant Singh' },
-    ],
-  },
-  {
-    id: 'wildlife',
-    number: '02',
-    accent: '#E8A44C',
-    accentRgb: '232,164,76',
-    bgImage: 'https://www.vkartbox.com/assets/img/backgrounds/Bengal-Tiger.jpg',
-    gradientColor: 'rgba(120,60,20,0.6)',
-    title: 'Wildlife',
-    desc: 'Majestic beasts of nature captured in charcoal, graphite & colour pencil',
-    count: '3 Artworks',
-    hoverLabel: 'Wildlife Collection',
-    btnLabel: 'View All Wildlife',
-    icon: (
-      <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
-        <path d="M6 34 C12 24, 18 20, 24 20 C32 20, 38 26, 42 34" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
-        <ellipse cx="34" cy="14" rx="6" ry="5" stroke="currentColor" strokeWidth="1.2" />
-        <circle cx="32" cy="13" r="1.5" fill="currentColor" />
-        <path d="M12 16 C10 11 13 8 16 10" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
-        <path d="M8 20 C5 15 8 11 11 13" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
-      </svg>
-    ),
-    previewType: 'wildlife',
-    previews: [
-      { img: 'https://www.vkartbox.com/assets/img/backgrounds/Bengal-Tiger.jpg', name: 'Bengal Tiger', badge: 'Colour Pencil' },
-      { img: 'https://www.vkartbox.com/assets/img/backgrounds/lions.jpg', name: 'Mufasa', badge: 'Graphite' },
-      { img: 'https://www.vkartbox.com/assets/img/backgrounds/white-tiger.jpg', name: 'Snow White', badge: 'Sold', sold: true },
-    ],
-  },
-  {
-    id: 'prints',
-    number: '03',
-    accent: '#4CE8C8',
-    accentRgb: '76,232,200',
-    bgImage: 'https://www.vkartbox.com/assets/img/Saraswati.jpeg',
-    gradientColor: 'rgba(30,80,80,0.6)',
-    title: 'Prints',
-    desc: 'Museum-quality fine art prints — bring the studio home, beautifully reproduced',
-    count: 'Coming Soon',
-    hoverLabel: 'Prints Collection',
-    btnLabel: 'Notify Me',
-    icon: (
-      <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
-        <rect x="10" y="6" width="28" height="36" rx="2" stroke="currentColor" strokeWidth="1.2" />
-        <line x1="16" y1="16" x2="32" y2="16" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
-        <line x1="16" y1="22" x2="32" y2="22" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
-        <line x1="16" y1="28" x2="25" y2="28" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
-        <circle cx="36" cy="36" r="7" fill="rgba(76,232,200,0.15)" stroke="currentColor" strokeWidth="1.2" />
-        <path d="M33 36l2 2 4-4" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
-      </svg>
-    ),
-    previewType: 'prints',
-    printFeature: { img: 'https://www.vkartbox.com/assets/img/Saraswati.jpeg', name: 'Saraswati — Fine Art Print' },
-    printSpecs: [
-      'Giclée archival printing',
-      'Cotton rag 300gsm paper',
-      'Hand-signed by artist',
-      'Limited editions only',
-      'Shipped from Indore, India',
-    ],
-  },
-];
+/* ── ICONS & PREVIEW GRIDS ── */
+const icons = {
+  portraits: (
+    <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+      <circle cx="24" cy="18" r="8" stroke="currentColor" strokeWidth="1.2" />
+      <path d="M8 42c0-8.837 7.163-16 16-16s16 7.163 16 16" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
+    </svg>
+  ),
+  wildlife: (
+    <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+      <path d="M6 34 C12 24, 18 20, 24 20 C32 20, 38 26, 42 34" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
+      <ellipse cx="34" cy="14" rx="6" ry="5" stroke="currentColor" strokeWidth="1.2" />
+      <circle cx="32" cy="13" r="1.5" fill="currentColor" />
+      <path d="M12 16 C10 11 13 8 16 10" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
+      <path d="M8 20 C5 15 8 11 11 13" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
+    </svg>
+  ),
+  prints: (
+    <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+      <rect x="10" y="6" width="28" height="36" rx="2" stroke="currentColor" strokeWidth="1.2" />
+      <line x1="16" y1="16" x2="32" y2="16" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
+      <line x1="16" y1="22" x2="32" y2="22" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
+      <line x1="16" y1="28" x2="25" y2="28" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" />
+      <circle cx="36" cy="36" r="7" fill="rgba(76,232,200,0.15)" stroke="currentColor" strokeWidth="1.2" />
+      <path d="M33 36l2 2 4-4" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  ),
+};
 
 /* ── PREVIEW GRIDS ── */
 function PortraitsPreview({ previews, accent }) {
@@ -156,6 +96,11 @@ function PrintsPreview({ printFeature, printSpecs, accent, accentRgb }) {
 /* ── SINGLE CARD ── */
 function CollectionCard({ col }) {
   const [hovered, setHovered] = useState(false);
+  const navigate = useNavigate();
+
+  const handleCardClick = () => {
+    navigate(`/collection/${col.id}`);
+  };
 
   const accentStyle = { '--col-accent': col.accent, '--col-accent-rgb': col.accentRgb };
 
@@ -172,21 +117,21 @@ function CollectionCard({ col }) {
       <div className="cc-card__grad" />
 
       {/* Resting face */}
-      <div className="cc-card__face">
+      <div className="cc-card__face" onClick={handleCardClick} style={{ cursor: 'pointer' }}>
         <div className="cc-card__number">{col.number}</div>
         <div className="cc-card__icon" style={{ color: col.accent }}>
-          {col.icon}
+          {icons[col.id]}
         </div>
         <h3 className="cc-card__title">{col.title}</h3>
         <p className="cc-card__desc">{col.desc}</p>
         <div className="cc-card__count">{col.count}</div>
-        <div className="cc-card__cta">
+        <div className="cc-card__cta" onClick={handleCardClick} style={{ cursor: 'pointer' }}>
           Explore <span>→</span>
         </div>
       </div>
 
       {/* Hover panel */}
-      <div className="cc-card__hover">
+      <div className="cc-card__hover" onClick={handleCardClick} style={{ cursor: 'pointer' }}>
         <div className="cc-card__hover-label">
           {col.hoverLabel}
         </div>
@@ -208,7 +153,7 @@ function CollectionCard({ col }) {
           )}
         </div>
 
-        <button className="cc-card__btn">
+        <button className="cc-card__btn" onClick={(e) => { e.stopPropagation(); handleCardClick(); }}>
           {col.btnLabel}
         </button>
       </div>
