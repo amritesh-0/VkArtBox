@@ -1,17 +1,44 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
+import { collection as firestoreCollection, doc, getDoc, getDocs, query, where } from 'firebase/firestore';
+import { db } from '../firebase';
 import { collections } from '../data/collectionData';
 import './CollectionDetail.css';
 
 export default function CollectionDetail() {
     const { id } = useParams();
-    const [collection, setCollection] = useState(null);
+    const [collectionData, setCollectionData] = useState(null);
     const [selectedArtwork, setSelectedArtwork] = useState(null);
 
     useEffect(() => {
         window.scrollTo(0, 0);
-        const found = collections.find(c => c.id === id);
-        setCollection(found);
+
+        const fetchCollection = async () => {
+            try {
+                const collectionDoc = await getDoc(doc(db, 'collections', id));
+                const artworksQuery = query(firestoreCollection(db, 'artworks'), where('collectionId', '==', id));
+                const artworksSnapshot = await getDocs(artworksQuery);
+                const artworks = artworksSnapshot.docs.map((artDoc) => ({ id: artDoc.id, ...artDoc.data() }));
+
+                if (collectionDoc.exists()) {
+                    const data = collectionDoc.data();
+                    setCollectionData({
+                        id: collectionDoc.id,
+                        ...data,
+                        count: `${artworks.length} Artworks`,
+                        artworks,
+                    });
+                    return;
+                }
+            } catch (error) {
+                console.error('Error fetching collection detail:', error);
+            }
+
+            const found = collections.find((c) => c.id === id);
+            setCollectionData(found || null);
+        };
+
+        fetchCollection();
     }, [id]);
 
     useEffect(() => {
@@ -21,7 +48,7 @@ export default function CollectionDetail() {
         };
     }, [selectedArtwork]);
 
-    if (!collection) {
+    if (!collectionData) {
         return (
             <div className="cd-not-found">
                 <h2>Collection Not Found</h2>
@@ -41,14 +68,14 @@ export default function CollectionDetail() {
     return (
         <div className="cd-page">
             {/* Hero Section */}
-            <section className="cd-hero" style={{ '--accent': collection.accent }}>
-                <div className="cd-hero-bg" style={{ backgroundImage: `url(${collection.heroImage})` }}>
+            <section className="cd-hero" style={{ '--accent': collectionData.accent }}>
+                <div className="cd-hero-bg" style={{ backgroundImage: `url(${collectionData.heroImage})` }}>
                     <div className="cd-hero-overlay"></div>
                 </div>
                 <div className="cd-hero-content">
-                    <div className="cd-hero-number">{collection.number}</div>
-                    <h1 className="cd-hero-title">{collection.title} Collection</h1>
-                    <p className="cd-hero-desc">{collection.desc}</p>
+                    <div className="cd-hero-number">{collectionData.number}</div>
+                    <h1 className="cd-hero-title">{collectionData.title} Collection</h1>
+                    <p className="cd-hero-desc">{collectionData.desc}</p>
                 </div>
             </section>
 
@@ -57,15 +84,15 @@ export default function CollectionDetail() {
                 <div className="cd-about-grid">
                     <div className="cd-about-text">
                         <h2>About the Collection</h2>
-                        <p>{collection.about}</p>
+                        <p>{collectionData.about}</p>
                     </div>
                     <div className="cd-about-stats">
                         <div className="cd-stat">
-                            <span className="cd-stat-val">{collection.count}</span>
+                            <span className="cd-stat-val">{collectionData.count}</span>
                             <span className="cd-stat-label">Total Pieces</span>
                         </div>
                         <div className="cd-stat">
-                            <span className="cd-stat-val" style={{ color: collection.accent }}>100%</span>
+                            <span className="cd-stat-val" style={{ color: collectionData.accent }}>100%</span>
                             <span className="cd-stat-label">Handcrafted</span>
                         </div>
                     </div>
@@ -76,11 +103,11 @@ export default function CollectionDetail() {
             <section className="cd-gallery">
                 <div className="cd-gallery-header">
                     <h2>Featured Artworks</h2>
-                    <div className="cd-divider" style={{ backgroundColor: collection.accent }}></div>
+                    <div className="cd-divider" style={{ backgroundColor: collectionData.accent }}></div>
                 </div>
 
                 <div className="cd-masonry">
-                    {collection.artworks && collection.artworks.map((art, index) => (
+                    {collectionData.artworks && collectionData.artworks.map((art, index) => (
                         <div
                             key={art.id}
                             className="cd-art-card"
@@ -110,7 +137,7 @@ export default function CollectionDetail() {
                         <div className="cd-modal-image-col">
                             <img src={selectedArtwork.image} alt={selectedArtwork.title} />
                         </div>
-                        <div className="cd-modal-info-col" style={{ '--accent': collection.accent }}>
+                        <div className="cd-modal-info-col" style={{ '--accent': collectionData.accent }}>
                             <h2>{selectedArtwork.title}</h2>
                             <div className="cd-modal-meta">
                                 <div className="cd-meta-item">
@@ -141,7 +168,7 @@ export default function CollectionDetail() {
                                     <div className="cd-price">{selectedArtwork.price}</div>
                                 )}
                                 {selectedArtwork.status !== 'Sold' && (
-                                    <button className="cd-inquire-btn" style={{ backgroundColor: collection.accent }}>
+                                    <button className="cd-inquire-btn" style={{ backgroundColor: collectionData.accent }}>
                                         Inquire About Piece
                                     </button>
                                 )}

@@ -1,6 +1,3 @@
-import portraitImg from '../assets/blog_pencil_portrait.png';
-import releaseImg from '../assets/recent_release_portrait.png';
-
 export const BLOG_POSTS = [
     {
         id: 'evolution-of-pencil-portraits',
@@ -17,7 +14,7 @@ export const BLOG_POSTS = [
             <h3>The Modern Graphite Soul</h3>
             <p>Today, the pencil remains the most accessible yet most challenging tool for an artist. It is an extension of the soul, capturing the split-second emotional shift in a subject's gaze with a fidelity that camera lenses often miss.</p>
         `,
-        image: portraitImg,
+        image: '/assets/blog_pencil_portrait.png',
         featured: true,
         date: 'October 12, 2025',
         tags: ['#graphite', '#history', '#portrait'],
@@ -70,7 +67,7 @@ export const BLOG_POSTS = [
     },
     {
         id: 'aged-wisdom-collection',
-        category: 'Recent Release',
+        category: 'Realism',
         title: 'The "Aged Wisdom" Collection',
         excerpt: 'A powerful series of portraits celebrating the stories written in time.',
         content: `
@@ -83,7 +80,7 @@ export const BLOG_POSTS = [
             <h3>A Tribute to Endurance</h3>
             <p>It is a tribute to endurance and the silent strength of the human spirit. "Aged Wisdom" isn't just a gallery; it's a testament to the resilience of those who have walked long paths and lived to tell their tales through silence.</p>
         `,
-        image: releaseImg,
+        image: '/assets/recent_release_portrait.png',
         isRelease: true,
         date: 'November 1, 2025',
         tags: ['#newrelease', '#collection', '#wisdom'],

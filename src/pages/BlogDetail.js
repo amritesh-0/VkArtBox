@@ -1,5 +1,7 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { collection, doc, getDoc, getDocs, orderBy, query } from 'firebase/firestore';
+import { db } from '../firebase';
 import { BLOG_POSTS } from '../data/blogData';
 import './BlogDetail.css';
 
@@ -7,11 +9,41 @@ export default function BlogDetail() {
     const { id } = useParams();
     const navigate = useNavigate();
     const sectionRef = useRef(null);
-    const post = BLOG_POSTS.find(p => p.id === id);
+    const [post, setPost] = useState(() => BLOG_POSTS.find((p) => p.id === id) || null);
+    const [allPosts, setAllPosts] = useState(BLOG_POSTS);
 
     useEffect(() => {
         window.scrollTo(0, 0);
+    }, [id]);
 
+    useEffect(() => {
+        const fetchPostData = async () => {
+            try {
+                const postDoc = await getDoc(doc(db, 'blogs', id));
+                const latestQuery = query(collection(db, 'blogs'), orderBy('createdAt', 'desc'));
+                const latestSnapshot = await getDocs(latestQuery);
+                const latestPosts = latestSnapshot.docs.map((blogDoc) => ({ id: blogDoc.id, ...blogDoc.data() }));
+
+                if (latestPosts.length > 0) {
+                    setAllPosts(latestPosts);
+                }
+
+                if (postDoc.exists()) {
+                    setPost({ id: postDoc.id, ...postDoc.data() });
+                    return;
+                }
+            } catch (error) {
+                console.error('Error fetching blog detail:', error);
+            }
+
+            setPost(BLOG_POSTS.find((p) => p.id === id) || null);
+            setAllPosts(BLOG_POSTS);
+        };
+
+        fetchPostData();
+    }, [id]);
+
+    useEffect(() => {
         const els = sectionRef.current?.querySelectorAll('.reveal');
         if (!els) return;
         const observer = new IntersectionObserver(
@@ -20,7 +52,11 @@ export default function BlogDetail() {
         );
         els.forEach(el => observer.observe(el));
         return () => observer.disconnect();
-    }, []);
+    }, [post?.id, allPosts.length]);
+
+    const categories = [...new Set(allPosts.map((p) => p.category).filter(Boolean))].slice(0, 4);
+    const tags = [...new Set(allPosts.flatMap((p) => p.tags || []).filter(Boolean))].slice(0, 5);
+    const latestPosts = allPosts.filter((p) => p.id !== id).slice(0, 3);
 
     if (!post) {
         return (
@@ -106,7 +142,7 @@ export default function BlogDetail() {
                         <div className="sidebar__widget reveal reveal-delay-1">
                             <h4 className="sidebar__title">Latest Observations</h4>
                             <div className="sidebar__posts">
-                                {BLOG_POSTS.slice(0, 3).map(p => (
+                                {latestPosts.map(p => (
                                     <div key={p.id} className="sidebar__post-card" onClick={() => navigate(`/blog/${p.id}`)}>
                                         <div className="sidebar__post-img-wrap">
                                             <img src={p.image} alt={p.title} />
@@ -124,7 +160,7 @@ export default function BlogDetail() {
                         <div className="sidebar__widget reveal reveal-delay-2">
                             <h4 className="sidebar__title">Categories</h4>
                             <div className="sidebar__pills">
-                                {['Portraits', 'Technique', 'Art History', 'Sketches'].map(cat => (
+                                {categories.map(cat => (
                                     <button key={cat} className="sidebar__pill">{cat}</button>
                                 ))}
                             </div>
@@ -134,7 +170,7 @@ export default function BlogDetail() {
                         <div className="sidebar__widget reveal reveal-delay-3">
                             <h4 className="sidebar__title">Popular Tags</h4>
                             <div className="sidebar__tags">
-                                {['#graphite', '#charcoal', '#artstudy', '#wisdom', '#technique'].map(tag => (
+                                {tags.map(tag => (
                                     <span key={tag} className="sidebar__tag">{tag}</span>
                                 ))}
                             </div>

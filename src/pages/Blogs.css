@@ -1,4 +1,16 @@
 .blogs-page {
+    --blogs-promo-bg: #C4C4A8;
+    --blogs-promo-text: #1A1A1A;
+    --blogs-promo-btn-bg: #1A1A1A;
+    --blogs-promo-btn-text: #FFFFFF;
+    --blogs-modal-bg: linear-gradient(165deg, #fffdf7 0%, #f6efdf 100%);
+    --blogs-modal-border: rgba(184, 134, 11, 0.4);
+    --blogs-modal-card-bg: rgba(255, 255, 255, 0.92);
+    --blogs-modal-card-border: rgba(184, 134, 11, 0.25);
+    --blogs-modal-close-bg: rgba(255, 255, 255, 0.96);
+    --blogs-modal-close-border: rgba(0, 0, 0, 0.24);
+    --blogs-modal-shadow: 0 30px 56px rgba(0, 0, 0, 0.24);
+    --blogs-overlay-bg: rgba(7, 11, 25, 0.56);
     padding: 150px 4% 96px;
     background: var(--parchment);
     min-height: 100vh;
@@ -53,7 +65,7 @@
 .modern-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    grid-auto-rows: minmax(240px, 300px);
+    grid-auto-rows: minmax(320px, auto);
     gap: 20px;
 }
 
@@ -63,16 +75,16 @@
     overflow: hidden;
     background: var(--paper-white);
     transition: all 0.6s var(--ease);
+    cursor: pointer;
 }
 
-.modern-card--large {
-    grid-column: span 2;
-    grid-row: span 2;
+.modern-card--active {
+    box-shadow: 0 0 0 2px rgba(212, 175, 55, 0.7), 0 16px 40px rgba(0, 0, 0, 0.25);
 }
 
-/* Keep secondary cards uniform so the right side aligns as a clean 2x2 block */
-.modern-card:nth-child(2),
-.modern-card:nth-child(3) {
+/* Category card grid consistency */
+.modern-card {
+    grid-column: span 1;
     grid-row: span 1;
 }
 
@@ -121,11 +133,31 @@
 
 .modern-post-title {
     font-family: var(--font-heading);
-    font-size: clamp(1.2rem, 2.5vw, 1.9rem);
+    font-size: clamp(1rem, 1.8vw, 1.4rem);
     color: white;
     font-weight: 500;
-    line-height: 1.1;
-    overflow-wrap: anywhere;
+    line-height: 1.2;
+    overflow-wrap: break-word;
+    margin-bottom: 12px;
+}
+
+.modern-inquire-btn {
+    background: var(--gold-faint);
+    color: var(--charcoal);
+    border: 1px solid var(--sepia);
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-family: var(--font-ui);
+    font-size: 0.75rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s var(--ease);
+    display: inline-block;
+}
+
+.modern-inquire-btn:hover {
+    background: var(--sepia);
+    color: white;
 }
 
 .modern-btn {
@@ -174,14 +206,13 @@
 /* Promo Card */
 .modern-promo-card {
     grid-column: span 1;
-    background: #C4C4A8;
-    /* A muted sage/tan from reference */
+    background: var(--blogs-promo-bg);
     border-radius: 24px;
     padding: clamp(24px, 3vw, 40px);
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    color: #1A1A1A;
+    color: var(--blogs-promo-text);
 }
 
 .promo-badge {
@@ -206,8 +237,8 @@
 
 .promo-btn {
     font-family: var(--font-ui);
-    background: #1A1A1A;
-    color: white;
+    background: var(--blogs-promo-btn-bg);
+    color: var(--blogs-promo-btn-text);
     border: none;
     padding: 12px 24px;
     border-radius: 30px;
@@ -219,7 +250,167 @@
 
 .promo-btn:hover {
     transform: scale(1.05);
-    background: black;
+    filter: brightness(0.88);
+}
+
+.category-modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: var(--blogs-overlay-bg);
+    backdrop-filter: blur(8px);
+    z-index: 1200;
+    padding: 36px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.category-modal {
+    width: min(1100px, 100%);
+    max-height: min(88vh, 900px);
+    overflow: auto;
+    overscroll-behavior: contain;
+    background: var(--blogs-modal-bg);
+    border: 1px solid var(--blogs-modal-border);
+    border-radius: 22px;
+    box-shadow: var(--blogs-modal-shadow);
+    padding: 24px;
+}
+
+.category-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 18px;
+}
+
+.category-modal-eyebrow {
+    display: inline-block;
+    font-family: var(--font-ui);
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--sepia);
+    margin-bottom: 6px;
+}
+
+.category-modal-header h2 {
+    margin: 0;
+    font-family: var(--font-heading);
+    font-size: clamp(1.8rem, 3vw, 2.5rem);
+    color: var(--charcoal);
+}
+
+.category-modal-header p {
+    margin: 6px 0 0;
+    font-family: var(--font-ui);
+    color: var(--graphite);
+}
+
+.category-modal-close {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1px solid var(--blogs-modal-close-border);
+    background: var(--blogs-modal-close-bg);
+    color: var(--charcoal);
+    font-size: 1.7rem;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.category-modal-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.category-modal-card {
+    background: var(--blogs-modal-card-bg);
+    border: 1px solid var(--blogs-modal-card-border);
+    border-radius: 16px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.category-modal-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 16px 28px rgba(18, 18, 18, 0.14);
+}
+
+.category-modal-card-img {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+}
+
+.category-modal-card-body {
+    padding: 14px 16px 16px;
+}
+
+.category-modal-card-body span {
+    font-family: var(--font-ui);
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.09em;
+    color: var(--sepia);
+}
+
+.category-modal-card-body h3 {
+    margin: 8px 0 0;
+    font-family: var(--font-heading);
+    font-size: 1.35rem;
+    color: var(--charcoal);
+    line-height: 1.2;
+}
+
+.category-modal-card-body p {
+    margin: 10px 0 0;
+    font-family: var(--font-ui);
+    color: var(--graphite);
+    font-size: 0.92rem;
+    line-height: 1.45;
+}
+
+.category-modal-empty {
+    border: 1px dashed var(--blogs-modal-border);
+    border-radius: 12px;
+    padding: 18px;
+    font-family: var(--font-ui);
+    color: var(--graphite);
+    background: var(--blogs-modal-card-bg);
+}
+
+[data-theme='dark'] .blogs-page {
+    --blogs-promo-bg: #2b322f;
+    --blogs-promo-text: #f2f0ea;
+    --blogs-promo-btn-bg: #d4af37;
+    --blogs-promo-btn-text: #171717;
+    --blogs-modal-bg: linear-gradient(165deg, #1d1e21 0%, #262a2b 100%);
+    --blogs-modal-border: rgba(212, 175, 55, 0.42);
+    --blogs-modal-card-bg: rgba(29, 34, 36, 0.92);
+    --blogs-modal-card-border: rgba(212, 175, 55, 0.28);
+    --blogs-modal-close-bg: rgba(42, 46, 48, 0.88);
+    --blogs-modal-close-border: rgba(212, 175, 55, 0.3);
+    --blogs-modal-shadow: 0 35px 64px rgba(0, 0, 0, 0.55);
+    --blogs-overlay-bg: rgba(0, 0, 0, 0.76);
+}
+
+[data-theme='light'] .blogs-page {
+    --blogs-promo-bg: #c9c9ad;
+    --blogs-promo-text: #1a1a1a;
+    --blogs-promo-btn-bg: #1a1a1a;
+    --blogs-promo-btn-text: #ffffff;
+    --blogs-modal-bg: linear-gradient(165deg, #fffdf7 0%, #f6efdf 100%);
+    --blogs-modal-border: rgba(184, 134, 11, 0.4);
+    --blogs-modal-card-bg: rgba(255, 255, 255, 0.92);
+    --blogs-modal-card-border: rgba(184, 134, 11, 0.25);
+    --blogs-modal-close-bg: rgba(255, 255, 255, 0.96);
+    --blogs-modal-close-border: rgba(0, 0, 0, 0.24);
+    --blogs-modal-shadow: 0 30px 56px rgba(0, 0, 0, 0.24);
+    --blogs-overlay-bg: rgba(7, 11, 25, 0.56);
 }
 
 @media (max-width: 1200px) {
@@ -255,6 +446,15 @@
     .modern-desc {
         margin-top: 0;
     }
+
+    .category-modal {
+        width: min(900px, 100%);
+        max-height: 92vh;
+    }
+
+    .category-modal-grid {
+        grid-template-columns: 1fr;
+    }
 }
 
 @media (max-width: 600px) {
@@ -270,7 +470,7 @@
 
     .modern-card,
     .modern-promo-card {
-        min-height: 320px;
+        min-height: 280px;
         height: auto;
     }
 
@@ -287,5 +487,29 @@
     .promo-btn {
         width: 100%;
         text-align: center;
+    }
+
+    .category-modal-backdrop {
+        padding: 10px;
+        align-items: flex-end;
+    }
+
+    .category-modal {
+        width: 100%;
+        max-height: 85vh;
+        padding: 14px;
+        border-radius: 16px 16px 0 0;
+    }
+
+    .category-modal-card-img {
+        height: 180px;
+    }
+
+    .category-modal-header h2 {
+        font-size: clamp(1.5rem, 7vw, 2rem);
+    }
+
+    .category-modal-header p {
+        font-size: 0.88rem;
     }
 }
