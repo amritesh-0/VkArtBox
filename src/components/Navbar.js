@@ -5,9 +5,9 @@ import './Navbar.css';
 
 const navLinks = [
   { label: 'Home', href: '/', id: 'home' },
-  { label: 'About', href: '/', id: 'about' },
   { label: 'Collections', href: '/', id: 'collections' },
   { label: 'Blog', href: '/blogs' },
+  { label: 'Careers', href: '/careers' },
   { label: 'Contact', href: '/contact' },
 ];
 

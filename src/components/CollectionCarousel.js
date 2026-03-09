@@ -1,6 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import './CollectionCarousel.css';
 import { useNavigate } from 'react-router-dom';
+import { collection, getDocs } from 'firebase/firestore';
+import { db } from '../firebase';
 import { collections } from '../data/collectionData';
 
 /* ── ICONS & PREVIEW GRIDS ── */
@@ -164,6 +166,46 @@ function CollectionCard({ col }) {
 /* ── MAIN SECTION ── */
 export default function CollectionCarousel() {
   const ref = useRef(null);
+  const [collectionList, setCollectionList] = useState(collections);
+
+  useEffect(() => {
+    const fetchCollections = async () => {
+      try {
+        const [collectionsSnapshot, artworksSnapshot] = await Promise.all([
+          getDocs(collection(db, 'collections')),
+          getDocs(collection(db, 'artworks')),
+        ]);
+
+        const artworkCountByCollection = artworksSnapshot.docs.reduce((acc, artDoc) => {
+          const collectionId = artDoc.data().collectionId;
+          if (!collectionId) return acc;
+          acc[collectionId] = (acc[collectionId] || 0) + 1;
+          return acc;
+        }, {});
+
+        const dbCollections = collectionsSnapshot.docs.map((collectionDoc) => {
+          const data = collectionDoc.data();
+          const fallback = collections.find((c) => c.id === collectionDoc.id);
+          const artworkCount = artworkCountByCollection[collectionDoc.id] || 0;
+          return {
+            id: collectionDoc.id,
+            ...fallback,
+            ...data,
+            count: data.count || `${artworkCount} Artworks`,
+          };
+        });
+
+        if (dbCollections.length > 0) {
+          setCollectionList(dbCollections);
+        }
+      } catch (error) {
+        console.error('Error fetching collections:', error);
+        setCollectionList(collections);
+      }
+    };
+
+    fetchCollections();
+  }, [collectionList.length]);
 
   useEffect(() => {
     const els = ref.current?.querySelectorAll('.reveal');
@@ -186,7 +228,7 @@ export default function CollectionCarousel() {
         </div>
 
         <div className="cc-track">
-          {collections.map(col => (
+          {collectionList.map(col => (
             <CollectionCard key={col.id} col={col} />
           ))}
         </div>
