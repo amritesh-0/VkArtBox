@@ -290,6 +290,8 @@
     background: rgba(0, 0, 0, 0.03);
     border: 1px solid rgba(0, 0, 0, 0.05);
     color: var(--charcoal);
+    -webkit-text-fill-color: var(--charcoal);
+    caret-color: var(--charcoal);
     padding: 12px 15px;
     border-radius: 10px;
     font-family: var(--font-body);
@@ -316,6 +318,8 @@
     background: rgba(0, 0, 0, 0.03);
     border: 1px solid rgba(0, 0, 0, 0.05);
     color: var(--charcoal);
+    -webkit-text-fill-color: var(--charcoal);
+    caret-color: var(--charcoal);
     padding: 10px 15px;
     border-radius: 8px;
     font-family: var(--font-ui);
@@ -333,6 +337,36 @@
     padding: 10px 24px !important;
     font-size: 0.8rem !important;
     white-space: nowrap;
+}
+
+.comments__input--small::placeholder,
+.comments__input--mini::placeholder {
+    color: rgba(59, 51, 43, 0.6);
+}
+
+.comments__input--small::selection,
+.comments__input--mini::selection {
+    background: rgba(197, 160, 89, 0.28);
+    color: #1f1a15;
+}
+
+[data-theme='dark'] .comments__input--small,
+[data-theme='dark'] .comments__input--mini {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(255, 255, 255, 0.12);
+    color: #f3ede3;
+    -webkit-text-fill-color: #f3ede3;
+    caret-color: #f3ede3;
+}
+
+[data-theme='dark'] .comments__input--small::placeholder,
+[data-theme='dark'] .comments__input--mini::placeholder {
+    color: rgba(243, 237, 227, 0.62);
+}
+
+[data-theme='dark'] .comments__input--small:focus,
+[data-theme='dark'] .comments__input--mini:focus {
+    background: rgba(255, 255, 255, 0.12);
 }
 
 /* Sidebar Widgets */

@@ -80,7 +80,7 @@ export const collections = [
             {
                 id: 'p6',
                 title: 'Classic Beauty',
-                image: 'https://www.vkartbox.com/assets/img/backgrounds/Pencil.jpeg',
+                image: 'https://www.vkartbox.com/assets/img/backgrounds/Keerthy.jpg',
                 medium: 'Graphite on Vellum Board',
                 dimensions: 'A4 (8.3 x 11.7 inches)',
                 year: '2022',
