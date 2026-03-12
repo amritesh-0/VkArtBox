@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from 'react';
+import { SOCIAL_LINKS, SocialIcon } from '../components/SocialLinks';
 import './Contact.css';
 
 export default function Contact() {
@@ -47,8 +48,18 @@ export default function Contact() {
                     <div className="info-item">
                         <h4>Follow Our Journey</h4>
                         <div className="contact-socials">
-                            {['Ig', 'Fb', 'Tw', 'Pt'].map(s => (
-                                <button key={s} className="contact-soc-link" onClick={() => { }}>{s}</button>
+                            {SOCIAL_LINKS.map((social) => (
+                                <a
+                                    key={social.label}
+                                    href={social.href}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                    className="contact-soc-link"
+                                    aria-label={social.label}
+                                    title={social.label}
+                                >
+                                    <SocialIcon type={social.key} className="contact-soc-icon" />
+                                </a>
                             ))}
                         </div>
                     </div>

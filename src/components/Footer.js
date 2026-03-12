@@ -1,14 +1,7 @@
 import React from 'react';
 import logo from '../assets/vkartbox-logo.png';
+import { SOCIAL_LINKS, SocialIcon } from './SocialLinks';
 import './Footer.css';
-
-const socials = [
-  { label: 'Fb', href: 'https://www.facebook.com/vkartbox' },
-  { label: 'Tw', href: 'https://twitter.com/VkArtbox' },
-  { label: 'Ig', href: 'https://www.instagram.com/vk_artbox/' },
-  { label: 'Yt', href: 'https://www.youtube.com/vkartbox' },
-  { label: 'Pt', href: 'https://in.pinterest.com/vkartbox/' },
-];
 
 const shopLinks = ['Quick Sketch', 'Wildlife', 'Portraits', 'Prints'];
 const exploreLinks = ['Home', 'Journal', 'Events', 'Register'];
@@ -30,9 +23,17 @@ export default function Footer() {
             mail@vkartbox.com
           </p>
           <div className="footer__socials">
-            {socials.map(s => (
-              <a key={s.label} href={s.href} target="_blank" rel="noreferrer" className="footer__soc">
-                {s.label}
+            {SOCIAL_LINKS.map((social) => (
+              <a
+                key={social.label}
+                href={social.href}
+                target="_blank"
+                rel="noreferrer"
+                className="footer__soc"
+                aria-label={social.label}
+                title={social.label}
+              >
+                <SocialIcon type={social.key} className="footer__soc-icon" />
               </a>
             ))}
           </div>

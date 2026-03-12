@@ -18,39 +18,42 @@ export default function Careers() {
     const values = [
         {
             title: 'Creative Freedom',
-            description: 'We believe in giving our artists the space to experiment, fail, and ultimately create something extraordinary.',
-            icon: '🎨'
+            description: 'We believe in giving our artists the space to experiment, fail, and ultimately create something extraordinary.'
         },
         {
             title: 'Continuous Growth',
-            description: 'Learn new techniques and refine your craft alongside a family of dedicated creators.',
-            icon: '🌿'
+            description: 'Learn new techniques and refine your craft alongside a family of dedicated creators.'
         },
         {
             title: 'Meaningful Impact',
-            description: 'Your work brings joy to people\'s homes and captures memories that last a lifetime.',
-            icon: '✨'
+            description: 'Your work brings joy to people\'s homes and captures memories that last a lifetime.'
         }
     ];
 
     const positions = [
         {
-            title: 'Fine Artist (Portraiture)',
-            type: 'Full-time / Remote',
+            title: 'Artist',
+            type: 'Full-time',
             location: 'Indore / India',
-            description: 'We are looking for master sketch artists specialized in charcoal and graphite portraits.'
+            description: 'We are looking for skilled artists who can create high-quality custom artwork with strong drawing fundamentals and attention to detail.'
         },
         {
-            title: 'Digital illustrator',
-            type: 'Contract',
+            title: 'Digital Marketing',
+            type: 'Full-time',
             location: 'Remote',
-            description: 'Help us translate traditional textures into digital masterpieces for our unique collections.'
+            description: 'Help grow VkArtBox through campaign planning, audience engagement, performance tracking, and creative digital promotion.'
         },
         {
-            title: 'Art Consultant',
+            title: 'Part-Time Content Writer',
             type: 'Part-time',
-            location: 'Indore, M.P.',
-            description: 'Guide our clients through the process of commissioning their perfect custom artwork.'
+            location: 'Remote',
+            description: 'Create engaging content for blogs, captions, product storytelling, and brand communication aligned with our artistic voice.'
+        },
+        {
+            title: 'Social Media Manager',
+            type: 'Full-time',
+            location: 'Remote / Indore',
+            description: 'Manage social platforms, content calendars, posting strategy, and community interactions to strengthen our online presence.'
         }
     ];
 
@@ -74,7 +77,6 @@ export default function Careers() {
                 <div className="values-grid">
                     {values.map((v, i) => (
                         <div key={i} className="value-card">
-                            <span className="value-icon">{v.icon}</span>
                             <h3>{v.title}</h3>
                             <p>{v.description}</p>
                         </div>

@@ -71,8 +71,8 @@ export default function InstagramSection() {
                                 <br />
                                 YouTube channel:
                                 {' '}
-                                <a href="https://www.youtube.com/c/VKArtBox" target="_blank" rel="noopener noreferrer">
-                                    https://www.youtube.com/c/VKArtBox
+                                <a href="https://www.youtube.com/vkartbox" target="_blank" rel="noopener noreferrer">
+                                    https://www.youtube.com/vkartbox
                                 </a>
                                 <br />
                                 Contact us: mail@vkartbox.com

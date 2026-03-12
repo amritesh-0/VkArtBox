@@ -2,12 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { collection as firestoreCollection, doc, getDoc, getDocs, query, where } from 'firebase/firestore';
 import { db } from '../firebase';
-import { collections } from '../data/collectionData';
 import './CollectionDetail.css';
 
 export default function CollectionDetail() {
     const { id } = useParams();
     const [collectionData, setCollectionData] = useState(null);
+    const [loading, setLoading] = useState(true);
     const [selectedArtwork, setSelectedArtwork] = useState(null);
 
     useEffect(() => {
@@ -28,14 +28,15 @@ export default function CollectionDetail() {
                         count: `${artworks.length} Artworks`,
                         artworks,
                     });
-                    return;
+                } else {
+                    setCollectionData(null);
                 }
             } catch (error) {
                 console.error('Error fetching collection detail:', error);
+                setCollectionData(null);
+            } finally {
+                setLoading(false);
             }
-
-            const found = collections.find((c) => c.id === id);
-            setCollectionData(found || null);
         };
 
         fetchCollection();
@@ -47,6 +48,14 @@ export default function CollectionDetail() {
             document.body.style.overflow = 'auto';
         };
     }, [selectedArtwork]);
+
+    if (loading) {
+        return (
+            <div className="cd-not-found">
+                <h2>Loading collection...</h2>
+            </div>
+        );
+    }
 
     if (!collectionData) {
         return (

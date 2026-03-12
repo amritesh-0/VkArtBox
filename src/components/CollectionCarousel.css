@@ -23,6 +23,18 @@
   opacity: 0.8;
 }
 
+.cc-status {
+  margin-top: 60px;
+  padding: 48px 24px;
+  text-align: center;
+  border: 1px dashed var(--gold-dim);
+  color: var(--pencil);
+  font-family: var(--font-ui);
+  font-size: 0.9rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
 /* ── TRACK ── */
 .cc-track {
   display: grid;
@@ -235,6 +247,21 @@
 /* ── PREVIEW GRIDS ── */
 .cc-preview {
   height: 100%;
+}
+
+.cc-preview-empty {
+  height: 100%;
+  min-height: 260px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px dashed rgba(255, 255, 255, 0.14);
+  border-radius: 12px;
+  color: rgba(255, 255, 255, 0.72);
+  font-family: var(--font-ui);
+  font-size: 0.78rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
 }
 
 .cc-prev-item,

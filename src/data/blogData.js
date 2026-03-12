@@ -3,17 +3,18 @@ export const BLOG_POSTS = [
         id: 'evolution-of-pencil-portraits',
         category: 'Art History',
         title: 'The Evolution of Pencil Portraits',
-        excerpt: 'Explore how graphite became the primary tool for master portraitists throughout the centuries.',
-        content: `
-            <h3>The Silent Genesis</h3>
-            <p>Graphite, in its purest form, has a history as deep and layered as the portraits it creates. From the initial discovery of large graphite deposits in Borrowdale, England, during the 16th century, to the refined, chemically balanced pencils of the modern era, this medium has been the architect of human expression.</p>
-            
-            <h3>Masters of the Grey Scale</h3>
-            <p>In this deep dive, we look at how masters like Jean-Auguste-Dominique Ingres utilized the subtle range of graphite to create works that remain as vibrant today as they were centuries ago. Ingres didn't just draw; he sculpted with lines, using varying pressures to indicate volume and light without the need for heavy shading.</p>
-            
-            <h3>The Modern Graphite Soul</h3>
-            <p>Today, the pencil remains the most accessible yet most challenging tool for an artist. It is an extension of the soul, capturing the split-second emotional shift in a subject's gaze with a fidelity that camera lenses often miss.</p>
-        `,
+        subtitle: 'From Graphite Deposits to Masterful Expressions',
+        author: 'Julian Vane',
+        publication: 'Art Journal Monthly',
+        lead: 'Explore how graphite became the primary tool for master portraitists throughout the centuries. Graphite, in its purest form, has a history as deep and layered as the portraits it creates.',
+        background: 'From the initial discovery of large graphite deposits in Borrowdale, England, during the 16th century, to the refined, chemically balanced pencils of the modern era, this medium has been the architect of human expression. The transition from silverpoint to graphite marked a significant turning point in the accessibility of fine art materials.',
+        analysis: 'In this deep dive, we look at how masters like Jean-Auguste-Dominique Ingres utilized the subtle range of graphite to create works that remain as vibrant today as they were centuries ago. Ingres didn\'t just draw; he sculpted with lines, using varying pressures to indicate volume and light without the need for heavy shading. The ability to erase and rework lines allowed for a level of precision previously unattainable with permanent media.',
+        artworkDescription: 'The featured portrait showcases the delicate interplay of light and shadow achieved through various grades of graphite. Note the fine detailing in the texture of the skin and the sharp clarity of the eyes, which draw the viewer into a silent conversation.',
+        quotes: [
+            'Graphite really is the most honest medium.',
+            'Ingres didn\'t just draw; he sculpted with lines.'
+        ],
+        conclusion: 'Today, the pencil remains the most accessible yet most challenging tool for an artist. It is an extension of the soul, capturing the split-second emotional shift in a subject\'s gaze with a fidelity that camera lenses often miss. As we continue to evolve digitally, the tactile honesty of lead on paper remains an irreplaceable cornerstone of the artist\'s journey.',
         image: '/assets/blog_pencil_portrait.png',
         featured: true,
         date: 'October 12, 2025',
@@ -25,7 +26,7 @@ export const BLOG_POSTS = [
     },
     {
         id: 'mastering-charcoal-shading',
-        category: 'Technique',
+        category: 'Art Tools',
         title: 'Mastering Charcoal Shading',
         excerpt: 'Secrets to creating depth and texture using traditional charcoal techniques in modern art.',
         content: `
@@ -47,7 +48,7 @@ export const BLOG_POSTS = [
     },
     {
         id: 'emotional-resonance-in-eyes',
-        category: 'Portraits',
+        category: 'Stories of Artwork',
         title: 'Emotional Resonance in Eyes',
         excerpt: 'Why the eyes are the most critical element in capturing the soul of a portrait subject.',
         content: `
@@ -67,7 +68,7 @@ export const BLOG_POSTS = [
     },
     {
         id: 'aged-wisdom-collection',
-        category: 'Realism',
+        category: 'Stories of Artist',
         title: 'The "Aged Wisdom" Collection',
         excerpt: 'A powerful series of portraits celebrating the stories written in time.',
         content: `

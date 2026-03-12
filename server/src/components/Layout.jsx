@@ -1,26 +1,20 @@
-import React, { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import { Menu } from 'lucide-react';
-import { Toaster } from 'react-hot-toast';
 import Sidebar from './Sidebar';
+import { useAuth } from './AuthProvider';
 
 const Layout = () => {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+    const { user } = useAuth();
 
     const openSidebar = () => setIsSidebarOpen(true);
     const closeSidebar = () => setIsSidebarOpen(false);
+    const adminLabel = useMemo(() => user?.email || 'Admin', [user]);
+    const adminInitial = useMemo(() => (user?.email?.[0] || 'A').toUpperCase(), [user]);
 
     return (
         <div className="admin-layout">
-            <Toaster position="top-right" toastOptions={{
-                style: {
-                    background: 'var(--admin-bg-secondary)',
-                    color: 'var(--admin-text-primary)',
-                    fontFamily: 'var(--font-ui)',
-                    fontSize: '0.9rem',
-                    border: '1px solid var(--admin-border)'
-                }
-            }} />
             <Sidebar isOpen={isSidebarOpen} onClose={closeSidebar} />
             {isSidebarOpen && <button className="sidebar-overlay" onClick={closeSidebar} aria-label="Close sidebar" />}
             <main className="admin-main">
@@ -29,9 +23,9 @@ const Layout = () => {
                         <button className="mobile-menu-btn" onClick={openSidebar} aria-label="Open sidebar menu">
                             <Menu size={20} />
                         </button>
-                        <h1 className="topbar-title">Welcome Admin</h1>
+                        <h1 className="topbar-title">Welcome {adminLabel}</h1>
                     </div>
-                    <div className="admin-avatar">A</div>
+                    <div className="admin-avatar">{adminInitial}</div>
                 </div>
                 <div className="admin-content">
                     <Outlet />

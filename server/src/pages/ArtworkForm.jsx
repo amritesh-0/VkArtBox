@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import React, { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import { collection, addDoc, doc, getDoc, serverTimestamp, updateDoc } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { db, storage } from '../firebase';
 import { ArrowLeft, Save, Image as ImageIcon } from 'lucide-react';
@@ -8,7 +8,10 @@ import toast from 'react-hot-toast';
 
 const ArtworkForm = () => {
     const navigate = useNavigate();
+    const { id } = useParams();
+    const isEditMode = Boolean(id);
     const [loading, setLoading] = useState(false);
+    const [loadingInitialData, setLoadingInitialData] = useState(isEditMode);
     const [imageFile, setImageFile] = useState(null);
     const [imagePreview, setImagePreview] = useState(null);
 
@@ -22,6 +25,42 @@ const ArtworkForm = () => {
         status: 'Available',
         price: '',
     });
+
+    useEffect(() => {
+        if (!isEditMode) return;
+
+        const fetchArtwork = async () => {
+            try {
+                const artworkSnapshot = await getDoc(doc(db, 'artworks', id));
+                if (!artworkSnapshot.exists()) {
+                    toast.error('Artwork not found.');
+                    navigate('/collections');
+                    return;
+                }
+
+                const artworkData = artworkSnapshot.data();
+                setFormData({
+                    collectionId: artworkData.collectionId || 'portraits',
+                    title: artworkData.title || '',
+                    medium: artworkData.medium || '',
+                    dimensions: artworkData.dimensions || '',
+                    year: artworkData.year || new Date().getFullYear().toString(),
+                    description: artworkData.description || '',
+                    status: artworkData.status || 'Available',
+                    price: artworkData.price || '',
+                });
+                setImagePreview(artworkData.image || null);
+            } catch (error) {
+                console.error('Error fetching artwork: ', error);
+                toast.error('Failed to load artwork.');
+                navigate('/collections');
+            } finally {
+                setLoadingInitialData(false);
+            }
+        };
+
+        fetchArtwork();
+    }, [id, isEditMode, navigate]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -43,39 +82,58 @@ const ArtworkForm = () => {
             toast.error("Please provide an artwork title.");
             return;
         }
-        if (!imageFile) {
+        if (!imageFile && !imagePreview) {
             toast.error("Please select an artwork image.");
             return;
         }
 
         setLoading(true);
-        const loadingToast = toast.loading('Saving artwork...');
+        const loadingToast = toast.loading(isEditMode ? 'Updating artwork...' : 'Saving artwork...');
 
         try {
-            // 1. Upload image
-            const imageRef = ref(storage, `artworks/${formData.collectionId}/${Date.now()}_${imageFile.name}`);
-            await uploadBytes(imageRef, imageFile);
-            const imageUrl = await getDownloadURL(imageRef);
+            let imageUrl = imagePreview;
+            if (imageFile) {
+                const imageRef = ref(storage, `artworks/${formData.collectionId}/${Date.now()}_${imageFile.name}`);
+                await uploadBytes(imageRef, imageFile);
+                imageUrl = await getDownloadURL(imageRef);
+            }
 
-            // 2. Save info to Firestore under artworks collection
             const artworkData = {
                 ...formData,
                 image: imageUrl,
                 price: formData.price.trim() === '' ? null : formData.price,
-                createdAt: serverTimestamp(),
+                updatedAt: serverTimestamp(),
             };
 
-            await addDoc(collection(db, 'artworks'), artworkData);
+            if (isEditMode) {
+                await updateDoc(doc(db, 'artworks', id), artworkData);
+                toast.success('Artwork updated successfully!', { id: loadingToast });
+            } else {
+                await addDoc(collection(db, 'artworks'), {
+                    ...artworkData,
+                    createdAt: serverTimestamp(),
+                });
+                toast.success('Artwork added successfully!', { id: loadingToast });
+            }
 
-            toast.success('Artwork added successfully!', { id: loadingToast });
             setTimeout(() => navigate('/collections'), 1000);
         } catch (error) {
-            console.error("Error adding artwork: ", error);
-            toast.error(error.message || "Failed to add artwork.", { id: loadingToast });
+            console.error(`Error ${isEditMode ? 'updating' : 'adding'} artwork: `, error);
+            toast.error(error.message || `Failed to ${isEditMode ? 'update' : 'add'} artwork.`, { id: loadingToast });
         } finally {
             setLoading(false);
         }
     };
+
+    if (loadingInitialData) {
+        return (
+            <div className="form-page">
+                <div className="admin-card">
+                    <div className="empty-state">Loading artwork...</div>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <div className="form-page">
@@ -84,7 +142,7 @@ const ArtworkForm = () => {
                     <button className="btn-icon" onClick={() => navigate('/collections')}>
                         <ArrowLeft size={24} />
                     </button>
-                    <h2>Add New Artwork</h2>
+                    <h2>{isEditMode ? 'Edit Artwork' : 'Add New Artwork'}</h2>
                 </div>
             </div>
 
@@ -142,7 +200,7 @@ const ArtworkForm = () => {
                     </div>
 
                     <div className="form-group">
-                        <label>Artwork Image *</label>
+                        <label>Artwork Image {isEditMode ? '' : '*'}</label>
                         <div className="image-upload-wrapper">
                             {imagePreview ? (
                                 <div className="image-preview">
@@ -153,7 +211,7 @@ const ArtworkForm = () => {
                                 <div className="image-upload-box">
                                     <ImageIcon size={48} className="upload-icon" />
                                     <p>Click to upload or drag and drop</p>
-                                    <input type="file" accept="image/*" onChange={handleImageChange} required className="file-input-hidden" />
+                                    <input type="file" accept="image/*" onChange={handleImageChange} required={!isEditMode} className="file-input-hidden" />
                                 </div>
                             )}
                         </div>
@@ -163,7 +221,7 @@ const ArtworkForm = () => {
                         <button type="button" className="btn-secondary" onClick={() => navigate('/collections')}>Cancel</button>
                         <button type="submit" className="btn-primary" disabled={loading}>
                             <Save size={18} />
-                            <span>{loading ? 'Saving...' : 'Save Artwork'}</span>
+                            <span>{loading ? 'Saving...' : isEditMode ? 'Update Artwork' : 'Save Artwork'}</span>
                         </button>
                     </div>
                 </form>

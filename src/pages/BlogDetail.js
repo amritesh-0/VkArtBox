@@ -2,15 +2,16 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { collection, doc, getDoc, getDocs, orderBy, query } from 'firebase/firestore';
 import { db } from '../firebase';
-import { BLOG_POSTS } from '../data/blogData';
+import { SOCIAL_LINKS, SocialIcon } from '../components/SocialLinks';
 import './BlogDetail.css';
 
 export default function BlogDetail() {
     const { id } = useParams();
     const navigate = useNavigate();
     const sectionRef = useRef(null);
-    const [post, setPost] = useState(() => BLOG_POSTS.find((p) => p.id === id) || null);
-    const [allPosts, setAllPosts] = useState(BLOG_POSTS);
+    const [post, setPost] = useState(null);
+    const [allPosts, setAllPosts] = useState([]);
+    const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         window.scrollTo(0, 0);
@@ -24,20 +25,20 @@ export default function BlogDetail() {
                 const latestSnapshot = await getDocs(latestQuery);
                 const latestPosts = latestSnapshot.docs.map((blogDoc) => ({ id: blogDoc.id, ...blogDoc.data() }));
 
-                if (latestPosts.length > 0) {
-                    setAllPosts(latestPosts);
-                }
+                setAllPosts(latestPosts);
 
                 if (postDoc.exists()) {
                     setPost({ id: postDoc.id, ...postDoc.data() });
-                    return;
+                } else {
+                    setPost(null);
                 }
             } catch (error) {
                 console.error('Error fetching blog detail:', error);
+                setPost(null);
+                setAllPosts([]);
+            } finally {
+                setLoading(false);
             }
-
-            setPost(BLOG_POSTS.find((p) => p.id === id) || null);
-            setAllPosts(BLOG_POSTS);
         };
 
         fetchPostData();
@@ -57,6 +58,16 @@ export default function BlogDetail() {
     const categories = [...new Set(allPosts.map((p) => p.category).filter(Boolean))].slice(0, 4);
     const tags = [...new Set(allPosts.flatMap((p) => p.tags || []).filter(Boolean))].slice(0, 5);
     const latestPosts = allPosts.filter((p) => p.id !== id).slice(0, 3);
+
+    if (loading) {
+        return (
+            <div className="blog-detail">
+                <div className="blog-detail__container">
+                    <h1 className="blog-detail__title">Loading article...</h1>
+                </div>
+            </div>
+        );
+    }
 
     if (!post) {
         return (
@@ -87,16 +98,74 @@ export default function BlogDetail() {
                         <header className="blog-detail__post-header reveal">
                             <span className="blog-detail__cat">{post.category}</span>
                             <h1 className="blog-detail__title">{post.title}</h1>
+                            {post.subtitle && <h2 className="blog-detail__subtitle">{post.subtitle}</h2>}
+                            <div className="blog-detail__meta-info">
+                                {post.author && <span className="blog-detail__author">By {post.author}</span>}
+                                {post.publication && (
+                                    <>
+                                        <span className="blog-detail__separator">•</span>
+                                        <span className="blog-detail__publication">{post.publication}</span>
+                                    </>
+                                )}
+                                <span className="blog-detail__separator">•</span>
+                                <span className="blog-detail__date">{post.date}</span>
+                            </div>
                             <div className="blog-detail__img-wrap">
                                 <img src={post.image} alt={post.title} className="blog-detail__img" />
                             </div>
                         </header>
 
                         <article className="blog-detail__article reveal reveal-delay-2">
-                            <div
-                                className="blog-detail__content"
-                                dangerouslySetInnerHTML={{ __html: post.content }}
-                            />
+                            {post.lead && (
+                                <section className="blog-detail__section blog-detail__section--lead">
+                                    <p className="blog-detail__lead-text">{post.lead}</p>
+                                </section>
+                            )}
+
+                            {post.background && (
+                                <section className="blog-detail__section">
+                                    <h3 className="blog-detail__section-title">Background & Context</h3>
+                                    <p>{post.background}</p>
+                                </section>
+                            )}
+
+                            {post.analysis && (
+                                <section className="blog-detail__section">
+                                    <h3 className="blog-detail__section-title">Main Analysis</h3>
+                                    <p>{post.analysis}</p>
+                                </section>
+                            )}
+
+                            {post.artworkDescription && (
+                                <section className="blog-detail__section">
+                                    <h3 className="blog-detail__section-title">Artwork Description</h3>
+                                    <p>{post.artworkDescription}</p>
+                                </section>
+                            )}
+
+                            {post.quotes && post.quotes.length > 0 && (
+                                <section className="blog-detail__section blog-detail__section--quotes">
+                                    {post.quotes.map((quote, index) => (
+                                        <blockquote key={index} className="blog-detail__quote">
+                                            "{quote}"
+                                        </blockquote>
+                                    ))}
+                                </section>
+                            )}
+
+                            {post.conclusion && (
+                                <section className="blog-detail__section">
+                                    <h3 className="blog-detail__section-title">Conclusion</h3>
+                                    <p>{post.conclusion}</p>
+                                </section>
+                            )}
+
+                            {post.content && (
+                                <div
+                                    className="blog-detail__content"
+                                    dangerouslySetInnerHTML={{ __html: post.content }}
+                                />
+                            )}
                         </article>
 
                         {/* Comment Section */}
@@ -180,10 +249,19 @@ export default function BlogDetail() {
                         <div className="sidebar__widget reveal reveal-delay-4">
                             <h4 className="sidebar__title">Connect With Us</h4>
                             <div className="sidebar__socials">
-                                <button className="sidebar__soc-btn">Ig</button>
-                                <button className="sidebar__soc-btn">Tw</button>
-                                <button className="sidebar__soc-btn">Fb</button>
-                                <button className="sidebar__soc-btn">In</button>
+                                {SOCIAL_LINKS.map((social) => (
+                                    <a
+                                        key={social.label}
+                                        href={social.href}
+                                        target="_blank"
+                                        rel="noreferrer"
+                                        className="sidebar__soc-btn"
+                                        aria-label={social.label}
+                                        title={social.label}
+                                    >
+                                        <SocialIcon type={social.key} className="sidebar__soc-icon" />
+                                    </a>
+                                ))}
                             </div>
                         </div>
                     </aside>

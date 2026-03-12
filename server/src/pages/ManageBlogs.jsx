@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { collection, getDocs, deleteDoc, doc, orderBy, query } from 'firebase/firestore';
 import { db } from '../firebase';
-import { Plus, Trash2 } from 'lucide-react';
+import { Plus, Trash2, Pencil } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 const ManageBlogs = () => {
@@ -84,6 +84,9 @@ const ManageBlogs = () => {
                                         <td>{blog.category}</td>
                                         <td>{blog.date}</td>
                                         <td>
+                                            <button className="btn-icon" onClick={() => navigate(`/blogs/${blog.id}/edit`)}>
+                                                <Pencil size={18} />
+                                            </button>
                                             <button className="btn-icon-danger" onClick={() => handleDelete(blog.id)}>
                                                 <Trash2 size={18} />
                                             </button>

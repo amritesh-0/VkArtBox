@@ -85,6 +85,89 @@
     object-fit: cover;
 }
 
+.blog-detail__subtitle {
+    font-family: var(--font-heading);
+    font-weight: 400;
+    font-style: italic;
+    font-size: clamp(1.2rem, 2.2vw, 1.6rem);
+    color: var(--sepia);
+    margin-top: -30px;
+    margin-bottom: 30px;
+    line-height: 1.4;
+    opacity: 0.9;
+}
+
+.blog-detail__meta-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 40px;
+    font-family: var(--font-ui);
+    font-size: 0.85rem;
+    color: var(--pencil);
+    opacity: 0.7;
+}
+
+.blog-detail__separator {
+    color: var(--sepia);
+    opacity: 0.5;
+}
+
+.blog-detail__section {
+    margin-bottom: 60px;
+}
+
+.blog-detail__section--lead {
+    margin-bottom: 80px;
+}
+
+.blog-detail__lead-text {
+    font-size: clamp(1.1rem, 1.8vw, 1.35rem);
+    line-height: 1.6;
+    color: var(--charcoal);
+    font-weight: 500;
+    font-family: var(--font-heading);
+}
+
+.blog-detail__section-title {
+    font-family: var(--font-heading);
+    font-size: 1.5rem;
+    font-weight: 500;
+    margin-bottom: 20px;
+    color: var(--sepia);
+    position: relative;
+    padding-bottom: 10px;
+}
+
+.blog-detail__section-title::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 40px;
+    height: 1px;
+    background: var(--sepia);
+    opacity: 0.3;
+}
+
+.blog-detail__section--quotes {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    margin: 80px 0;
+    padding: 0 40px;
+    border-left: 2px solid var(--gold-faint);
+}
+
+.blog-detail__quote {
+    font-family: var(--font-heading);
+    font-size: clamp(1.4rem, 2.5vw, 2rem);
+    font-style: italic;
+    color: var(--charcoal);
+    line-height: 1.3;
+    position: relative;
+}
+
 .blog-detail__content {
     font-family: var(--font-body);
     font-size: clamp(0.98rem, 1.4vw, 1.12rem);
@@ -387,6 +470,11 @@
     font-size: 0.85rem;
     transition: all 0.3s;
     cursor: pointer;
+}
+
+.sidebar__soc-icon {
+    width: 17px;
+    height: 17px;
 }
 
 .sidebar__soc-btn:hover {

@@ -3,7 +3,6 @@ import './CollectionCarousel.css';
 import { useNavigate } from 'react-router-dom';
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from '../firebase';
-import { collections } from '../data/collectionData';
 
 /* ── ICONS & PREVIEW GRIDS ── */
 const icons = {
@@ -36,6 +35,10 @@ const icons = {
 
 /* ── PREVIEW GRIDS ── */
 function PortraitsPreview({ previews, accent }) {
+  if (!previews || previews.length === 0) {
+    return <div className="cc-preview-empty">No previews available yet.</div>;
+  }
+
   return (
     <div className="cc-preview cc-preview--portraits">
       <div className="cc-prev-tall">
@@ -55,6 +58,10 @@ function PortraitsPreview({ previews, accent }) {
 }
 
 function WildlifePreview({ previews, accent }) {
+  if (!previews || previews.length === 0) {
+    return <div className="cc-preview-empty">No previews available yet.</div>;
+  }
+
   return (
     <div className="cc-preview cc-preview--wildlife">
       <div className="cc-prev-hero">
@@ -74,6 +81,10 @@ function WildlifePreview({ previews, accent }) {
 }
 
 function PrintsPreview({ printFeature, printSpecs, accent, accentRgb }) {
+  if (!printFeature?.img) {
+    return <div className="cc-preview-empty">No previews available yet.</div>;
+  }
+
   return (
     <div className="cc-preview cc-preview--prints">
       <div className="cc-prev-print-img">
@@ -166,7 +177,8 @@ function CollectionCard({ col }) {
 /* ── MAIN SECTION ── */
 export default function CollectionCarousel() {
   const ref = useRef(null);
-  const [collectionList, setCollectionList] = useState(collections);
+  const [collectionList, setCollectionList] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchCollections = async () => {
@@ -185,27 +197,25 @@ export default function CollectionCarousel() {
 
         const dbCollections = collectionsSnapshot.docs.map((collectionDoc) => {
           const data = collectionDoc.data();
-          const fallback = collections.find((c) => c.id === collectionDoc.id);
           const artworkCount = artworkCountByCollection[collectionDoc.id] || 0;
           return {
             id: collectionDoc.id,
-            ...fallback,
             ...data,
             count: data.count || `${artworkCount} Artworks`,
           };
         });
 
-        if (dbCollections.length > 0) {
-          setCollectionList(dbCollections);
-        }
+        setCollectionList(dbCollections);
       } catch (error) {
         console.error('Error fetching collections:', error);
-        setCollectionList(collections);
+        setCollectionList([]);
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchCollections();
-  }, [collectionList.length]);
+  }, []);
 
   useEffect(() => {
     const els = ref.current?.querySelectorAll('.reveal');
@@ -227,11 +237,17 @@ export default function CollectionCarousel() {
           <p className="cc-sub reveal reveal-delay-1">Hover to discover the art within each world</p>
         </div>
 
-        <div className="cc-track">
-          {collectionList.map(col => (
-            <CollectionCard key={col.id} col={col} />
-          ))}
-        </div>
+        {loading ? (
+          <div className="cc-status">Loading collections...</div>
+        ) : collectionList.length === 0 ? (
+          <div className="cc-status">No collections available right now.</div>
+        ) : (
+          <div className="cc-track">
+            {collectionList.map(col => (
+              <CollectionCard key={col.id} col={col} />
+            ))}
+          </div>
+        )}
       </div>
     </section>
   );

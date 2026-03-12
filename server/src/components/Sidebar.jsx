@@ -1,8 +1,22 @@
-import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { LayoutDashboard, FileText, Image as ImageIcon, LogOut, Settings, X } from 'lucide-react';
+import toast from 'react-hot-toast';
+import { useAuth } from './AuthProvider';
 
 const Sidebar = ({ isOpen, onClose }) => {
+    const { logout } = useAuth();
+
+    const handleLogout = async () => {
+        try {
+            await logout();
+            toast.success('Logged out successfully.');
+            onClose();
+        } catch (error) {
+            console.error('Logout failed:', error);
+            toast.error('Failed to log out.');
+        }
+    };
+
     return (
         <aside className={`admin-sidebar ${isOpen ? 'open' : ''}`}>
             <div className="sidebar-header">
@@ -31,7 +45,7 @@ const Sidebar = ({ isOpen, onClose }) => {
                 </NavLink>
             </nav>
             <div className="sidebar-footer">
-                <button className="logout-btn">
+                <button className="logout-btn" onClick={handleLogout}>
                     <LogOut size={20} />
                     <span>Logout</span>
                 </button>
