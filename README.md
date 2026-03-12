@@ -50,6 +50,35 @@ Default local URL: `http://localhost:3000`
 npm run build
 ```
 
+### Vercel Deployment
+
+Deploy the root app in this repository as a static Create React App project.
+
+Vercel project settings:
+
+- Root Directory: `.`
+- Install Command: `npm install`
+- Build Command: `npm run build`
+- Output Directory: `build`
+
+The included [`vercel.json`](/Users/amriteshpandey/Downloads/vkartbox/vercel.json) adds SPA routing so routes such as `/blogs`, `/blog/:id`, and `/collection/:id` resolve correctly on refresh.
+
+Before deploying, add these environment variables in Vercel using the values from your Firebase web app config:
+
+```bash
+REACT_APP_FIREBASE_API_KEY=
+REACT_APP_FIREBASE_AUTH_DOMAIN=
+REACT_APP_FIREBASE_PROJECT_ID=
+REACT_APP_FIREBASE_STORAGE_BUCKET=
+REACT_APP_FIREBASE_MESSAGING_SENDER_ID=
+REACT_APP_FIREBASE_APP_ID=
+REACT_APP_FIREBASE_MEASUREMENT_ID=
+```
+
+You can copy the variable names from [`.env.example`](/Users/amriteshpandey/Downloads/vkartbox/.env.example) for local setup as well.
+
+The `server/` directory is a separate Vite admin app. If you want that on Vercel too, create a second Vercel project with `server/` as its Root Directory.
+
 ### Run Tests
 
 ```bash

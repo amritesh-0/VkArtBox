@@ -13,7 +13,9 @@ coverage
 *.swp
 *.swo       
 server/node_modules
-firebase.js
 server/firebase.js
 scripts/seed-firestore.mjs
 server/src/firebase.js
+.env.local
+.env.example
+.env
