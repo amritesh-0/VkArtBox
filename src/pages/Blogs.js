@@ -4,7 +4,12 @@ import { collection, getDocs, orderBy, query } from 'firebase/firestore';
 import { db } from '../firebase';
 import './Blogs.css';
 
-const FEATURED_CATEGORIES = ['Art History', 'Art Tools', 'Stories of Artwork', 'Stories of Artist'];
+const CATEGORY_DESCRIPTIONS = {
+    'Art History': 'Tracing the lineage of classical masters and timeless techniques.',
+    'Art Tools': 'An exploration of the physical instruments that bridge mind and canvas.',
+    'Stories of Artwork': 'The hidden inspirations and technical journey behind our key pieces.',
+    'Stories of Artist': 'Personal reflections on the creative spirit and the path of the observer.',
+};
 
 export default function Blogs() {
     const sectionRef = useRef(null);
@@ -38,7 +43,9 @@ export default function Blogs() {
         };
     }, [modalCategory]);
 
-    const categoryCards = FEATURED_CATEGORIES.map((category, index) => {
+    const categories = [...new Set(posts.map((post) => post.category).filter(Boolean))];
+
+    const categoryCards = categories.map((category, index) => {
         const related = posts.filter((post) => post.category === category);
         const previewPost = related[0] || null;
 
@@ -54,8 +61,6 @@ export default function Blogs() {
             count: related.length
         };
     });
-
-    const discoveryCards = categoryCards.slice(1);
 
     useEffect(() => {
         const observerOptions = {
@@ -75,7 +80,7 @@ export default function Blogs() {
         revealElements.forEach(el => observer.observe(el));
 
         return () => observer.disconnect();
-    }, [posts, discoveryCards.length]); // Re-run when posts or discovery grid changes
+    }, [posts, categoryCards.length]); // Re-run when posts or category grid changes
 
     useEffect(() => {
         if (!modalCategory) return;
@@ -120,6 +125,8 @@ export default function Blogs() {
                     
                     {loading ? (
                         <div className="editorial-status">Loading chapters...</div>
+                    ) : categoryCards.length === 0 ? (
+                        <div className="editorial-status">No blog categories available right now.</div>
                     ) : (
                         <div className="gallery-grid">
                             {categoryCards.map((card, idx) => (
@@ -142,10 +149,7 @@ export default function Blogs() {
                                             <div className="gallery-copy">
                                                 <h3 className="gallery-post-title">{card.title}</h3>
                                                 <p className="gallery-post-desc">
-                                                    {card.category === 'Art History' && "Tracing the lineage of classical masters and timeless techniques."}
-                                                    {card.category === 'Art Tools' && "An exploration of the physical instruments that bridge mind and canvas."}
-                                                    {card.category === 'Stories of Artwork' && "The hidden inspirations and technical journey behind our key pieces."}
-                                                    {card.category === 'Stories of Artist' && "Personal reflections on the creative spirit and the path of the observer."}
+                                                    {CATEGORY_DESCRIPTIONS[card.category] || 'A live chapter from the journal, shaped directly by the latest published posts.'}
                                                 </p>
                                             </div>
                                             <div className="gallery-footer">

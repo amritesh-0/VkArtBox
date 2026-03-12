@@ -8,6 +8,7 @@ import toast from 'react-hot-toast';
 const ManageCollections = () => {
     const navigate = useNavigate();
     const [artworks, setArtworks] = useState([]);
+    const [collections, setCollections] = useState([]);
     const [loading, setLoading] = useState(true);
     const [filter, setFilter] = useState('all');
 
@@ -17,13 +18,22 @@ const ManageCollections = () => {
 
     const fetchArtworks = async () => {
         try {
-            const q = query(collection(db, 'artworks'), orderBy('createdAt', 'desc'));
-            const querySnapshot = await getDocs(q);
-            const data = querySnapshot.docs.map(doc => ({
+            const [artworksSnapshot, collectionsSnapshot] = await Promise.all([
+                getDocs(query(collection(db, 'artworks'), orderBy('createdAt', 'desc'))),
+                getDocs(collection(db, 'collections')),
+            ]);
+            const data = artworksSnapshot.docs.map(doc => ({
                 id: doc.id,
                 ...doc.data()
             }));
+            const collectionData = collectionsSnapshot.docs
+                .map(collectionDoc => ({
+                    id: collectionDoc.id,
+                    ...collectionDoc.data(),
+                }))
+                .sort((a, b) => String(a.number || '').localeCompare(String(b.number || ''), undefined, { numeric: true }));
             setArtworks(data);
+            setCollections(collectionData);
         } catch (error) {
             console.error("Error fetching artworks: ", error);
             toast.error("Failed to load artworks.");
@@ -49,6 +59,10 @@ const ManageCollections = () => {
     const filteredArtworks = filter === 'all'
         ? artworks
         : artworks.filter(a => a.collectionId === filter);
+    const collectionLabels = collections.reduce((acc, item) => {
+        acc[item.id] = item.title || item.id;
+        return acc;
+    }, {});
 
     return (
         <div>
@@ -63,9 +77,9 @@ const ManageCollections = () => {
             <div className="filters-bar">
                 <select value={filter} onChange={(e) => setFilter(e.target.value)} className="admin-select">
                     <option value="all">All Collections</option>
-                    <option value="portraits">Portraits</option>
-                    <option value="wildlife">Wildlife</option>
-                    <option value="prints">Prints</option>
+                    {collections.map((item) => (
+                        <option key={item.id} value={item.id}>{item.title || item.id}</option>
+                    ))}
                 </select>
             </div>
 
@@ -96,7 +110,7 @@ const ManageCollections = () => {
                                             <img src={art.image} alt={art.title} className="table-img" />
                                         </td>
                                         <td className="font-medium">{art.title}</td>
-                                        <td style={{ textTransform: 'capitalize' }}>{art.collectionId}</td>
+                                        <td>{collectionLabels[art.collectionId] || art.collectionId}</td>
                                         <td>
                                             <span className={`status-badge ${art.status.replace(/ /g, '-').toLowerCase()}`}>
                                                 {art.status}

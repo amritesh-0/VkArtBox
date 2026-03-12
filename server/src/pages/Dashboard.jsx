@@ -8,20 +8,23 @@ const Dashboard = () => {
     const [stats, setStats] = useState({
         blogs: 0,
         artworks: 0,
-        collections: 3
+        collections: 0
     });
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const fetchStats = async () => {
             try {
-                const blogsSnapshot = await getCountFromServer(collection(db, 'blogs'));
-                const artSnapshot = await getCountFromServer(collection(db, 'artworks'));
+                const [blogsSnapshot, artSnapshot, collectionsSnapshot] = await Promise.all([
+                    getCountFromServer(collection(db, 'blogs')),
+                    getCountFromServer(collection(db, 'artworks')),
+                    getCountFromServer(collection(db, 'collections')),
+                ]);
 
                 setStats({
                     blogs: blogsSnapshot.data().count,
                     artworks: artSnapshot.data().count,
-                    collections: 3 // Static for now, based on defined collections
+                    collections: collectionsSnapshot.data().count,
                 });
             } catch (error) {
                 console.error("Error fetching stats: ", error);
@@ -46,7 +49,7 @@ const Dashboard = () => {
                 <div className="dashboard-stats">
                     <Link to="/blogs" style={{ textDecoration: 'none' }}>
                         <div className="stat-card">
-                            <h3 className="stat-title">Total Logs Published</h3>
+                            <h3 className="stat-title">Total Blogs Published</h3>
                             <p className="stat-value">{stats.blogs}</p>
                         </div>
                     </Link>

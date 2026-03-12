@@ -66,7 +66,7 @@ export default function Hero() {
           </p>
 
           <div className="hero__btns">
-            <button className="btn-gold" onClick={() => scrollTo('portraits')}>
+            <button className="btn-gold" onClick={() => scrollTo('collections')}>
               View Collection
             </button>
             <button className="btn-outline" onClick={() => scrollTo('about')}>

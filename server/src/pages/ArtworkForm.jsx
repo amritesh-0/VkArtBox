@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { collection, addDoc, doc, getDoc, serverTimestamp, updateDoc } from 'firebase/firestore';
+import { collection, addDoc, doc, getDoc, getDocs, serverTimestamp, updateDoc } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { db, storage } from '../firebase';
 import { ArrowLeft, Save, Image as ImageIcon } from 'lucide-react';
@@ -14,9 +14,10 @@ const ArtworkForm = () => {
     const [loadingInitialData, setLoadingInitialData] = useState(isEditMode);
     const [imageFile, setImageFile] = useState(null);
     const [imagePreview, setImagePreview] = useState(null);
+    const [collections, setCollections] = useState([]);
 
     const [formData, setFormData] = useState({
-        collectionId: 'portraits',
+        collectionId: '',
         title: '',
         medium: '',
         dimensions: '',
@@ -27,10 +28,25 @@ const ArtworkForm = () => {
     });
 
     useEffect(() => {
-        if (!isEditMode) return;
-
-        const fetchArtwork = async () => {
+        const fetchFormDependencies = async () => {
             try {
+                const collectionsSnapshot = await getDocs(collection(db, 'collections'));
+                const collectionOptions = collectionsSnapshot.docs
+                    .map((collectionDoc) => ({
+                        id: collectionDoc.id,
+                        ...collectionDoc.data(),
+                    }))
+                    .sort((a, b) => String(a.number || '').localeCompare(String(b.number || ''), undefined, { numeric: true }));
+                setCollections(collectionOptions);
+
+                if (!isEditMode) {
+                    setFormData((prev) => ({
+                        ...prev,
+                        collectionId: prev.collectionId || collectionOptions[0]?.id || '',
+                    }));
+                    return;
+                }
+
                 const artworkSnapshot = await getDoc(doc(db, 'artworks', id));
                 if (!artworkSnapshot.exists()) {
                     toast.error('Artwork not found.');
@@ -40,7 +56,7 @@ const ArtworkForm = () => {
 
                 const artworkData = artworkSnapshot.data();
                 setFormData({
-                    collectionId: artworkData.collectionId || 'portraits',
+                    collectionId: artworkData.collectionId || collectionOptions[0]?.id || '',
                     title: artworkData.title || '',
                     medium: artworkData.medium || '',
                     dimensions: artworkData.dimensions || '',
@@ -51,15 +67,17 @@ const ArtworkForm = () => {
                 });
                 setImagePreview(artworkData.image || null);
             } catch (error) {
-                console.error('Error fetching artwork: ', error);
-                toast.error('Failed to load artwork.');
-                navigate('/collections');
+                console.error('Error fetching artwork form dependencies: ', error);
+                toast.error(isEditMode ? 'Failed to load artwork.' : 'Failed to load collections.');
+                if (isEditMode) {
+                    navigate('/collections');
+                }
             } finally {
                 setLoadingInitialData(false);
             }
         };
 
-        fetchArtwork();
+        fetchFormDependencies();
     }, [id, isEditMode, navigate]);
 
     const handleChange = (e) => {
@@ -80,6 +98,10 @@ const ArtworkForm = () => {
 
         if (!formData.title.trim()) {
             toast.error("Please provide an artwork title.");
+            return;
+        }
+        if (!formData.collectionId) {
+            toast.error("Please select a collection.");
             return;
         }
         if (!imageFile && !imagePreview) {
@@ -152,9 +174,10 @@ const ArtworkForm = () => {
                         <div className="form-group">
                             <label>Collection *</label>
                             <select name="collectionId" value={formData.collectionId} onChange={handleChange} required>
-                                <option value="portraits">Portraits</option>
-                                <option value="wildlife">Wildlife</option>
-                                <option value="prints">Prints</option>
+                                <option value="">Select a collection</option>
+                                {collections.map((item) => (
+                                    <option key={item.id} value={item.id}>{item.title || item.id}</option>
+                                ))}
                             </select>
                         </div>
                         <div className="form-group">

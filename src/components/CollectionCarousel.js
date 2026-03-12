@@ -31,6 +31,13 @@ const icons = {
       <path d="M33 36l2 2 4-4" stroke="currentColor" strokeWidth="1.3" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   ),
+  default: (
+    <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
+      <rect x="9" y="9" width="30" height="30" rx="4" stroke="currentColor" strokeWidth="1.2" />
+      <path d="M17 29l6-8 4 5 4-5 6 8" stroke="currentColor" strokeWidth="1.2" strokeLinecap="round" strokeLinejoin="round" />
+      <circle cx="19" cy="18" r="2.5" fill="currentColor" />
+    </svg>
+  ),
 };
 
 /* ── PREVIEW GRIDS ── */
@@ -133,7 +140,7 @@ function CollectionCard({ col }) {
       <div className="cc-card__face" onClick={handleCardClick} style={{ cursor: 'pointer' }}>
         <div className="cc-card__number">{col.number}</div>
         <div className="cc-card__icon" style={{ color: col.accent }}>
-          {icons[col.id]}
+          {icons[col.id] || icons.default}
         </div>
         <h3 className="cc-card__title">{col.title}</h3>
         <p className="cc-card__desc">{col.desc}</p>
@@ -201,7 +208,7 @@ export default function CollectionCarousel() {
           return {
             id: collectionDoc.id,
             ...data,
-            count: data.count || `${artworkCount} Artworks`,
+            count: `${artworkCount} Artworks`,
           };
         });
 

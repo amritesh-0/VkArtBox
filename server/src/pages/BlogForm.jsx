@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { collection, addDoc, doc, getDoc, serverTimestamp, updateDoc } from 'firebase/firestore';
+import { collection, addDoc, doc, getDoc, getDocs, orderBy, query, serverTimestamp, updateDoc } from 'firebase/firestore';
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { db, storage } from '../firebase';
 import { ArrowLeft, Save, Image as ImageIcon } from 'lucide-react';
@@ -14,6 +14,7 @@ const BlogForm = () => {
     const [loadingInitialData, setLoadingInitialData] = useState(isEditMode);
     const [imageFile, setImageFile] = useState(null);
     const [imagePreview, setImagePreview] = useState(null);
+    const [categoryOptions, setCategoryOptions] = useState([]);
 
     const [formData, setFormData] = useState({
         title: '',
@@ -32,10 +33,20 @@ const BlogForm = () => {
     });
 
     useEffect(() => {
-        if (!isEditMode) return;
-
-        const fetchBlog = async () => {
+        const fetchFormDependencies = async () => {
             try {
+                const categoriesSnapshot = await getDocs(query(collection(db, 'blogs'), orderBy('createdAt', 'desc')));
+                const categories = [...new Set(
+                    categoriesSnapshot.docs
+                        .map((blogDoc) => blogDoc.data().category)
+                        .filter(Boolean)
+                )];
+                setCategoryOptions(categories);
+
+                if (!isEditMode) {
+                    return;
+                }
+
                 const blogSnapshot = await getDoc(doc(db, 'blogs', id));
                 if (!blogSnapshot.exists()) {
                     toast.error('Blog post not found.');
@@ -61,15 +72,17 @@ const BlogForm = () => {
                 });
                 setImagePreview(blogData.image || null);
             } catch (error) {
-                console.error('Error fetching blog: ', error);
-                toast.error('Failed to load blog post.');
-                navigate('/blogs');
+                console.error('Error fetching blog form dependencies: ', error);
+                toast.error(isEditMode ? 'Failed to load blog post.' : 'Failed to load blog categories.');
+                if (isEditMode) {
+                    navigate('/blogs');
+                }
             } finally {
                 setLoadingInitialData(false);
             }
         };
 
-        fetchBlog();
+        fetchFormDependencies();
     }, [id, isEditMode, navigate]);
 
     const handleChange = (e) => {
@@ -186,13 +199,20 @@ const BlogForm = () => {
                     <div className="form-group-row">
                         <div className="form-group">
                             <label>Category *</label>
-                            <select name="category" value={formData.category} onChange={handleChange} required className="admin-select">
-                                <option value="">Select a Category</option>
-                                <option value="Art History">Art History</option>
-                                <option value="Art Tools">Art Tools</option>
-                                <option value="Stories of Artwork">Stories of Artwork</option>
-                                <option value="Stories of Artist">Stories of Artist</option>
-                            </select>
+                            <input
+                                type="text"
+                                name="category"
+                                value={formData.category}
+                                onChange={handleChange}
+                                required
+                                list="blog-category-options"
+                                placeholder="e.g. Art History"
+                            />
+                            <datalist id="blog-category-options">
+                                {categoryOptions.map((category) => (
+                                    <option key={category} value={category} />
+                                ))}
+                            </datalist>
                         </div>
                         <div className="form-group">
                             <label>Tags (comma separated)</label>
