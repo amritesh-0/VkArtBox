@@ -1,0 +1,198 @@
+.career-application-page {
+    padding: 140px 5% 100px;
+    max-width: 1280px;
+    margin: 0 auto;
+}
+
+.career-application-hero {
+    max-width: 760px;
+    margin-bottom: 56px;
+}
+
+.career-application-kicker {
+    display: inline-block;
+    margin-bottom: 16px;
+    font-family: var(--font-ui);
+    font-size: 0.82rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--sienna);
+}
+
+.career-application-hero h1 {
+    margin: 0 0 18px;
+    font-size: clamp(2.1rem, 5vw, 3.4rem);
+}
+
+.career-application-hero p {
+    margin: 0;
+    max-width: 680px;
+    color: var(--graphite);
+    font-size: 0.98rem;
+    line-height: 1.7;
+}
+
+.career-application-shell {
+    display: grid;
+    grid-template-columns: minmax(260px, 320px) minmax(0, 1fr);
+    gap: 32px;
+    align-items: start;
+}
+
+.career-application-aside,
+.career-application-card {
+    background: var(--paper-white);
+    border: 1px solid var(--gold-dim);
+    border-radius: 10px;
+    box-shadow: 0 18px 50px rgba(43, 38, 34, 0.08);
+}
+
+.career-application-aside {
+    padding: 28px;
+    position: sticky;
+    top: 120px;
+}
+
+.career-application-aside h2 {
+    margin: 0 0 16px;
+    font-size: 1.45rem;
+    color: var(--charcoal);
+}
+
+.career-application-aside ul {
+    margin: 0 0 24px;
+    padding-left: 18px;
+    color: var(--graphite);
+    font-size: 0.95rem;
+    line-height: 1.7;
+}
+
+.career-application-back {
+    color: var(--sienna);
+    text-decoration: none;
+    font-family: var(--font-ui);
+    font-size: 0.9rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.career-application-card {
+    padding: 32px;
+}
+
+.career-application-form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.career-form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px;
+}
+
+.career-application-form label {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.career-application-form span {
+    color: var(--charcoal);
+    font-family: var(--font-ui);
+    font-size: 0.76rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+}
+
+.career-application-form input,
+.career-application-form select,
+.career-application-form textarea {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid var(--gold-dim);
+    border-radius: 6px;
+    background: #e4ddd0;
+    color: #2f2922;
+    font-family: var(--font-ui);
+    font-size: 0.9rem;
+    box-sizing: border-box;
+}
+
+.career-application-form input::placeholder,
+.career-application-form textarea::placeholder {
+    color: #74695b;
+}
+
+.career-application-form input:focus,
+.career-application-form select:focus,
+.career-application-form textarea:focus {
+    outline: none;
+    border-color: var(--sienna);
+    box-shadow: 0 0 0 3px rgba(135, 82, 46, 0.12);
+}
+
+.career-file-field strong {
+    color: var(--pencil);
+    font-family: var(--font-ui);
+    font-size: 0.82rem;
+    font-weight: 500;
+}
+
+.career-form-message {
+    padding: 14px 16px;
+    border-radius: 6px;
+    font-family: var(--font-ui);
+    font-size: 0.86rem;
+}
+
+.career-form-message.success {
+    background: rgba(43, 122, 72, 0.12);
+    color: #1f6a3c;
+    border: 1px solid rgba(43, 122, 72, 0.24);
+}
+
+.career-form-message.error {
+    background: rgba(159, 35, 35, 0.1);
+    color: #8f2020;
+    border: 1px solid rgba(159, 35, 35, 0.2);
+}
+
+.career-submit-btn {
+    align-self: flex-start;
+}
+
+.career-submit-btn:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+}
+
+@media (max-width: 900px) {
+    .career-application-shell {
+        grid-template-columns: 1fr;
+    }
+
+    .career-application-aside {
+        position: static;
+    }
+}
+
+@media (max-width: 768px) {
+    .career-application-page {
+        padding-top: 108px;
+    }
+
+    .career-form-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .career-application-card,
+    .career-application-aside {
+        padding: 24px;
+    }
+
+    .career-submit-btn {
+        width: 100%;
+    }
+}

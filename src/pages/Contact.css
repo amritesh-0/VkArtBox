@@ -161,10 +161,34 @@
     margin-top: 10px;
 }
 
+.contact-submit:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
 .contact-submit:hover {
     background: white;
     color: black;
     transform: translateY(-2px);
+}
+
+.contact-form-message {
+    padding: 12px 14px;
+    border-radius: 6px;
+    font-family: var(--font-ui);
+    font-size: 0.84rem;
+}
+
+.contact-form-message.success {
+    background: rgba(43, 122, 72, 0.12);
+    color: #1f6a3c;
+    border: 1px solid rgba(43, 122, 72, 0.24);
+}
+
+.contact-form-message.error {
+    background: rgba(159, 35, 35, 0.1);
+    color: #8f2020;
+    border: 1px solid rgba(159, 35, 35, 0.2);
 }
 
 @media (max-width: 1024px) {

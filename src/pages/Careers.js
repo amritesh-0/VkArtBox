@@ -1,8 +1,10 @@
 import React, { useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './Careers.css';
 
 export default function Careers() {
     const sectionRef = useRef(null);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const els = sectionRef.current?.querySelectorAll('.reveal');
@@ -102,7 +104,12 @@ export default function Careers() {
                                 </div>
                                 <p>{p.description}</p>
                             </div>
-                            <button className="btn-outline">Apply Now</button>
+                            <button
+                                className="btn-outline"
+                                onClick={() => navigate(`/careers/apply?role=${encodeURIComponent(p.title)}`)}
+                            >
+                                Apply Now
+                            </button>
                         </div>
                     ))}
                 </div>
@@ -116,7 +123,9 @@ export default function Careers() {
                         We're always looking for exceptional talent. If you're passionate about art
                         and believe you'd be a great fit, reach out to us.
                     </p>
-                    <a href="mailto:careers@vkartbox.com" className="btn-gold">Get In Touch</a>
+                    <button className="btn-gold" onClick={() => navigate('/careers/apply')}>
+                        Start Application
+                    </button>
                 </div>
             </section>
         </div>

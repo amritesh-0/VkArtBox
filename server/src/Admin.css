@@ -418,6 +418,173 @@ h6 {
     color: var(--admin-text-secondary);
 }
 
+.application-card {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    padding: 22px;
+    border: 1px solid var(--admin-border);
+    background: rgba(0, 0, 0, 0.12);
+    border-radius: 8px;
+}
+
+.application-card__header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.application-card__header h3 {
+    margin: 4px 0 0;
+    font-size: 1.3rem;
+}
+
+.application-card__eyebrow {
+    margin: 0;
+    font-family: var(--font-ui);
+    font-size: 0.68rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--admin-text-secondary);
+}
+
+.application-card__meta {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    color: var(--admin-text-secondary);
+    font-family: var(--font-ui);
+    font-size: 0.84rem;
+}
+
+.application-card__meta span {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.application-card__link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--admin-accent);
+    text-decoration: none;
+    font-family: var(--font-ui);
+    font-size: 0.82rem;
+}
+
+.application-card__section h4 {
+    margin: 0 0 8px;
+    font-size: 0.84rem;
+    font-family: var(--font-ui);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--admin-text-secondary);
+}
+
+.application-card__section p {
+    margin: 0;
+    line-height: 1.7;
+    color: var(--admin-text-primary);
+    font-size: 0.9rem;
+}
+
+.application-card__footer {
+    padding-top: 14px;
+    border-top: 1px solid var(--admin-border);
+    color: var(--admin-text-secondary);
+    font-family: var(--font-ui);
+    font-size: 0.76rem;
+}
+
+.submissions-table td {
+    vertical-align: middle;
+    font-size: 0.84rem;
+}
+
+.btn-primary--compact {
+    padding: 8px 14px;
+    font-size: 0.72rem;
+}
+
+.detail-modal-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(10, 10, 10, 0.7);
+    backdrop-filter: blur(3px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    z-index: 1400;
+}
+
+.detail-modal {
+    width: min(780px, 100%);
+    max-height: min(85vh, 920px);
+    overflow-y: auto;
+    background: var(--admin-bg-secondary);
+    border: 1px solid var(--admin-border);
+    border-radius: 10px;
+    box-shadow: 0 28px 80px rgba(0, 0, 0, 0.45);
+}
+
+.detail-modal__header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 22px 22px 0;
+}
+
+.detail-modal__actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.detail-modal__close {
+    width: 34px;
+    height: 34px;
+    border: 1px solid var(--admin-border);
+    border-radius: 999px;
+    background: transparent;
+    color: var(--admin-text-primary);
+    cursor: pointer;
+    font-size: 1.4rem;
+    line-height: 1;
+}
+
+.detail-modal__content {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    padding: 20px 22px 22px;
+}
+
+.detail-modal__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+}
+
+@media (max-width: 768px) {
+    .submissions-table {
+        min-width: 720px;
+    }
+
+    .detail-modal-backdrop {
+        padding: 12px;
+    }
+
+    .detail-modal__header,
+    .detail-modal__content {
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+}
+
 /* Forms */
 .form-page {
     max-width: 800px;
@@ -618,6 +785,12 @@ h6 {
 }
 
 .status-badge.available {
+    background-color: rgba(212, 175, 55, 0.1);
+    color: var(--admin-accent);
+    border-color: var(--admin-accent);
+}
+
+.status-badge.new {
     background-color: rgba(212, 175, 55, 0.1);
     color: var(--admin-accent);
     border-color: var(--admin-accent);

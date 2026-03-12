@@ -10,6 +10,8 @@ import BlogForm from './pages/BlogForm';
 import ArtworkForm from './pages/ArtworkForm';
 import Login from './pages/Login';
 import Settings from './pages/Settings';
+import CareerApplications from './pages/CareerApplications';
+import ContactMessages from './pages/ContactMessages';
 import './Admin.css';
 
 function App() {
@@ -36,6 +38,8 @@ function App() {
               <Route path="collections" element={<ManageCollections />} />
               <Route path="collections/new" element={<ArtworkForm />} />
               <Route path="collections/:id/edit" element={<ArtworkForm />} />
+              <Route path="applications" element={<CareerApplications />} />
+              <Route path="contacts" element={<ContactMessages />} />
               <Route path="settings" element={<Settings />} />
             </Route>
           </Route>

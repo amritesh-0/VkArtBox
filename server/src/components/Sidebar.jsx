@@ -1,5 +1,5 @@
 import { NavLink } from 'react-router-dom';
-import { LayoutDashboard, FileText, Image as ImageIcon, LogOut, Settings, X } from 'lucide-react';
+import { BriefcaseBusiness, FileText, Image as ImageIcon, LayoutDashboard, LogOut, Mail, Settings, X } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { useAuth } from './AuthProvider';
 
@@ -37,6 +37,14 @@ const Sidebar = ({ isOpen, onClose }) => {
                 <NavLink to="/collections" className={({ isActive }) => (isActive ? 'nav-item active' : 'nav-item')} onClick={onClose}>
                     <ImageIcon size={20} />
                     <span>Manage Collections</span>
+                </NavLink>
+                <NavLink to="/applications" className={({ isActive }) => (isActive ? 'nav-item active' : 'nav-item')} onClick={onClose}>
+                    <BriefcaseBusiness size={20} />
+                    <span>Applications</span>
+                </NavLink>
+                <NavLink to="/contacts" className={({ isActive }) => (isActive ? 'nav-item active' : 'nav-item')} onClick={onClose}>
+                    <Mail size={20} />
+                    <span>Contact Messages</span>
                 </NavLink>
                 <div className="nav-divider"></div>
                 <NavLink to="/settings" className={({ isActive }) => (isActive ? 'nav-item active' : 'nav-item')} onClick={onClose}>

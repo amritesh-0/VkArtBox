@@ -8,23 +8,29 @@ const Dashboard = () => {
     const [stats, setStats] = useState({
         blogs: 0,
         artworks: 0,
-        collections: 0
+        collections: 0,
+        applications: 0,
+        contacts: 0,
     });
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const fetchStats = async () => {
             try {
-                const [blogsSnapshot, artSnapshot, collectionsSnapshot] = await Promise.all([
+                const [blogsSnapshot, artSnapshot, collectionsSnapshot, applicationsSnapshot, contactsSnapshot] = await Promise.all([
                     getCountFromServer(collection(db, 'blogs')),
                     getCountFromServer(collection(db, 'artworks')),
                     getCountFromServer(collection(db, 'collections')),
+                    getCountFromServer(collection(db, 'careerApplications')),
+                    getCountFromServer(collection(db, 'contactMessages')),
                 ]);
 
                 setStats({
                     blogs: blogsSnapshot.data().count,
                     artworks: artSnapshot.data().count,
                     collections: collectionsSnapshot.data().count,
+                    applications: applicationsSnapshot.data().count,
+                    contacts: contactsSnapshot.data().count,
                 });
             } catch (error) {
                 console.error("Error fetching stats: ", error);
@@ -63,6 +69,18 @@ const Dashboard = () => {
                         <div className="stat-card">
                             <h3 className="stat-title">Active Collections</h3>
                             <p className="stat-value">{stats.collections}</p>
+                        </div>
+                    </Link>
+                    <Link to="/applications" style={{ textDecoration: 'none' }}>
+                        <div className="stat-card">
+                            <h3 className="stat-title">Career Applications</h3>
+                            <p className="stat-value">{stats.applications}</p>
+                        </div>
+                    </Link>
+                    <Link to="/contacts" style={{ textDecoration: 'none' }}>
+                        <div className="stat-card">
+                            <h3 className="stat-title">Contact Messages</h3>
+                            <p className="stat-value">{stats.contacts}</p>
                         </div>
                     </Link>
                 </div>
