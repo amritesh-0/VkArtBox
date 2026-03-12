@@ -212,7 +212,7 @@ export default function CollectionCarousel() {
           };
         });
 
-        setCollectionList(dbCollections);
+        setCollectionList(dbCollections.filter((collectionItem) => collectionItem.id !== 'prints'));
       } catch (error) {
         console.error('Error fetching collections:', error);
         setCollectionList([]);

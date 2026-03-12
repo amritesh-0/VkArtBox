@@ -339,6 +339,17 @@
     white-space: nowrap;
 }
 
+.btn-gold--mini:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+}
+
+.comments__message {
+    font-family: var(--font-ui);
+    font-size: 0.8rem;
+    color: var(--sepia);
+}
+
 .comments__input--small::placeholder,
 .comments__input--mini::placeholder {
     color: rgba(59, 51, 43, 0.6);

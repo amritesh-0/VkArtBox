@@ -7,7 +7,6 @@ import './Footer.css';
 const shopLinks = [
   { label: 'Portraits', href: '/collection/portraits' },
   { label: 'Wildlife', href: '/collection/wildlife' },
-  { label: 'Prints', href: '/collection/prints' },
 ];
 
 const exploreLinks = [

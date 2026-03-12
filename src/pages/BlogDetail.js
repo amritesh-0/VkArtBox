@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { collection, doc, getDoc, getDocs, orderBy, query } from 'firebase/firestore';
+import { collection, doc, getDocs, onSnapshot, orderBy, query, updateDoc } from 'firebase/firestore';
 import { db } from '../firebase';
 import { SOCIAL_LINKS, SocialIcon } from '../components/SocialLinks';
 import './BlogDetail.css';
@@ -12,36 +12,53 @@ export default function BlogDetail() {
     const [post, setPost] = useState(null);
     const [allPosts, setAllPosts] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [commentForm, setCommentForm] = useState({
+        text: '',
+        author: '',
+        email: '',
+    });
+    const [commentSubmitting, setCommentSubmitting] = useState(false);
+    const [commentMessage, setCommentMessage] = useState('');
 
     useEffect(() => {
         window.scrollTo(0, 0);
     }, [id]);
 
     useEffect(() => {
-        const fetchPostData = async () => {
+        const postRef = doc(db, 'blogs', id);
+        const unsubscribe = onSnapshot(
+            postRef,
+            (postSnapshot) => {
+                if (postSnapshot.exists()) {
+                    setPost({ id: postSnapshot.id, ...postSnapshot.data() });
+                } else {
+                    setPost(null);
+                }
+            },
+            (error) => {
+                console.error('Error subscribing to blog detail:', error);
+                setPost(null);
+            }
+        );
+
+        const fetchSidebarData = async () => {
             try {
-                const postDoc = await getDoc(doc(db, 'blogs', id));
                 const latestQuery = query(collection(db, 'blogs'), orderBy('createdAt', 'desc'));
                 const latestSnapshot = await getDocs(latestQuery);
                 const latestPosts = latestSnapshot.docs.map((blogDoc) => ({ id: blogDoc.id, ...blogDoc.data() }));
 
                 setAllPosts(latestPosts);
-
-                if (postDoc.exists()) {
-                    setPost({ id: postDoc.id, ...postDoc.data() });
-                } else {
-                    setPost(null);
-                }
             } catch (error) {
                 console.error('Error fetching blog detail:', error);
-                setPost(null);
                 setAllPosts([]);
             } finally {
                 setLoading(false);
             }
         };
 
-        fetchPostData();
+        fetchSidebarData();
+
+        return () => unsubscribe();
     }, [id]);
 
     useEffect(() => {
@@ -58,6 +75,50 @@ export default function BlogDetail() {
     const categories = [...new Set(allPosts.map((p) => p.category).filter(Boolean))].slice(0, 4);
     const tags = [...new Set(allPosts.flatMap((p) => p.tags || []).filter(Boolean))].slice(0, 5);
     const latestPosts = allPosts.filter((p) => p.id !== id).slice(0, 3);
+    const comments = post?.comments || [];
+
+    const handleCommentChange = (event) => {
+        const { name, value } = event.target;
+        setCommentForm((prev) => ({ ...prev, [name]: value }));
+    };
+
+    const handleCommentSubmit = async (event) => {
+        event.preventDefault();
+        if (!post) return;
+
+        const trimmedText = commentForm.text.trim();
+        const trimmedAuthor = commentForm.author.trim();
+        const trimmedEmail = commentForm.email.trim();
+
+        if (!trimmedText || !trimmedAuthor || !trimmedEmail) {
+            setCommentMessage('Please fill in your reflection, name, and email.');
+            return;
+        }
+
+        setCommentSubmitting(true);
+        setCommentMessage('');
+
+        const nextComment = {
+            id: Date.now(),
+            author: trimmedAuthor,
+            email: trimmedEmail,
+            date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+            text: trimmedText,
+        };
+
+        try {
+            await updateDoc(doc(db, 'blogs', id), {
+                comments: [...comments, nextComment],
+            });
+            setCommentForm({ text: '', author: '', email: '' });
+            setCommentMessage('Your reflection has been added.');
+        } catch (error) {
+            console.error('Error saving comment:', error);
+            setCommentMessage('Failed to post your reflection. Please try again.');
+        } finally {
+            setCommentSubmitting(false);
+        }
+    };
 
     if (loading) {
         return (
@@ -172,13 +233,13 @@ export default function BlogDetail() {
                         <section className="blog-detail__comments reveal reveal-delay-3">
                             <div className="comments__header">
                                 <h4 className="comments__title">Reflections</h4>
-                                <span className="comments__count">({post.comments?.length || 0})</span>
+                                <span className="comments__count">({comments.length})</span>
                             </div>
 
                             {/* Past Comments List */}
-                            {post.comments && post.comments.length > 0 && (
+                            {comments.length > 0 && (
                                 <div className="comments__list">
-                                    {post.comments.map(comment => (
+                                    {comments.map((comment) => (
                                         <div key={comment.id} className="comment__item">
                                             <div className="comment__meta">
                                                 <span className="comment__author">{comment.author}</span>
@@ -193,13 +254,36 @@ export default function BlogDetail() {
                             {/* Compact Add Comment Form */}
                             <div className="comments__add">
                                 <h5 className="comments__add-title">Add a Thought</h5>
-                                <form className="comments__form--compact" onSubmit={e => e.preventDefault()}>
-                                    <textarea placeholder="Your reflection..." className="comments__input--small"></textarea>
+                                <form className="comments__form--compact" onSubmit={handleCommentSubmit}>
+                                    <textarea
+                                        name="text"
+                                        placeholder="Your reflection..."
+                                        className="comments__input--small"
+                                        value={commentForm.text}
+                                        onChange={handleCommentChange}
+                                    ></textarea>
                                     <div className="comments__form-row--compact">
-                                        <input type="text" placeholder="Name" className="comments__input--mini" />
-                                        <input type="email" placeholder="Email" className="comments__input--mini" />
-                                        <button type="submit" className="btn-gold btn-gold--mini">Post</button>
+                                        <input
+                                            type="text"
+                                            name="author"
+                                            placeholder="Name"
+                                            className="comments__input--mini"
+                                            value={commentForm.author}
+                                            onChange={handleCommentChange}
+                                        />
+                                        <input
+                                            type="email"
+                                            name="email"
+                                            placeholder="Email"
+                                            className="comments__input--mini"
+                                            value={commentForm.email}
+                                            onChange={handleCommentChange}
+                                        />
+                                        <button type="submit" className="btn-gold btn-gold--mini" disabled={commentSubmitting}>
+                                            {commentSubmitting ? 'Posting...' : 'Post'}
+                                        </button>
                                     </div>
+                                    {commentMessage && <div className="comments__message">{commentMessage}</div>}
                                 </form>
                             </div>
                         </section>
