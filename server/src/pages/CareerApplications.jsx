@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { collection, getDocs, orderBy, query } from 'firebase/firestore';
+import { collection, deleteDoc, doc, getDocs, orderBy, query } from 'firebase/firestore';
 import { getDownloadURL, ref } from 'firebase/storage';
 import { db } from '../firebase';
 import { storage } from '../firebase';
-import { BriefcaseBusiness, ExternalLink, Mail, MapPin, Phone } from 'lucide-react';
+import { BriefcaseBusiness, ExternalLink, Mail, MapPin, Phone, Trash2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 const formatSubmittedAt = (submittedAt) => {
@@ -54,6 +54,23 @@ const CareerApplications = () => {
         fetchApplications();
     }, []);
 
+    const handleDelete = async (application) => {
+        if (!window.confirm(`Delete application from ${application.fullName}?`)) {
+            return;
+        }
+
+        const toastId = toast.loading('Deleting application...');
+        try {
+            await deleteDoc(doc(db, 'careerApplications', application.id));
+            setApplications((prev) => prev.filter((item) => item.id !== application.id));
+            setSelectedApplication((prev) => (prev?.id === application.id ? null : prev));
+            toast.success('Application deleted successfully.', { id: toastId });
+        } catch (error) {
+            console.error('Error deleting application:', error);
+            toast.error('Failed to delete application.', { id: toastId });
+        }
+    };
+
     return (
         <div>
             <div className="page-header">
@@ -89,6 +106,9 @@ const CareerApplications = () => {
                                                 <button className="btn-primary btn-primary--compact" onClick={() => setSelectedApplication(application)}>
                                                     View
                                                 </button>
+                                                <button className="btn-icon-danger btn-icon-danger--inline" onClick={() => handleDelete(application)}>
+                                                    <Trash2 size={16} />
+                                                </button>
                                             </td>
                                         </tr>
                                     ))}
@@ -105,6 +125,9 @@ const CareerApplications = () => {
                                             <h3>{selectedApplication.role || 'General Application'}</h3>
                                         </div>
                                         <div className="detail-modal__actions">
+                                            <button type="button" className="btn-icon-danger btn-icon-danger--inline" onClick={() => handleDelete(selectedApplication)}>
+                                                <Trash2 size={16} />
+                                            </button>
                                             <button type="button" className="detail-modal__close" onClick={() => setSelectedApplication(null)}>×</button>
                                         </div>
                                     </div>

@@ -1,13 +1,54 @@
 import React from 'react';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import logo from '../assets/vkartbox-logo.png';
 import { SOCIAL_LINKS, SocialIcon } from './SocialLinks';
 import './Footer.css';
 
-const shopLinks = ['Quick Sketch', 'Wildlife', 'Portraits', 'Prints'];
-const exploreLinks = ['Home', 'Journal', 'Events', 'Register'];
-const supportLinks = ['Privacy Policy', 'Contact Us', 'FAQ', 'Shipping'];
+const shopLinks = [
+  { label: 'Portraits', href: '/collection/portraits' },
+  { label: 'Wildlife', href: '/collection/wildlife' },
+  { label: 'Prints', href: '/collection/prints' },
+];
+
+const exploreLinks = [
+  { label: 'Collections', href: '/', id: 'collections' },
+  { label: 'Blogs', href: '/blogs' },
+  { label: 'Careers', href: '/careers' },
+];
+
+const supportLinks = [
+  { label: 'Contact Us', href: '/contact' },
+  { label: 'Apply Now', href: '/careers/apply' },
+  { label: 'Email Us', href: 'mailto:mail@vkartbox.com', external: true },
+];
 
 export default function Footer() {
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const handleNav = (link) => {
+    if (link.external) {
+      window.location.href = link.href;
+      return;
+    }
+
+    if (link.id) {
+      if (location.pathname === '/') {
+        const el = document.getElementById(link.id);
+        if (el) el.scrollIntoView({ behavior: 'smooth' });
+      } else {
+        navigate(link.href);
+        setTimeout(() => {
+          const el = document.getElementById(link.id);
+          if (el) el.scrollIntoView({ behavior: 'smooth' });
+        }, 100);
+      }
+      return;
+    }
+
+    navigate(link.href);
+  };
+
   return (
     <footer className="footer">
       <div className="footer__grid">
@@ -43,7 +84,11 @@ export default function Footer() {
         <div className="footer__col">
           <div className="footer__col-title">Shop</div>
           <ul className="footer__links">
-            {shopLinks.map(l => <li key={l}><button className="footer__link-btn" onClick={() => { }}>{l}</button></li>)}
+            {shopLinks.map((link) => (
+              <li key={link.label}>
+                <button className="footer__link-btn" onClick={() => handleNav(link)}>{link.label}</button>
+              </li>
+            ))}
           </ul>
         </div>
 
@@ -51,7 +96,11 @@ export default function Footer() {
         <div className="footer__col">
           <div className="footer__col-title">Explore</div>
           <ul className="footer__links">
-            {exploreLinks.map(l => <li key={l}><button className="footer__link-btn" onClick={() => { }}>{l}</button></li>)}
+            {exploreLinks.map((link) => (
+              <li key={link.label}>
+                <button className="footer__link-btn" onClick={() => handleNav(link)}>{link.label}</button>
+              </li>
+            ))}
           </ul>
         </div>
 
@@ -59,7 +108,11 @@ export default function Footer() {
         <div className="footer__col">
           <div className="footer__col-title">Support</div>
           <ul className="footer__links">
-            {supportLinks.map(l => <li key={l}><button className="footer__link-btn" onClick={() => { }}>{l}</button></li>)}
+            {supportLinks.map((link) => (
+              <li key={link.label}>
+                <button className="footer__link-btn" onClick={() => handleNav(link)}>{link.label}</button>
+              </li>
+            ))}
           </ul>
         </div>
 
@@ -76,7 +129,7 @@ export default function Footer() {
         <span className="footer__copy">
           Handcrafted with love © 2015 – {new Date().getFullYear()} VkArtBox. All rights reserved.
         </span>
-        <span className="footer__heart">Made in Indore, with love ♥</span>
+        <Link to="/contact" className="footer__heart">Made in Indore, with love</Link>
       </div>
     </footer>
   );

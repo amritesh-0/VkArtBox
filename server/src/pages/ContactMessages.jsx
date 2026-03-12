@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { collection, getDocs, orderBy, query } from 'firebase/firestore';
+import { collection, deleteDoc, doc, getDocs, orderBy, query } from 'firebase/firestore';
 import { db } from '../firebase';
-import { Mail, UserRound } from 'lucide-react';
+import { Mail, Trash2, UserRound } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 const formatSubmittedAt = (submittedAt) => {
@@ -38,6 +38,23 @@ const ContactMessages = () => {
         fetchMessages();
     }, []);
 
+    const handleDelete = async (message) => {
+        if (!window.confirm(`Delete message from ${message.fullName}?`)) {
+            return;
+        }
+
+        const toastId = toast.loading('Deleting contact message...');
+        try {
+            await deleteDoc(doc(db, 'contactMessages', message.id));
+            setMessages((prev) => prev.filter((item) => item.id !== message.id));
+            setSelectedMessage((prev) => (prev?.id === message.id ? null : prev));
+            toast.success('Contact message deleted successfully.', { id: toastId });
+        } catch (error) {
+            console.error('Error deleting contact message:', error);
+            toast.error('Failed to delete contact message.', { id: toastId });
+        }
+    };
+
     return (
         <div>
             <div className="page-header">
@@ -73,6 +90,9 @@ const ContactMessages = () => {
                                                 <button className="btn-primary btn-primary--compact" onClick={() => setSelectedMessage(message)}>
                                                     View
                                                 </button>
+                                                <button className="btn-icon-danger btn-icon-danger--inline" onClick={() => handleDelete(message)}>
+                                                    <Trash2 size={16} />
+                                                </button>
                                             </td>
                                         </tr>
                                     ))}
@@ -89,6 +109,9 @@ const ContactMessages = () => {
                                             <h3>{selectedMessage.subject || 'No subject'}</h3>
                                         </div>
                                         <div className="detail-modal__actions">
+                                            <button type="button" className="btn-icon-danger btn-icon-danger--inline" onClick={() => handleDelete(selectedMessage)}>
+                                                <Trash2 size={16} />
+                                            </button>
                                             <button type="button" className="detail-modal__close" onClick={() => setSelectedMessage(null)}>×</button>
                                         </div>
                                     </div>

@@ -508,6 +508,16 @@ h6 {
     font-size: 0.72rem;
 }
 
+.btn-icon-danger--inline {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    margin-left: 8px;
+    vertical-align: middle;
+}
+
 .detail-modal-backdrop {
     position: fixed;
     inset: 0;
