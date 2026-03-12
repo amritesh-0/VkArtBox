@@ -1,8 +1,43 @@
-# React + Vite
+# VkArtBox Admin
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Admin dashboard for managing VkArtBox content, collections, applications, and contact submissions.
 
-Currently, two official plugins are available:
+## Local Development
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+```bash
+npm install
+npm run dev
+```
+
+Default local URL: `http://localhost:5173`
+
+## Production Build
+
+```bash
+npm run build
+```
+
+## Vercel Deployment
+
+Deploy this app as a separate Vercel project with these settings:
+
+- Root Directory: `server`
+- Install Command: `npm install`
+- Build Command: `npm run build`
+- Output Directory: `dist`
+
+The included `vercel.json` handles SPA routing for `/login`, `/blogs`, `/collections`, `/applications`, `/contacts`, and `/settings`.
+
+Add these environment variables in Vercel using your Firebase web app config:
+
+```bash
+VITE_FIREBASE_API_KEY=
+VITE_FIREBASE_AUTH_DOMAIN=
+VITE_FIREBASE_PROJECT_ID=
+VITE_FIREBASE_STORAGE_BUCKET=
+VITE_FIREBASE_MESSAGING_SENDER_ID=
+VITE_FIREBASE_APP_ID=
+VITE_FIREBASE_MEASUREMENT_ID=
+```
+
+You can copy the variable names from `.env.example` for local setup.
