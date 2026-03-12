@@ -25,6 +25,5 @@ dist-ssr
 .env
 *.env
 *.tsbuildinfo
-firebase.js
 scripts/seed-firestore.mjs
 server/src/firebase.js
