@@ -3,8 +3,28 @@ import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import toast from 'react-hot-toast';
 import { LockKeyhole, Mail } from 'lucide-react';
-import { auth } from '../firebase';
+import { auth, isFirebaseConfigured, missingFirebaseEnvVars } from '../firebase';
 import { useAuth } from '../components/AuthProvider';
+
+function getLoginErrorMessage(error) {
+    switch (error?.code) {
+        case 'auth/invalid-credential':
+        case 'auth/wrong-password':
+        case 'auth/user-not-found':
+        case 'auth/invalid-email':
+            return 'Invalid email or password.';
+        case 'auth/invalid-api-key':
+            return 'Firebase API key is invalid or was not loaded from env.';
+        case 'auth/configuration-not-found':
+            return 'Firebase Auth configuration is missing for this app or API key. Check the Firebase web app config and enable Email/Password sign-in.';
+        case 'auth/network-request-failed':
+            return 'Network request failed while contacting Firebase Auth.';
+        case 'auth/operation-not-allowed':
+            return 'Email/password sign-in is not enabled in Firebase Authentication.';
+        default:
+            return error?.message || 'Admin login failed.';
+    }
+}
 
 const Login = () => {
     const navigate = useNavigate();
@@ -28,6 +48,11 @@ const Login = () => {
             return;
         }
 
+        if (!isFirebaseConfigured || !auth) {
+            toast.error(`Firebase auth is not configured. Missing env vars: ${missingFirebaseEnvVars.join(', ')}`);
+            return;
+        }
+
         setSubmitting(true);
         const toastId = toast.loading('Signing in...');
 
@@ -37,7 +62,7 @@ const Login = () => {
             navigate(destination, { replace: true });
         } catch (error) {
             console.error('Admin login failed:', error);
-            toast.error('Invalid credentials or access denied.', { id: toastId });
+            toast.error(getLoginErrorMessage(error), { id: toastId });
         } finally {
             setSubmitting(false);
         }
