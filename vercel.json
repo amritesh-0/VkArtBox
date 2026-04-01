@@ -5,6 +5,13 @@
   "outputDirectory": "build",
   "routes": [
     {
+      "src": "/admin",
+      "status": 308,
+      "headers": {
+        "Location": "https://admin.vkartbox.com"
+      }
+    },
+    {
       "handle": "filesystem"
     },
     {

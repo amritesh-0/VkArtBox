@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
@@ -11,6 +11,14 @@ import CollectionDetail from './pages/CollectionDetail';
 import Careers from './pages/Careers';
 import CareerApplication from './pages/CareerApplication';
 
+function AdminRedirect() {
+  useEffect(() => {
+    window.location.replace('https://admin.vkartbox.com');
+  }, []);
+
+  return null;
+}
+
 function App() {
   return (
     <BrowserRouter>
@@ -22,6 +30,7 @@ function App() {
         <Route path="/blogs" element={<Blogs />} />
         <Route path="/careers" element={<Careers />} />
         <Route path="/careers/apply" element={<CareerApplication />} />
+        <Route path="/admin" element={<AdminRedirect />} />
         <Route path="/blog/:id" element={<BlogDetail />} />
         <Route path="/collection/:id" element={<CollectionDetail />} />
       </Routes>
