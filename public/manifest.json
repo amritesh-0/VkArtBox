@@ -1,0 +1,16 @@
+{
+  "short_name": "VkArtBox",
+  "name": "VkArtBox — Art Lifts the Vision",
+  "icons": [
+    {
+      "src": "favicon.png",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/png"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#06061A",
+  "background_color": "#06061A",
+  "description": "VkArtBox — Art Lifts the Vision. Handcrafted fine art from Indore, India."
+}
