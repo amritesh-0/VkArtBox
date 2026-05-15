@@ -3,6 +3,23 @@
   "installCommand": "npm install",
   "buildCommand": "npm run build",
   "outputDirectory": "build",
+  "redirects": [
+    {
+      "source": "/shop.html",
+      "destination": "/#collections",
+      "permanent": true
+    },
+    {
+      "source": "/shop",
+      "destination": "/#collections",
+      "permanent": true
+    },
+    {
+      "source": "/Privacy-Policy.html",
+      "destination": "/privacy-policy",
+      "permanent": true
+    }
+  ],
   "routes": [
     {
       "src": "/admin",
