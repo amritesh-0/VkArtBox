@@ -5,6 +5,7 @@ import { SOCIAL_LINKS, SocialIcon } from './SocialLinks';
 import './Footer.css';
 
 const shopLinks = [
+  { label: 'All Collections', href: '/', id: 'collections' },
   { label: 'Portraits', href: '/collection/portraits' },
   { label: 'Wildlife', href: '/collection/wildlife' },
 ];
@@ -17,7 +18,7 @@ const exploreLinks = [
 
 const supportLinks = [
   { label: 'Contact Us', href: '/contact' },
-  { label: 'Apply Now', href: '/careers/apply' },
+  { label: 'Privacy Policy', href: '/privacy-policy' },
   { label: 'Email Us', href: 'mailto:mail@vkartbox.com', external: true },
 ];
 
