@@ -43,7 +43,7 @@ export default function Hero() {
         <div className="hero__top">
           <div className="hero__tagline">
             <span className="hero__tagline-line" />
-            Handcrafted Fine Art · India
+            <span>Handcrafted Fine Art · India</span>
           </div>
           <h1 className="hero__title">
             Creative <em>Mesmerizing</em><br />

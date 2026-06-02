@@ -202,6 +202,7 @@
 .hero__tagline {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 12px;
   font-family: var(--font-ui);
   font-size: 0.75rem;
@@ -209,6 +210,7 @@
   letter-spacing: 0.4em;
   color: var(--sepia);
   text-transform: uppercase;
+  line-height: 1.5;
 }
 
 .hero__tagline-line {
@@ -419,7 +421,11 @@
   .hero__tagline {
     letter-spacing: 0.22em;
     text-align: center;
-    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .hero__tagline-line {
+    display: none;
   }
 
   .hero__img-box {

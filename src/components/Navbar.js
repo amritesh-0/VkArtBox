@@ -91,7 +91,7 @@ export default function Navbar() {
           )}
         </button>
 
-        <button className="nav-cta btn-gold" onClick={() => handleNav(navLinks[2])}>
+        <button className="nav-cta btn-gold" onClick={() => handleNav(navLinks[1])}>
           View Collection
         </button>
       </div>
