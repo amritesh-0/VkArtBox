@@ -7,6 +7,7 @@ const navLinks = [
   { label: 'Home', href: '/', id: 'home' },
   { label: 'Collections', href: '/', id: 'collections' },
   { label: 'Blog', href: '/blogs' },
+  { label: 'Webinar', href: '/webinar' },
   { label: 'Contact', href: '/contact' },
 ];
 
@@ -91,9 +92,10 @@ export default function Navbar() {
           )}
         </button>
 
-        <button className="nav-cta btn-gold" onClick={() => handleNav(navLinks[1])}>
-          View Collection
-        </button>
+<button className="nav-cta btn-gold" onClick={() => handleNav(navLinks[3])}>
+  Join Webinar
+</button>
+
       </div>
 
       <button

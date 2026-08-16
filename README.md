@@ -76,12 +76,29 @@ REACT_APP_FIREBASE_MEASUREMENT_ID=
 
 FIREBASE_ADMIN_EMAIL=
 FIREBASE_ADMIN_PASSWORD=
+
+# Razorpay Webinar Checkout
+REACT_APP_RAZORPAY_KEY_ID=
+RAZORPAY_KEY_ID=
+RAZORPAY_KEY_SECRET=
 ```
 
 Notes:
 
 - `REACT_APP_*` variables are used by the public site
+- `REACT_APP_RAZORPAY_KEY_ID` is Razorpay's public Key ID and is safe to expose to the browser
+- `RAZORPAY_KEY_ID` and `RAZORPAY_KEY_SECRET` are used only by Vercel's payment API functions; never prefix the secret with `REACT_APP_`
 - `FIREBASE_ADMIN_EMAIL` and `FIREBASE_ADMIN_PASSWORD` are only used by the seed script when authenticated writes are required by Firebase rules
+
+### Webinar payment testing
+
+The demo Webinar is available at `/webinar` and currently charges ₹499. Razorpay needs a server-side order and signature verification, so `npm start` alone cannot perform an end-to-end checkout. For local payment testing, set the three Razorpay variables above and run the site through Vercel's local environment:
+
+```bash
+npx vercel dev
+```
+
+Use Razorpay test keys and its test payment details during local testing. Configure the same variables in the public Vercel project's environment before deploying live checkout.
 
 ### Admin app: `server/.env`
 

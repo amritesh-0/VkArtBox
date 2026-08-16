@@ -11,6 +11,7 @@ import CollectionDetail from './pages/CollectionDetail';
 import Careers from './pages/Careers';
 import CareerApplication from './pages/CareerApplication';
 import PrivacyPolicy from './pages/PrivacyPolicy';
+import Webinar from './pages/Webinar';
 
 function AdminRedirect() {
   useEffect(() => {
@@ -35,6 +36,7 @@ function App() {
         <Route path="/blog/:id" element={<BlogDetail />} />
         <Route path="/collection/:id" element={<CollectionDetail />} />
         <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+        <Route path="/webinar" element={<Webinar />} />
       </Routes>
       <Footer />
     </BrowserRouter>
