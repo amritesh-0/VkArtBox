@@ -1,6 +1,6 @@
 const https = require('https');
 
-const WEBINAR_AMOUNT = 49900;
+const WEBINAR_AMOUNT = 100;
 
 function readBody(req) {
   if (typeof req.body === 'object' && req.body) return Promise.resolve(req.body);
