@@ -13,6 +13,7 @@ import Settings from './pages/Settings';
 import CareerApplications from './pages/CareerApplications';
 import ContactMessages from './pages/ContactMessages';
 import WebinarRegistrations from './pages/WebinarRegistrations';
+import ManageWebinars from './pages/ManageWebinars';
 import './Admin.css';
 
 function App() {
@@ -42,6 +43,7 @@ function App() {
               <Route path="applications" element={<CareerApplications />} />
               <Route path="contacts" element={<ContactMessages />} />
               <Route path="webinar-registrations" element={<WebinarRegistrations />} />
+              <Route path="webinars" element={<ManageWebinars />} />
               <Route path="settings" element={<Settings />} />
             </Route>
           </Route>

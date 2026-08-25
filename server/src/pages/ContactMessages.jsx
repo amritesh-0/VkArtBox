@@ -12,6 +12,12 @@ const formatSubmittedAt = (submittedAt) => {
     return String(submittedAt);
 };
 
+const replyLink = (message) => {
+    const subject = `Re: ${message.subject || 'Your message to VkArtBox'}`;
+    const body = `Hi ${message.fullName || ''},\n\n\n\n--- Original message ---\n${message.message || ''}`;
+    return `mailto:${message.email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+};
+
 const ContactMessages = () => {
     const [messages, setMessages] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -84,12 +90,15 @@ const ContactMessages = () => {
                                         <tr key={message.id}>
                                             <td className="font-medium">{message.fullName}</td>
                                             <td>{message.subject || 'No subject'}</td>
-                                            <td>{message.email}</td>
+                                            <td><a className="admin-email-link" href={replyLink(message)}>{message.email}</a></td>
                                             <td>{formatSubmittedAt(message.submittedAt)}</td>
                                             <td>
                                                 <button className="btn-primary btn-primary--compact" onClick={() => setSelectedMessage(message)}>
                                                     View
                                                 </button>
+                                                <a className="btn-primary btn-primary--compact" href={replyLink(message)}>
+                                                    Reply
+                                                </a>
                                                 <button className="btn-icon-danger btn-icon-danger--inline" onClick={() => handleDelete(message)}>
                                                     <Trash2 size={16} />
                                                 </button>
@@ -119,13 +128,17 @@ const ContactMessages = () => {
                                     <div className="detail-modal__content">
                                         <div className="application-card__meta">
                                             <span><UserRound size={15} /> {selectedMessage.fullName}</span>
-                                            <span><Mail size={15} /> {selectedMessage.email}</span>
+                                            <a className="admin-email-link" href={replyLink(selectedMessage)}><Mail size={15} /> {selectedMessage.email}</a>
                                         </div>
 
                                         <div className="application-card__section">
                                             <h4>Message</h4>
                                             <p>{selectedMessage.message}</p>
                                         </div>
+
+                                        <a className="btn-primary contact-reply-button" href={replyLink(selectedMessage)}>
+                                            <Mail size={16} /> Reply by email
+                                        </a>
 
                                         <div className="application-card__footer">
                                             <span>Submitted: {formatSubmittedAt(selectedMessage.submittedAt)}</span>

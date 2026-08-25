@@ -437,6 +437,41 @@ h6 {
     font: inherit;
 }
 
+.admin-table a,
+.admin-email-link {
+    color: var(--admin-accent);
+    text-decoration-color: rgba(212, 175, 55, 0.55);
+}
+
+.admin-table a:hover,
+.admin-email-link:hover {
+    color: #fff1a8;
+}
+
+.admin-email-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    overflow-wrap: anywhere;
+}
+
+a.btn-primary.btn-primary--compact {
+    display: inline-flex;
+    align-items: center;
+    margin-left: 8px;
+    text-decoration: none;
+}
+
+.contact-reply-button {
+    width: fit-content;
+    text-decoration: none;
+}
+
+.webinar-editor { margin-bottom: 24px; }
+.webinar-editor__heading { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+.webinar-editor__heading h3 { margin: 0; font-size: 1.3rem; }
+.webinar-published-toggle { display: flex; align-items: center; gap: 9px; color: var(--admin-text-secondary); font-family: var(--font-ui); font-size: .88rem; }
+
 .btn-primary {
     font-family: var(--font-ui);
     background-color: transparent;

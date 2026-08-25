@@ -1,5 +1,5 @@
 import { NavLink } from 'react-router-dom';
-import { BriefcaseBusiness, FileText, Image as ImageIcon, LayoutDashboard, LogOut, Mail, Settings, TicketCheck, X } from 'lucide-react';
+import { BriefcaseBusiness, FileText, Image as ImageIcon, LayoutDashboard, LogOut, Mail, Presentation, Settings, TicketCheck, X } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { useAuth } from './AuthProvider';
 
@@ -49,6 +49,10 @@ const Sidebar = ({ isOpen, onClose }) => {
                 <NavLink to="/webinar-registrations" className={({ isActive }) => (isActive ? 'nav-item active' : 'nav-item')} onClick={onClose}>
                     <TicketCheck size={20} />
                     <span>Webinar Registrations</span>
+                </NavLink>
+                <NavLink to="/webinars" className={({ isActive }) => (isActive ? 'nav-item active' : 'nav-item')} onClick={onClose}>
+                    <Presentation size={20} />
+                    <span>Manage Webinars</span>
                 </NavLink>
                 <div className="nav-divider"></div>
                 <NavLink to="/settings" className={({ isActive }) => (isActive ? 'nav-item active' : 'nav-item')} onClick={onClose}>

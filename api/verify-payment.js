@@ -2,8 +2,6 @@ const crypto = require('crypto');
 const https = require('https');
 const { FieldValue, getAdminDb } = require('./firebase-admin');
 
-const WEBINAR_AMOUNT = 100;
-const WEBINAR_EVENT = 'Find Your Artistic Voice';
 
 function readBody(req) {
   if (typeof req.body === 'object' && req.body) return Promise.resolve(req.body);
@@ -42,7 +40,7 @@ module.exports = async (req, res) => {
 
     const order = await razorpayGet(`/v1/orders/${encodeURIComponent(razorpay_order_id)}`);
     const attendee = order.notes || {};
-    if (order.amount !== WEBINAR_AMOUNT || order.currency !== 'INR' || attendee.event !== WEBINAR_EVENT || !attendee.attendee_name || !attendee.attendee_email || !attendee.attendee_phone) {
+    if (!Number.isInteger(order.amount) || order.amount <= 0 || order.currency !== 'INR' || !attendee.webinar_id || !attendee.event || !attendee.attendee_name || !attendee.attendee_email || !attendee.attendee_phone) {
       return res.status(400).json({ verified: false, message: 'This payment order is not a valid webinar registration.' });
     }
 
@@ -52,6 +50,9 @@ module.exports = async (req, res) => {
       email: attendee.attendee_email,
       phone: attendee.attendee_phone,
       event: attendee.event,
+      webinarId: attendee.webinar_id,
+      eventDate: attendee.event_date || '',
+      eventTime: attendee.event_time || '',
       amount: order.amount,
       currency: order.currency,
       razorpayOrderId: razorpay_order_id,

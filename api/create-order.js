@@ -1,6 +1,5 @@
 const https = require('https');
-
-const WEBINAR_AMOUNT = 100;
+const { getAdminDb } = require('./firebase-admin');
 
 function readBody(req) {
   if (typeof req.body === 'object' && req.body) return Promise.resolve(req.body);
@@ -28,9 +27,23 @@ module.exports = async (req, res) => {
   if (req.method !== 'POST') return res.status(405).json({ message: 'Method not allowed.' });
   if (!process.env.RAZORPAY_KEY_ID || !process.env.RAZORPAY_KEY_SECRET) return res.status(500).json({ message: 'Razorpay is not configured on the server.' });
   try {
-    const { name, email, phone } = await readBody(req);
+    const { name, email, phone, webinarId } = await readBody(req);
     if (![name, email, phone].every((value) => typeof value === 'string' && value.trim())) return res.status(400).json({ message: 'Name, email, and phone are required.' });
-    const order = await razorpayRequest('/v1/orders', { amount: WEBINAR_AMOUNT, currency: 'INR', receipt: `webinar_${Date.now()}`, notes: { attendee_name: name.trim(), attendee_email: email.trim(), attendee_phone: phone.trim(), event: 'Find Your Artistic Voice' } });
+    if (typeof webinarId !== 'string' || !webinarId.trim()) return res.status(400).json({ message: 'Please select a webinar.' });
+    const webinarSnapshot = await getAdminDb().collection('webinars').doc(webinarId).get();
+    const webinar = webinarSnapshot.data();
+    const price = Number(webinar?.price);
+    if (!webinarSnapshot.exists || !webinar.isPublished || !webinar.title || !Number.isFinite(price) || price <= 0) return res.status(400).json({ message: 'This webinar is no longer available for registration.' });
+    const amount = Math.round(price * 100);
+    const order = await razorpayRequest('/v1/orders', {
+      amount,
+      currency: 'INR',
+      receipt: `webinar_${Date.now()}`,
+      notes: {
+        attendee_name: name.trim(), attendee_email: email.trim(), attendee_phone: phone.trim(),
+        webinar_id: webinarId, event: webinar.title, event_date: webinar.date || '', event_time: webinar.time || '',
+      },
+    });
     return res.status(200).json({ id: order.id, amount: order.amount, currency: order.currency });
   } catch (error) { return res.status(500).json({ message: error.message || 'Unable to create payment order.' }); }
 };
