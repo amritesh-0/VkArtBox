@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { CalendarDays, Check, Clock3, MapPin, ShieldCheck, Users } from 'lucide-react';
+import { CalendarDays, Check, CheckCircle2, Clock3, MapPin, ShieldCheck, Users } from 'lucide-react';
 import './Webinar.css';
 
 const WEBINAR = {
@@ -128,14 +128,28 @@ export default function Webinar() {
           <div className="webinar-trust"><ShieldCheck size={20} /> Secure payment via Razorpay</div>
           <div className="webinar-trust"><Users size={20} /> Limited live seats available</div>
         </div>
-        <form className="webinar-form" onSubmit={joinWebinar}>
-          <label>Full name<input name="name" value={form.name} onChange={updateField} required autoComplete="name" /></label>
-          <label>Email address<input name="email" type="email" value={form.email} onChange={updateField} required autoComplete="email" /></label>
-          <label>Phone number<input name="phone" type="tel" value={form.phone} onChange={updateField} required autoComplete="tel" /></label>
-          <button className="btn-gold webinar-form__submit" type="submit" disabled={isPaying}>{isPaying ? 'Opening secure payment…' : `Join now · ₹${WEBINAR.price}`}</button>
-          {status.message && <p className={`webinar-status webinar-status--${status.type}`} role="status">{status.message}</p>}
-          <p className="webinar-form__note">By continuing, you agree to receive webinar access details at the email address above.</p>
-        </form>
+        {status.type === 'success' ? (
+          <div className="webinar-success-card" role="status">
+            <CheckCircle2 size={42} aria-hidden="true" />
+            <p className="section-eyebrow">Registration complete</p>
+            <h3>You’re on the list.</h3>
+            <p>{status.message}</p>
+            <div className="webinar-success-card__event">
+              <strong>{WEBINAR.title}</strong>
+              <span>{WEBINAR.date} · {WEBINAR.time}</span>
+            </div>
+            <p className="webinar-success-card__note">Please keep an eye on <strong>{form.email}</strong>. Your Zoom access details and event reminders will be sent there.</p>
+          </div>
+        ) : (
+          <form className="webinar-form" onSubmit={joinWebinar}>
+            <label>Full name<input name="name" value={form.name} onChange={updateField} required autoComplete="name" /></label>
+            <label>Email address<input name="email" type="email" value={form.email} onChange={updateField} required autoComplete="email" /></label>
+            <label>Phone number<input name="phone" type="tel" value={form.phone} onChange={updateField} required autoComplete="tel" /></label>
+            <button className="btn-gold webinar-form__submit" type="submit" disabled={isPaying}>{isPaying ? 'Opening secure payment…' : `Join now · ₹${WEBINAR.price}`}</button>
+            {status.message && <p className={`webinar-status webinar-status--${status.type}`} role="status">{status.message}</p>}
+            <p className="webinar-form__note">By continuing, you agree to receive webinar access details at the email address above.</p>
+          </form>
+        )}
       </section>
     </main>
   );

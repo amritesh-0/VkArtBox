@@ -376,6 +376,67 @@ h6 {
     font-weight: 600;
 }
 
+.webinar-registrations__header p {
+    margin: 6px 0 0;
+    color: var(--admin-text-secondary);
+}
+
+.webinar-event-tabs {
+    display: flex;
+    gap: 8px;
+    overflow-x: auto;
+    padding: 4px 0 20px;
+    border-bottom: 1px solid var(--admin-border);
+}
+
+.webinar-event-tabs button {
+    flex: none;
+    border: 1px solid var(--admin-border);
+    border-radius: 999px;
+    padding: 9px 13px;
+    background: transparent;
+    color: var(--admin-text-secondary);
+    font: 500 0.8rem var(--font-ui);
+    cursor: pointer;
+}
+
+.webinar-event-tabs button:hover,
+.webinar-event-tabs button.active {
+    border-color: var(--admin-accent);
+    background: rgba(212, 175, 55, 0.12);
+    color: var(--admin-text-primary);
+}
+
+.webinar-event-tabs span {
+    margin-left: 5px;
+    color: var(--admin-accent);
+}
+
+.webinar-registrations__toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 20px 0;
+    color: var(--admin-text-secondary);
+    font: 0.82rem var(--font-ui);
+}
+
+.webinar-registrations__toolbar label {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+}
+
+.webinar-registrations__toolbar select {
+    border: 1px solid var(--admin-border);
+    border-radius: 5px;
+    padding: 8px;
+    background: var(--admin-bg-primary);
+    color: var(--admin-text-primary);
+    font: inherit;
+}
+
 .btn-primary {
     font-family: var(--font-ui);
     background-color: transparent;
