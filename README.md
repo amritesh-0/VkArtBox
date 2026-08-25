@@ -81,6 +81,14 @@ FIREBASE_ADMIN_PASSWORD=
 REACT_APP_RAZORPAY_KEY_ID=
 RAZORPAY_KEY_ID=
 RAZORPAY_KEY_SECRET=
+
+# Service account used only by the payment API to store paid registrations.
+# Prefer the single-line JSON value copied from Firebase service-account credentials.
+FIREBASE_SERVICE_ACCOUNT=
+# Alternatively set all three values below:
+FIREBASE_PROJECT_ID=
+FIREBASE_CLIENT_EMAIL=
+FIREBASE_PRIVATE_KEY=
 ```
 
 Notes:
@@ -88,6 +96,7 @@ Notes:
 - `REACT_APP_*` variables are used by the public site
 - `REACT_APP_RAZORPAY_KEY_ID` is Razorpay's public Key ID and is safe to expose to the browser
 - `RAZORPAY_KEY_ID` and `RAZORPAY_KEY_SECRET` are used only by Vercel's payment API functions; never prefix the secret with `REACT_APP_`
+- `FIREBASE_SERVICE_ACCOUNT` (or the three `FIREBASE_*` variables) is required by `/api/verify-payment` to save a paid registration securely. Do not expose it with a `REACT_APP_` prefix.
 - `FIREBASE_ADMIN_EMAIL` and `FIREBASE_ADMIN_PASSWORD` are only used by the seed script when authenticated writes are required by Firebase rules
 
 ### Webinar payment testing
@@ -193,6 +202,7 @@ To run this system in production, configure Firebase with at least the following
   - Create admin users manually in Firebase Auth
 - Firestore
   - Create and validate rules for public reads and restricted admin writes
+  - Allow authenticated admin users to read the `webinarRegistrations` collection; payment API writes use the Firebase Admin SDK and bypass Firestore rules
 - Storage
   - Allow admin uploads for blog images, artwork images, and candidate resumes
 

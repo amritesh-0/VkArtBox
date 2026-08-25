@@ -12,6 +12,7 @@ import Login from './pages/Login';
 import Settings from './pages/Settings';
 import CareerApplications from './pages/CareerApplications';
 import ContactMessages from './pages/ContactMessages';
+import WebinarRegistrations from './pages/WebinarRegistrations';
 import './Admin.css';
 
 function App() {
@@ -40,6 +41,7 @@ function App() {
               <Route path="collections/:id/edit" element={<ArtworkForm />} />
               <Route path="applications" element={<CareerApplications />} />
               <Route path="contacts" element={<ContactMessages />} />
+              <Route path="webinar-registrations" element={<WebinarRegistrations />} />
               <Route path="settings" element={<Settings />} />
             </Route>
           </Route>

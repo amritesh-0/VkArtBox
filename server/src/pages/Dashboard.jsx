@@ -11,18 +11,20 @@ const Dashboard = () => {
         collections: 0,
         applications: 0,
         contacts: 0,
+        webinarRegistrations: 0,
     });
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
         const fetchStats = async () => {
             try {
-                const [blogsSnapshot, artSnapshot, collectionsSnapshot, applicationsSnapshot, contactsSnapshot] = await Promise.all([
+                const [blogsSnapshot, artSnapshot, collectionsSnapshot, applicationsSnapshot, contactsSnapshot, webinarRegistrationsSnapshot] = await Promise.all([
                     getCountFromServer(collection(db, 'blogs')),
                     getCountFromServer(collection(db, 'artworks')),
                     getCountFromServer(collection(db, 'collections')),
                     getCountFromServer(collection(db, 'careerApplications')),
                     getCountFromServer(collection(db, 'contactMessages')),
+                    getCountFromServer(collection(db, 'webinarRegistrations')),
                 ]);
 
                 setStats({
@@ -31,6 +33,7 @@ const Dashboard = () => {
                     collections: collectionsSnapshot.data().count,
                     applications: applicationsSnapshot.data().count,
                     contacts: contactsSnapshot.data().count,
+                    webinarRegistrations: webinarRegistrationsSnapshot.data().count,
                 });
             } catch (error) {
                 console.error("Error fetching stats: ", error);
@@ -81,6 +84,12 @@ const Dashboard = () => {
                         <div className="stat-card">
                             <h3 className="stat-title">Contact Messages</h3>
                             <p className="stat-value">{stats.contacts}</p>
+                        </div>
+                    </Link>
+                    <Link to="/webinar-registrations" style={{ textDecoration: 'none' }}>
+                        <div className="stat-card">
+                            <h3 className="stat-title">Webinar Registrations</h3>
+                            <p className="stat-value">{stats.webinarRegistrations}</p>
                         </div>
                     </Link>
                 </div>
