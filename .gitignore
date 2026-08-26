@@ -3,6 +3,8 @@ build
 dist
 coverage
 .env
+.env.*
+!.env.example
 .DS_Store
 .idea
 .vscode
@@ -13,7 +15,10 @@ coverage
 *.swp
 *.swo       
 server/node_modules
-scripts/seed-firestore.mjs
-.env.local
-.env.example
-.env
+.firebase/
+
+# Firebase Admin/service-account credentials — never commit these.
+serviceAccountKey.json
+service-account*.json
+firebase-service-account*.json
+*-firebase-adminsdk-*.json

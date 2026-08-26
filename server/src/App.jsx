@@ -12,8 +12,8 @@ import Login from './pages/Login';
 import Settings from './pages/Settings';
 import CareerApplications from './pages/CareerApplications';
 import ContactMessages from './pages/ContactMessages';
-import WebinarRegistrations from './pages/WebinarRegistrations';
-import ManageWebinars from './pages/ManageWebinars';
+import WorkshopRegistrations from './pages/WorkshopRegistrations';
+import ManageWorkshops from './pages/ManageWorkshops';
 import './Admin.css';
 
 function App() {
@@ -42,10 +42,10 @@ function App() {
               <Route path="collections/:id/edit" element={<ArtworkForm />} />
               <Route path="applications" element={<CareerApplications />} />
               <Route path="contacts" element={<ContactMessages />} />
-              <Route path="webinar-registrations" element={<WebinarRegistrations />} />
-              <Route path="workshop-registrations" element={<WebinarRegistrations />} />
-              <Route path="webinars" element={<ManageWebinars />} />
-              <Route path="workshops" element={<ManageWebinars />} />
+              <Route path="workshop-registrations" element={<WorkshopRegistrations />} />
+              <Route path="webinar-registrations" element={<WorkshopRegistrations />} />
+              <Route path="workshops" element={<ManageWorkshops />} />
+              <Route path="webinars" element={<ManageWorkshops />} />
               <Route path="settings" element={<Settings />} />
             </Route>
           </Route>

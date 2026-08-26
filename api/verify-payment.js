@@ -38,10 +38,28 @@ module.exports = async (req, res) => {
     const verified = signature.length === Buffer.byteLength(expected) && crypto.timingSafeEqual(Buffer.from(expected), signature);
     if (!verified) return res.status(400).json({ verified: false, message: 'Payment signature did not match.' });
 
-    const order = await razorpayGet(`/v1/orders/${encodeURIComponent(razorpay_order_id)}`);
+    const [order, payment] = await Promise.all([
+      razorpayGet(`/v1/orders/${encodeURIComponent(razorpay_order_id)}`),
+      razorpayGet(`/v1/payments/${encodeURIComponent(razorpay_payment_id)}`),
+    ]);
     const attendee = order.notes || {};
-    if (!Number.isInteger(order.amount) || order.amount <= 0 || order.currency !== 'INR' || !attendee.webinar_id || !attendee.event || !attendee.attendee_name || !attendee.attendee_email || !attendee.attendee_phone) {
-      return res.status(400).json({ verified: false, message: 'This payment order is not a valid webinar registration.' });
+    const targetId = attendee.workshop_id || attendee.webinar_id;
+    if (!Number.isInteger(order.amount) || order.amount <= 0 || order.currency !== 'INR' || !targetId || !attendee.event || !attendee.attendee_name || !attendee.attendee_email || !attendee.attendee_phone) {
+      return res.status(400).json({ verified: false, message: 'This payment order is not a valid workshop registration.' });
+    }
+
+    // A valid Checkout signature alone is insufficient proof that funds were
+    // captured. Confirm the payment directly with Razorpay and bind every
+    // payment property that determines whether this registration is paid.
+    if (
+      order.status !== 'paid' ||
+      order.amount_paid !== order.amount ||
+      payment.order_id !== razorpay_order_id ||
+      payment.status !== 'captured' ||
+      payment.amount !== order.amount ||
+      payment.currency !== order.currency
+    ) {
+      return res.status(400).json({ verified: false, message: 'Payment has not been captured for this workshop order.' });
     }
 
     const registrationRecord = {
@@ -49,14 +67,15 @@ module.exports = async (req, res) => {
       email: attendee.attendee_email,
       phone: attendee.attendee_phone,
       event: attendee.event,
-      webinarId: attendee.webinar_id,
-      workshopId: attendee.webinar_id,
+      webinarId: attendee.webinar_id || targetId,
+      workshopId: attendee.workshop_id || targetId,
       eventDate: attendee.event_date || '',
       eventTime: attendee.event_time || '',
       amount: order.amount,
       currency: order.currency,
       razorpayOrderId: razorpay_order_id,
       razorpayPaymentId: razorpay_payment_id,
+      razorpayPaymentStatus: payment.status,
       status: 'paid',
       registeredAt: FieldValue.serverTimestamp(),
     };

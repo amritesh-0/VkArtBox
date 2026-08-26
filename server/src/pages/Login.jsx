@@ -29,14 +29,14 @@ function getLoginErrorMessage(error) {
 const Login = () => {
     const navigate = useNavigate();
     const location = useLocation();
-    const { user, authLoading } = useAuth();
+    const { user, isAdmin, authLoading } = useAuth();
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [submitting, setSubmitting] = useState(false);
 
     const destination = location.state?.from?.pathname || '/';
 
-    if (!authLoading && user) {
+    if (!authLoading && user && isAdmin) {
         return <Navigate to={destination} replace />;
     }
 
@@ -57,7 +57,12 @@ const Login = () => {
         const toastId = toast.loading('Signing in...');
 
         try {
-            await signInWithEmailAndPassword(auth, email.trim(), password);
+            const credential = await signInWithEmailAndPassword(auth, email.trim(), password);
+            const token = await credential.user.getIdTokenResult(true);
+            if (token.claims.admin !== true) {
+                await auth.signOut();
+                throw new Error('This account does not have administrator access.');
+            }
             toast.success('Signed in successfully.', { id: toastId });
             navigate(destination, { replace: true });
         } catch (error) {

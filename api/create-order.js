@@ -27,27 +27,38 @@ module.exports = async (req, res) => {
   if (req.method !== 'POST') return res.status(405).json({ message: 'Method not allowed.' });
   if (!process.env.RAZORPAY_KEY_ID || !process.env.RAZORPAY_KEY_SECRET) return res.status(500).json({ message: 'Razorpay is not configured on the server.' });
   try {
-    const { name, email, phone, webinarId, customTitle, customPrice } = await readBody(req);
+    const { name, email, phone, workshopId, webinarId } = await readBody(req);
     if (![name, email, phone].every((value) => typeof value === 'string' && value.trim())) return res.status(400).json({ message: 'Name, email, and phone are required.' });
     
-    const targetId = typeof webinarId === 'string' && webinarId.trim() ? webinarId.trim() : 'workshop-default';
+    const rawId = workshopId || webinarId || 'workshop-default';
+    const targetId = typeof rawId === 'string' && rawId.trim() ? rawId.trim() : 'workshop-default';
+
+    // This endpoint currently sells one public workshop.  Do not accept an
+    // arbitrary item ID (or price/title) from the browser: those values decide
+    // what a customer is charged and must be owned by the server.
+    if (targetId !== 'workshop-default') {
+      return res.status(404).json({ message: 'Workshop not found.' });
+    }
     
-    let title = customTitle || 'VKartbox Basic Graphite & Charcoal Workshop — 2026 Sept';
-    let price = Number(customPrice) || 2499;
+    let title = 'VKartbox Basic Graphite & Charcoal Workshop — 2026 Sept';
+    let price = 2499;
     let eventDate = '12th Sept 2026';
     let eventTime = '2:00 PM - 5:00 PM IST';
 
     try {
-      const webinarSnapshot = await getAdminDb().collection('webinars').doc(targetId).get();
-      if (webinarSnapshot.exists) {
-        const webinar = webinarSnapshot.data();
-        if (webinar?.title) title = webinar.title;
-        if (Number.isFinite(Number(webinar?.price)) && Number(webinar.price) > 0) price = Number(webinar.price);
-        if (webinar?.date) eventDate = webinar.date;
-        if (webinar?.time) eventTime = webinar.time;
+      const workshopSnapshot = await getAdminDb().collection('workshops').doc(targetId).get();
+      const webinarSnapshot = !workshopSnapshot.exists ? await getAdminDb().collection('webinars').doc(targetId).get() : null;
+      const snap = workshopSnapshot.exists ? workshopSnapshot : webinarSnapshot;
+
+      if (snap && snap.exists) {
+        const item = snap.data();
+        if (item?.title) title = item.title;
+        if (Number.isFinite(Number(item?.price)) && Number(item.price) > 0) price = Number(item.price);
+        if (item?.date) eventDate = item.date;
+        if (item?.time) eventTime = item.time;
       }
     } catch (err) {
-      console.warn('Could not fetch webinar snapshot, using static workshop defaults:', err.message);
+      console.warn('Could not fetch workshop snapshot, using static workshop defaults:', err.message);
     }
 
     const amount = Math.round(price * 100);
@@ -59,6 +70,7 @@ module.exports = async (req, res) => {
         attendee_name: name.trim(),
         attendee_email: email.trim(),
         attendee_phone: phone.trim(),
+        workshop_id: targetId,
         webinar_id: targetId,
         event: title,
         event_date: eventDate,

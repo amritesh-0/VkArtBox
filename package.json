@@ -16,7 +16,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "seed:firestore": "node scripts/seed-firestore.mjs"
+    "seed:firestore": "node scripts/seed-firestore.mjs",
+    "grant:admin": "node scripts/grant-admin.mjs"
   },
   "eslintConfig": {
     "extends": [

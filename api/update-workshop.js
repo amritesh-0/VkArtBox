@@ -1,4 +1,28 @@
+const { getAuth } = require('firebase-admin/auth');
 const { getAdminDb, FieldValue } = require('./firebase-admin');
+
+async function requireAdmin(req) {
+  const authorization = req.headers.authorization || '';
+  const match = authorization.match(/^Bearer\s+(.+)$/i);
+  if (!match) throw new Error('Unauthorized');
+
+  // Initializes the Admin SDK before retrieving Firebase Auth.
+  getAdminDb();
+  const decodedToken = await getAuth().verifyIdToken(match[1]);
+  if (decodedToken.admin !== true) {
+    throw new Error('Forbidden');
+  }
+}
+
+function setAdminCorsHeaders(req, res) {
+  const allowedOrigin = process.env.ADMIN_APP_ORIGIN;
+  if (allowedOrigin && req.headers.origin === allowedOrigin) {
+    res.setHeader('Access-Control-Allow-Origin', allowedOrigin);
+    res.setHeader('Vary', 'Origin');
+    res.setHeader('Access-Control-Allow-Headers', 'Authorization, Content-Type');
+    res.setHeader('Access-Control-Allow-Methods', 'POST, PUT, OPTIONS');
+  }
+}
 
 function readBody(req) {
   if (typeof req.body === 'object' && req.body) return Promise.resolve(req.body);
@@ -16,11 +40,14 @@ function readBody(req) {
 }
 
 module.exports = async (req, res) => {
+  setAdminCorsHeaders(req, res);
+  if (req.method === 'OPTIONS') return res.status(204).end();
   if (req.method !== 'POST' && req.method !== 'PUT') {
     return res.status(405).json({ message: 'Method not allowed.' });
   }
 
   try {
+    await requireAdmin(req);
     const { title, price, workshopId = 'workshop-default' } = await readBody(req);
 
     if (title !== undefined && (typeof title !== 'string' || !title.trim())) {
@@ -60,6 +87,8 @@ module.exports = async (req, res) => {
       }
     });
   } catch (error) {
+    if (error.message === 'Unauthorized') return res.status(401).json({ message: 'Admin authentication is required.' });
+    if (error.message === 'Forbidden') return res.status(403).json({ message: 'Admin access is required.' });
     console.error('Error updating workshop title/price:', error);
     return res.status(500).json({ message: error.message || 'Unable to update workshop details.' });
   }

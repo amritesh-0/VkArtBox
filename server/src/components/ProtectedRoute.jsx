@@ -2,7 +2,7 @@ import { Navigate, Outlet, useLocation } from 'react-router-dom';
 import { useAuth } from './AuthProvider';
 
 const ProtectedRoute = () => {
-    const { user, authLoading } = useAuth();
+    const { user, isAdmin, authLoading } = useAuth();
     const location = useLocation();
 
     if (authLoading) {
@@ -18,6 +18,10 @@ const ProtectedRoute = () => {
 
     if (!user) {
         return <Navigate to="/login" replace state={{ from: location }} />;
+    }
+
+    if (!isAdmin) {
+        return <Navigate to="/login" replace state={{ from: location, unauthorized: true }} />;
     }
 
     return <Outlet />;

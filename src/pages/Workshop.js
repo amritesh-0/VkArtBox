@@ -182,7 +182,7 @@ export default function Workshop() {
       const orderResponse = await fetch('/api/create-order', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...form, webinarId: 'workshop-default', customTitle: workshopTitle, customPrice: workshopPrice })
+        body: JSON.stringify({ ...form, workshopId: 'workshop-default' })
       });
 
       const orderData = await orderResponse.json();

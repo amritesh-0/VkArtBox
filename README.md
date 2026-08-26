@@ -89,6 +89,10 @@ FIREBASE_SERVICE_ACCOUNT=
 FIREBASE_PROJECT_ID=
 FIREBASE_CLIENT_EMAIL=
 FIREBASE_PRIVATE_KEY=
+
+# Optional only when the admin app is hosted on a different origin.
+# Example: https://admin.vkartbox.com
+ADMIN_APP_ORIGIN=
 ```
 
 Notes:
@@ -97,6 +101,17 @@ Notes:
 - `REACT_APP_RAZORPAY_KEY_ID` is Razorpay's public Key ID and is safe to expose to the browser
 - `RAZORPAY_KEY_ID` and `RAZORPAY_KEY_SECRET` are used only by Vercel's payment API functions; never prefix the secret with `REACT_APP_`
 - `FIREBASE_SERVICE_ACCOUNT` (or the three `FIREBASE_*` variables) is required by `/api/verify-payment` to save a paid registration securely. Do not expose it with a `REACT_APP_` prefix.
+- `/api/update-workshop` requires a Firebase ID token with the `admin: true` custom claim; without one it intentionally rejects updates. Set `ADMIN_APP_ORIGIN` to permit the separately hosted dashboard to call it.
+- The admin dashboard and Firebase Firestore/Storage rules require the `admin: true` custom claim. Grant it with `FIREBASE_SERVICE_ACCOUNT='…' npm run grant:admin -- admin@example.com`, then have that user sign out and back in.
+- If the admin dashboard is hosted separately, set its `VITE_PUBLIC_API_ORIGIN` to the public site's origin (for example `https://www.vkartbox.com`).
+
+### Deploy Firebase access rules
+
+The checked-in [`firestore.rules`](/Users/amriteshpandey/Downloads/vkartbox/firestore.rules) and [`storage.rules`](/Users/amriteshpandey/Downloads/vkartbox/storage.rules) are part of the security fix; they must be deployed to enforce the admin boundary:
+
+```bash
+npx firebase-tools deploy --project YOUR_FIREBASE_PROJECT_ID --only firestore:rules,storage
+```
 - `FIREBASE_ADMIN_EMAIL` and `FIREBASE_ADMIN_PASSWORD` are only used by the seed script when authenticated writes are required by Firebase rules
 
 ### Webinar payment testing

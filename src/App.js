@@ -11,7 +11,6 @@ import CollectionDetail from './pages/CollectionDetail';
 import Careers from './pages/Careers';
 import CareerApplication from './pages/CareerApplication';
 import PrivacyPolicy from './pages/PrivacyPolicy';
-import Webinar from './pages/Webinar';
 import Workshop from './pages/Workshop';
 
 function AdminRedirect() {
@@ -38,7 +37,7 @@ function App() {
         <Route path="/collection/:id" element={<CollectionDetail />} />
         <Route path="/privacy-policy" element={<PrivacyPolicy />} />
         <Route path="/workshop" element={<Workshop />} />
-        <Route path="/webinar" element={<Webinar />} />
+        <Route path="/webinar" element={<Workshop />} />
       </Routes>
       <Footer />
     </BrowserRouter>

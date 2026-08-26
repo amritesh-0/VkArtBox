@@ -13,7 +13,7 @@ const safeCsvCell = (value) => {
     return `"${protectedText.replace(/"/g, '""')}"`;
 };
 
-const WebinarRegistrations = () => {
+const WorkshopRegistrations = () => {
     const [registrations, setRegistrations] = useState([]);
     const [activeEvent, setActiveEvent] = useState('all');
     const [sortOrder, setSortOrder] = useState('newest');
@@ -54,7 +54,7 @@ const WebinarRegistrations = () => {
     const exportRegistrations = () => {
         if (!visibleRegistrations.length) return;
         const rows = [
-            ['Name', 'Email', 'Phone', 'Webinar', 'Amount (INR)', 'Payment ID', 'Order ID', 'Registration date'],
+            ['Name', 'Email', 'Phone', 'Workshop', 'Amount (INR)', 'Payment ID', 'Order ID', 'Registration date'],
             ...visibleRegistrations.map((registration) => [
                 registration.name, registration.email, registration.phone, registration.event,
                 ((registration.amount || 0) / 100).toFixed(2), registration.razorpayPaymentId,
@@ -65,7 +65,7 @@ const WebinarRegistrations = () => {
         const url = URL.createObjectURL(new Blob([csv], { type: 'text/csv;charset=utf-8;' }));
         const link = document.createElement('a');
         link.href = url;
-        link.download = `${activeEvent === 'all' ? 'all-webinar-registrations' : activeEvent.toLowerCase().replace(/[^a-z0-9]+/g, '-')}-registrations.csv`;
+        link.download = `${activeEvent === 'all' ? 'all-workshop-registrations' : activeEvent.toLowerCase().replace(/[^a-z0-9]+/g, '-')}-registrations.csv`;
         link.click();
         URL.revokeObjectURL(url);
     };
@@ -79,12 +79,12 @@ const WebinarRegistrations = () => {
                 </button>
             </div>
             <div className="admin-card">
-                {loading ? <div className="empty-state">Loading webinar registrations...</div> : registrations.length === 0 ? (
-                    <div className="empty-state">No paid webinar registrations yet.</div>
+                {loading ? <div className="empty-state">Loading workshop registrations...</div> : registrations.length === 0 ? (
+                    <div className="empty-state">No paid workshop registrations yet.</div>
                 ) : (
                     <>
-                        <div className="webinar-event-tabs" role="tablist" aria-label="Filter registrations by webinar">
-                            <button type="button" role="tab" aria-selected={activeEvent === 'all'} className={activeEvent === 'all' ? 'active' : ''} onClick={() => setActiveEvent('all')}>All webinars <span>{registrations.length}</span></button>
+                        <div className="webinar-event-tabs" role="tablist" aria-label="Filter registrations by workshop">
+                            <button type="button" role="tab" aria-selected={activeEvent === 'all'} className={activeEvent === 'all' ? 'active' : ''} onClick={() => setActiveEvent('all')}>All workshops <span>{registrations.length}</span></button>
                             {events.map((event) => {
                                 const count = registrations.filter((registration) => registration.event === event).length;
                                 return <button key={event} type="button" role="tab" aria-selected={activeEvent === event} className={activeEvent === event ? 'active' : ''} onClick={() => setActiveEvent(event)}>{event} <span>{count}</span></button>;
@@ -115,4 +115,4 @@ const WebinarRegistrations = () => {
     );
 };
 
-export default WebinarRegistrations;
+export default WorkshopRegistrations;

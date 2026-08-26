@@ -1188,15 +1188,39 @@
   background: rgba(0, 0, 0, 0.3);
 }
 
-/* ━━ Responsive Breakpoints ━━ */
 @media (max-width: 992px) {
   .workshop-hero {
     grid-template-columns: 1fr;
     padding: 44px 5%;
+    gap: 32px;
+  }
+
+  .workshop-hero__actions {
+    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+    margin-bottom: 8px;
+  }
+
+  .workshop-hero__cta,
+  .workshop-hero__secondary-cta {
+    width: 100%;
+    justify-content: center;
+    text-align: center;
   }
 
   .workshop-hero__art {
-    height: 380px;
+    height: auto;
+    padding: 0;
+    width: 100%;
+    margin-top: 12px;
+  }
+
+  .workshop-hero__art-card {
+    width: 100%;
+    max-width: 360px;
+    margin: 0 auto;
   }
 
   .workshop-highlights {
