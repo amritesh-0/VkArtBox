@@ -1,11 +1,10 @@
-const { getAuth } = require('firebase-admin/auth');
-const { getAdminDb, FieldValue } = require('./firebase-admin');
-
 async function requireAdmin(req) {
   const authorization = req.headers.authorization || '';
   const match = authorization.match(/^Bearer\s+(.+)$/i);
   if (!match) throw new Error('Unauthorized');
 
+  const { getAuth } = require('firebase-admin/auth');
+  const { getAdminDb } = require('./firebase-admin');
   // Initializes the Admin SDK before retrieving Firebase Auth.
   getAdminDb();
   const decodedToken = await getAuth().verifyIdToken(match[1]);
@@ -55,6 +54,7 @@ module.exports = async (req, res) => {
 
   try {
     await requireAdmin(req);
+    const { getAdminDb, FieldValue } = require('./firebase-admin');
     const { title, price, workshopId = 'workshop-default' } = await readBody(req);
 
     if (title !== undefined && (typeof title !== 'string' || !title.trim())) {
