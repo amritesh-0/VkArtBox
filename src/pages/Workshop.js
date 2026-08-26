@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { CalendarDays, CheckCircle2, Clock3, MapPin, ShieldCheck, Award, Bell, UserCheck, Sparkles, BookOpen, Layers, Check, ArrowRight, Eye, X, ZoomIn, ChevronLeft, ChevronRight } from 'lucide-react';
+import { CalendarDays, CheckCircle2, Clock3, MapPin, ShieldCheck, Award, UserCheck, Sparkles, BookOpen, Layers, Check, ArrowRight, Eye, X, ZoomIn, ChevronLeft, ChevronRight } from 'lucide-react';
 import './Workshop.css';
 
 function loadRazorpay() {
@@ -279,13 +279,6 @@ export default function Workshop() {
               <div>
                 <small>CERTIFICATE</small>
                 <strong>Completion Certificate</strong>
-              </div>
-            </div>
-            <div className="meta-pill">
-              <Bell size={18} />
-              <div>
-                <small>REMINDER</small>
-                <strong>Mail Sent on 9th Sept</strong>
               </div>
             </div>
           </div>
@@ -569,7 +562,6 @@ export default function Workshop() {
             <div className="workshop-trust-item"><ShieldCheck size={20} /> 100% Secure Payment via Razorpay</div>
             <div className="workshop-trust-item"><UserCheck size={20} /> Live Guidance by Vikash Kumar</div>
             <div className="workshop-trust-item"><Award size={20} /> Certificate Provided Upon Completion</div>
-            <div className="workshop-trust-item"><Bell size={20} /> Reminder Mail Sent on 9th Sept</div>
             <div className="workshop-trust-item"><CalendarDays size={20} /> Starts 12th Sept 2026 (2–5 PM or 11 AM)</div>
           </div>
         </div>
