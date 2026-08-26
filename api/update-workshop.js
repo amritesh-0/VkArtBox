@@ -15,12 +15,19 @@ async function requireAdmin(req) {
 }
 
 function setAdminCorsHeaders(req, res) {
-  const allowedOrigin = process.env.ADMIN_APP_ORIGIN;
-  if (allowedOrigin && req.headers.origin === allowedOrigin) {
-    res.setHeader('Access-Control-Allow-Origin', allowedOrigin);
+  const requestOrigin = (req.headers.origin || '').replace(/\/$/, '');
+  // Keep the production admin origin explicit. ADMIN_APP_ORIGIN can add a
+  // staging/admin origin without ever reflecting an arbitrary Origin header.
+  const allowedOrigins = new Set([
+    'https://admin.vkartbox.com',
+    ...(process.env.ADMIN_APP_ORIGIN || '').split(',').map((origin) => origin.trim().replace(/\/$/, '')).filter(Boolean),
+  ]);
+  if (allowedOrigins.has(requestOrigin)) {
+    res.setHeader('Access-Control-Allow-Origin', requestOrigin);
     res.setHeader('Vary', 'Origin');
     res.setHeader('Access-Control-Allow-Headers', 'Authorization, Content-Type');
     res.setHeader('Access-Control-Allow-Methods', 'POST, PUT, OPTIONS');
+    res.setHeader('Access-Control-Max-Age', '86400');
   }
 }
 
