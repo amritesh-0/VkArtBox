@@ -2,6 +2,9 @@
   "name": "vkartbox",
   "version": "1.0.0",
   "private": true,
+  "engines": {
+    "node": "22.x"
+  },
   "dependencies": {
     "firebase": "^12.10.0",
     "firebase-admin": "^14.3.0",
