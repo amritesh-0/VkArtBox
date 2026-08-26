@@ -22,12 +22,20 @@ const WebinarRegistrations = () => {
     useEffect(() => {
         const fetchRegistrations = async () => {
             try {
-                const registrationsQuery = query(collection(db, 'webinarRegistrations'), orderBy('registeredAt', 'desc'));
-                const snapshot = await getDocs(registrationsQuery);
-                setRegistrations(snapshot.docs.map((registration) => ({ id: registration.id, ...registration.data() })));
+                const [webinarSnap, workshopSnap] = await Promise.all([
+                    getDocs(query(collection(db, 'webinarRegistrations'), orderBy('registeredAt', 'desc'))).catch(() => ({ docs: [] })),
+                    getDocs(query(collection(db, 'workshopRegistrations'), orderBy('registeredAt', 'desc'))).catch(() => ({ docs: [] }))
+                ]);
+                const combinedMap = new Map();
+                [...workshopSnap.docs, ...webinarSnap.docs].forEach((docSnap) => {
+                    if (!combinedMap.has(docSnap.id)) {
+                        combinedMap.set(docSnap.id, { id: docSnap.id, ...docSnap.data() });
+                    }
+                });
+                setRegistrations(Array.from(combinedMap.values()));
             } catch (error) {
-                console.error('Error fetching webinar registrations:', error);
-                toast.error('Failed to load webinar registrations.');
+                console.error('Error fetching workshop registrations:', error);
+                toast.error('Failed to load workshop registrations.');
             } finally {
                 setLoading(false);
             }
@@ -65,7 +73,7 @@ const WebinarRegistrations = () => {
     return (
         <div>
             <div className="page-header webinar-registrations__header">
-                <div><h2>Webinar Registrations</h2><p>Paid attendees, grouped by webinar.</p></div>
+                <div><h2>Workshop Registrations</h2><p>Paid attendees, grouped by workshop event.</p></div>
                 <button className="btn-primary" type="button" disabled={!visibleRegistrations.length} onClick={exportRegistrations}>
                     <Download size={17} /> Export for Excel
                 </button>

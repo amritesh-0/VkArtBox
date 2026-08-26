@@ -44,13 +44,13 @@ module.exports = async (req, res) => {
       return res.status(400).json({ verified: false, message: 'This payment order is not a valid webinar registration.' });
     }
 
-    // The payment ID is the document ID, making retries idempotent.
-    await getAdminDb().collection('webinarRegistrations').doc(razorpay_payment_id).set({
+    const registrationRecord = {
       name: attendee.attendee_name,
       email: attendee.attendee_email,
       phone: attendee.attendee_phone,
       event: attendee.event,
       webinarId: attendee.webinar_id,
+      workshopId: attendee.webinar_id,
       eventDate: attendee.event_date || '',
       eventTime: attendee.event_time || '',
       amount: order.amount,
@@ -59,7 +59,11 @@ module.exports = async (req, res) => {
       razorpayPaymentId: razorpay_payment_id,
       status: 'paid',
       registeredAt: FieldValue.serverTimestamp(),
-    }, { merge: true });
+    };
+
+    // The payment ID is the document ID, making retries idempotent.
+    await getAdminDb().collection('webinarRegistrations').doc(razorpay_payment_id).set(registrationRecord, { merge: true });
+    await getAdminDb().collection('workshopRegistrations').doc(razorpay_payment_id).set(registrationRecord, { merge: true });
 
     return res.status(200).json({ verified: true });
   } catch (error) { return res.status(500).json({ verified: false, message: error.message || 'Unable to verify payment.' }); }

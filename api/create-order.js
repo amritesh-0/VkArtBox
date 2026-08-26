@@ -27,21 +27,42 @@ module.exports = async (req, res) => {
   if (req.method !== 'POST') return res.status(405).json({ message: 'Method not allowed.' });
   if (!process.env.RAZORPAY_KEY_ID || !process.env.RAZORPAY_KEY_SECRET) return res.status(500).json({ message: 'Razorpay is not configured on the server.' });
   try {
-    const { name, email, phone, webinarId } = await readBody(req);
+    const { name, email, phone, webinarId, customTitle, customPrice } = await readBody(req);
     if (![name, email, phone].every((value) => typeof value === 'string' && value.trim())) return res.status(400).json({ message: 'Name, email, and phone are required.' });
-    if (typeof webinarId !== 'string' || !webinarId.trim()) return res.status(400).json({ message: 'Please select a webinar.' });
-    const webinarSnapshot = await getAdminDb().collection('webinars').doc(webinarId).get();
-    const webinar = webinarSnapshot.data();
-    const price = Number(webinar?.price);
-    if (!webinarSnapshot.exists || !webinar.isPublished || !webinar.title || !Number.isFinite(price) || price <= 0) return res.status(400).json({ message: 'This webinar is no longer available for registration.' });
+    
+    const targetId = typeof webinarId === 'string' && webinarId.trim() ? webinarId.trim() : 'workshop-default';
+    
+    let title = customTitle || 'VKartbox Basic Graphite & Charcoal Workshop — 2026 Sept';
+    let price = Number(customPrice) || 2499;
+    let eventDate = '12th Sept 2026';
+    let eventTime = '2:00 PM - 5:00 PM IST';
+
+    try {
+      const webinarSnapshot = await getAdminDb().collection('webinars').doc(targetId).get();
+      if (webinarSnapshot.exists) {
+        const webinar = webinarSnapshot.data();
+        if (webinar?.title) title = webinar.title;
+        if (Number.isFinite(Number(webinar?.price)) && Number(webinar.price) > 0) price = Number(webinar.price);
+        if (webinar?.date) eventDate = webinar.date;
+        if (webinar?.time) eventTime = webinar.time;
+      }
+    } catch (err) {
+      console.warn('Could not fetch webinar snapshot, using static workshop defaults:', err.message);
+    }
+
     const amount = Math.round(price * 100);
     const order = await razorpayRequest('/v1/orders', {
       amount,
       currency: 'INR',
-      receipt: `webinar_${Date.now()}`,
+      receipt: `workshop_${Date.now()}`,
       notes: {
-        attendee_name: name.trim(), attendee_email: email.trim(), attendee_phone: phone.trim(),
-        webinar_id: webinarId, event: webinar.title, event_date: webinar.date || '', event_time: webinar.time || '',
+        attendee_name: name.trim(),
+        attendee_email: email.trim(),
+        attendee_phone: phone.trim(),
+        webinar_id: targetId,
+        event: title,
+        event_date: eventDate,
+        event_time: eventTime,
       },
     });
     return res.status(200).json({ id: order.id, amount: order.amount, currency: order.currency });

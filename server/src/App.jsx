@@ -43,7 +43,9 @@ function App() {
               <Route path="applications" element={<CareerApplications />} />
               <Route path="contacts" element={<ContactMessages />} />
               <Route path="webinar-registrations" element={<WebinarRegistrations />} />
+              <Route path="workshop-registrations" element={<WebinarRegistrations />} />
               <Route path="webinars" element={<ManageWebinars />} />
+              <Route path="workshops" element={<ManageWebinars />} />
               <Route path="settings" element={<Settings />} />
             </Route>
           </Route>

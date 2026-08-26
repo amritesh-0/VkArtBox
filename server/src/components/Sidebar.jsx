@@ -48,11 +48,11 @@ const Sidebar = ({ isOpen, onClose }) => {
                 </NavLink>
                 <NavLink to="/webinar-registrations" className={({ isActive }) => (isActive ? 'nav-item active' : 'nav-item')} onClick={onClose}>
                     <TicketCheck size={20} />
-                    <span>Webinar Registrations</span>
+                    <span>Workshop Registrations</span>
                 </NavLink>
                 <NavLink to="/webinars" className={({ isActive }) => (isActive ? 'nav-item active' : 'nav-item')} onClick={onClose}>
                     <Presentation size={20} />
-                    <span>Manage Webinars</span>
+                    <span>Manage Workshop</span>
                 </NavLink>
                 <div className="nav-divider"></div>
                 <NavLink to="/settings" className={({ isActive }) => (isActive ? 'nav-item active' : 'nav-item')} onClick={onClose}>

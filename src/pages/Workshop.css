@@ -1,0 +1,1284 @@
+/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+   VkArtBox — Workshop Page Stylesheet (Light & Dark Theme Compatible)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
+.workshop-page {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 132px 5% 96px;
+  color: var(--charcoal);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* ━━ Badge Styling ━━ */
+.workshop-badge-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.workshop-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 18px;
+  background: var(--gold-faint);
+  border: 1px solid var(--gold-dim);
+  border-radius: 50px;
+  color: var(--sepia);
+  font-family: var(--font-ui, sans-serif);
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.workshop-badge-discount {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 14px;
+  background: rgba(197, 160, 89, 0.2);
+  border: 1px dashed var(--sienna);
+  border-radius: 50px;
+  color: var(--sienna);
+  font-family: var(--font-ui, sans-serif);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+/* ━━ Hero Section ━━ */
+.workshop-hero {
+  min-height: 560px;
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  align-items: center;
+  gap: 48px;
+  padding: 56px 6%;
+  background: var(--paper-white);
+  border: 1px solid var(--gold-dim);
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.04);
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.workshop-hero h1 {
+  font-family: var(--font-heading, Georgia, serif);
+  font-size: clamp(2.4rem, 4.5vw, 4.2rem);
+  font-weight: 400;
+  line-height: 1.06;
+  color: var(--charcoal);
+  margin-bottom: 18px;
+}
+
+.workshop-hero__subtitle {
+  font-size: 1.3rem;
+  line-height: 1.5;
+  color: var(--pencil);
+  margin-bottom: 24px;
+  font-style: italic;
+}
+
+.workshop-instructor-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 16px;
+  background: var(--gold-faint);
+  border-left: 3px solid var(--sepia);
+  font-family: var(--font-ui, sans-serif);
+  font-size: 0.95rem;
+  color: var(--charcoal);
+  margin-bottom: 32px;
+}
+
+.workshop-instructor-pill .instructor-icon {
+  color: var(--sepia);
+}
+
+/* Meta Pills Grid */
+.workshop-meta-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 14px;
+  margin-bottom: 36px;
+}
+
+.meta-pill {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  background: var(--parchment);
+  border: 1px solid var(--gold-dim);
+  border-radius: 6px;
+  transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.meta-pill:hover {
+  border-color: var(--sepia);
+  transform: translateY(-2px);
+}
+
+.meta-pill svg {
+  color: var(--sepia);
+  flex-shrink: 0;
+}
+
+.meta-pill small {
+  display: block;
+  font-family: var(--font-ui, sans-serif);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  color: var(--pencil);
+  margin-bottom: 2px;
+}
+
+.meta-pill strong {
+  display: block;
+  font-family: var(--font-ui, sans-serif);
+  font-size: 0.88rem;
+  color: var(--charcoal);
+}
+
+/* Hero Actions */
+.workshop-hero__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: center;
+}
+
+.workshop-hero__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 32px;
+  font-size: 1.05rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.workshop-hero__secondary-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 15px 26px;
+  border: 1px solid var(--gold-dim);
+  color: var(--charcoal);
+  font-family: var(--font-ui, sans-serif);
+  font-size: 0.95rem;
+  font-weight: 500;
+  text-decoration: none;
+  background: var(--parchment);
+  transition: all 0.25s ease;
+}
+
+.workshop-hero__secondary-cta:hover {
+  background: var(--gold-faint);
+  border-color: var(--sepia);
+}
+
+/* ━━ Floating Instructor Card in Hero ━━ */
+.workshop-hero__art {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  padding: 10px;
+}
+
+.workshop-hero__art-card {
+  z-index: 2;
+  text-align: center;
+  background: var(--paper-white);
+  padding: 24px 20px;
+  border: 1px solid var(--gold-dim);
+  border-radius: 12px;
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.1);
+  width: min(100%, 330px);
+  position: relative;
+  transition: transform 0.3s ease, border-color 0.3s ease;
+}
+
+.workshop-hero__art-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--sepia);
+}
+
+.hero-artwork-frame {
+  width: 100%;
+  height: 230px;
+  overflow: hidden;
+  border: 1px solid var(--gold-dim);
+  border-radius: 8px;
+  margin-bottom: 18px;
+  background: var(--parchment);
+}
+
+.hero-artwork-frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 15%;
+  transition: transform 0.4s ease;
+}
+
+.hero-instructor-frame img {
+  object-fit: cover;
+  object-position: center 15%;
+}
+
+.hero-artwork-frame:hover img {
+  transform: scale(1.04);
+}
+
+.art-card-top-tag {
+  font-family: var(--font-ui, sans-serif);
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--sepia);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.workshop-hero__art-title {
+  font-family: var(--font-heading, serif);
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  color: var(--charcoal);
+  margin: 0;
+}
+
+.workshop-hero__art-sub {
+  font-family: var(--font-ui, sans-serif);
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  color: var(--sienna);
+  margin: 4px 0 10px;
+  text-transform: uppercase;
+}
+
+.workshop-hero__art-divider {
+  width: 44px;
+  height: 2px;
+  background: var(--sepia);
+  margin: 10px auto;
+}
+
+.workshop-hero__art-author {
+  font-size: 0.85rem;
+  color: var(--pencil);
+  margin: 0 0 10px;
+}
+
+.art-price-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.art-price-original {
+  font-size: 1rem;
+  color: var(--pencil);
+  text-decoration: line-through;
+  opacity: 0.7;
+}
+
+.workshop-hero__art-price {
+  font-family: var(--font-heading, serif);
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--sepia);
+}
+
+.art-card-footer {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: var(--font-ui, sans-serif);
+  font-size: 0.75rem;
+  color: var(--charcoal);
+  background: var(--parchment);
+  padding: 5px 12px;
+  border-radius: 4px;
+}
+
+.workshop-hero__circle {
+  position: absolute;
+  border: 1px solid var(--sepia);
+  opacity: 0.2;
+  border-radius: 50%;
+}
+.workshop-hero__circle--one { width: 340px; height: 340px; }
+.workshop-hero__circle--two { width: 240px; height: 240px; }
+
+/* ━━ Highlights Section ━━ */
+.workshop-highlights {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+  margin: 48px 0;
+}
+
+.workshop-highlight-item {
+  padding: 36px 28px;
+  background: var(--paper-white);
+  border: 1px solid var(--gold-dim);
+  transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.workshop-highlight-item:hover {
+  transform: translateY(-6px);
+  border-color: var(--sepia);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+}
+
+.highlight-icon-box {
+  width: 52px;
+  height: 52px;
+  display: grid;
+  place-items: center;
+  background: var(--gold-faint);
+  border: 1px solid var(--gold-dim);
+  color: var(--sepia);
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.workshop-highlight-item h3 {
+  font-family: var(--font-heading, serif);
+  font-size: 1.3rem;
+  margin: 0 0 12px;
+  color: var(--charcoal);
+}
+
+.workshop-highlight-item p {
+  font-size: 1rem;
+  line-height: 1.55;
+  color: var(--pencil);
+  margin: 0;
+}
+
+/* ━━ 🖼️ Carousel / Swiper Artwork Showcase Gallery Section ━━ */
+.workshop-showcase {
+  margin: 72px 0;
+  padding: 56px 6%;
+  background: var(--paper-white);
+  border: 1px solid var(--gold-dim);
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.workshop-showcase__header {
+  text-align: center;
+  max-width: 720px;
+  margin: 0 auto 36px;
+}
+
+.workshop-showcase__intro {
+  font-size: 1.2rem;
+  color: var(--pencil);
+  margin-top: 12px;
+  line-height: 1.5;
+}
+
+/* Carousel Showcase Wrapper */
+.showcase-carousel-wrapper {
+  position: relative;
+  max-width: 1080px;
+  margin: 0 auto;
+}
+
+.carousel-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: var(--parchment);
+  border: 1px solid var(--gold-dim);
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.06);
+  user-select: none;
+  touch-action: pan-y;
+}
+
+.carousel-nav-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  width: 52px;
+  height: 52px;
+  display: grid;
+  place-items: center;
+  background: var(--paper-white);
+  border: 1px solid var(--gold-dim);
+  color: var(--charcoal);
+  cursor: pointer;
+  border-radius: 50%;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+  transition: all 0.25s ease;
+}
+
+.carousel-nav-btn:hover {
+  background: var(--sepia);
+  color: #ffffff;
+  border-color: var(--sepia);
+  transform: translateY(-50%) scale(1.08);
+}
+
+.carousel-nav-btn--prev { left: 18px; }
+.carousel-nav-btn--next { right: 18px; }
+
+.carousel-slide {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  width: 100%;
+  min-height: 480px;
+  animation: slideFade 0.4s ease;
+}
+
+@keyframes slideFade {
+  from { opacity: 0.4; transform: scale(0.99); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* Image Box - Full Uncropped View */
+.carousel-slide__image-box {
+  position: relative;
+  width: 100%;
+  height: 480px;
+  background: rgba(0, 0, 0, 0.04);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  cursor: pointer;
+  border-right: 1px solid var(--gold-dim);
+}
+
+.carousel-slide__img {
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  object-fit: contain; /* Guarantees complete artwork visibility without cropping */
+  filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.15));
+  transition: transform 0.3s ease;
+}
+
+.carousel-slide__image-box:hover .carousel-slide__img {
+  transform: scale(1.03);
+}
+
+.carousel-slide__zoom-hint {
+  position: absolute;
+  bottom: 16px;
+  right: 16px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: rgba(0, 0, 0, 0.7);
+  color: #ffffff;
+  font-family: var(--font-ui, sans-serif);
+  font-size: 0.75rem;
+  border-radius: 4px;
+  backdrop-filter: blur(4px);
+  opacity: 0.85;
+  transition: opacity 0.2s ease;
+}
+
+.carousel-slide__image-box:hover .carousel-slide__zoom-hint {
+  opacity: 1;
+}
+
+/* Slide Info Details */
+.carousel-slide__info {
+  padding: 48px 36px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.carousel-slide__category {
+  display: inline-block;
+  align-self: flex-start;
+  padding: 6px 14px;
+  background: var(--gold-faint);
+  border: 1px solid var(--gold-dim);
+  color: var(--sepia);
+  font-family: var(--font-ui, sans-serif);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+
+.carousel-slide__title {
+  font-family: var(--font-heading, serif);
+  font-size: 1.8rem;
+  color: var(--charcoal);
+  margin: 0 0 14px;
+  line-height: 1.25;
+}
+
+.carousel-slide__desc {
+  font-size: 1.05rem;
+  line-height: 1.6;
+  color: var(--pencil);
+  margin-bottom: 28px;
+}
+
+.carousel-slide__meta {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  font-family: var(--font-ui, sans-serif);
+  font-size: 0.82rem;
+  color: var(--pencil);
+}
+
+.btn-gold-sm {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  align-self: flex-start;
+  padding: 10px 18px;
+  background: var(--sepia);
+  color: #ffffff;
+  border: none;
+  font-family: var(--font-ui, sans-serif);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background 0.25s ease;
+}
+
+.btn-gold-sm:hover {
+  background: var(--sienna);
+}
+
+/* Carousel Dots Indicator */
+.carousel-dots {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin: 24px 0 28px;
+}
+
+.carousel-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--gold-dim);
+  border: none;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.carousel-dot.active {
+  background: var(--sepia);
+  width: 32px;
+  border-radius: 12px;
+}
+
+/* Carousel Thumbnail Selector Bar */
+.carousel-thumbnails {
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+  overflow-x: auto;
+  padding: 8px 4px;
+}
+
+.carousel-thumb {
+  width: 72px;
+  height: 72px;
+  border: 2px solid var(--gold-dim);
+  border-radius: 6px;
+  overflow: hidden;
+  cursor: pointer;
+  background: var(--parchment);
+  opacity: 0.6;
+  transition: all 0.25s ease;
+  flex-shrink: 0;
+}
+
+.carousel-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.carousel-thumb.active,
+.carousel-thumb:hover {
+  opacity: 1;
+  border-color: var(--sepia);
+  box-shadow: 0 4px 12px rgba(184, 134, 11, 0.25);
+  transform: translateY(-2px);
+}
+
+/* Modal Lightbox */
+.artwork-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(12px);
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  animation: fadeIn 0.25s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.artwork-modal__content {
+  position: relative;
+  background: var(--paper-white);
+  border: 1px solid var(--gold-dim);
+  max-width: 960px;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  overflow: hidden;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.3);
+}
+
+.artwork-modal__close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  z-index: 10;
+  width: 40px;
+  height: 40px;
+  display: grid;
+  place-items: center;
+  background: var(--parchment);
+  border: 1px solid var(--gold-dim);
+  color: var(--charcoal);
+  cursor: pointer;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+}
+
+.artwork-modal__close:hover {
+  background: var(--sepia);
+  color: #ffffff;
+}
+
+.artwork-modal__image {
+  background: #0d0d0d;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 440px;
+  padding: 20px;
+}
+
+.artwork-modal__image img {
+  max-width: 100%;
+  max-height: 80vh;
+  object-fit: contain;
+}
+
+.artwork-modal__details {
+  padding: 44px 36px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.artwork-modal__badge {
+  display: inline-block;
+  align-self: flex-start;
+  padding: 6px 14px;
+  background: var(--gold-faint);
+  border: 1px solid var(--gold-dim);
+  color: var(--sepia);
+  font-family: var(--font-ui, sans-serif);
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 16px;
+}
+
+.artwork-modal__details h2 {
+  font-family: var(--font-heading, serif);
+  font-size: 1.85rem;
+  color: var(--charcoal);
+  margin: 0 0 14px;
+}
+
+.artwork-modal__details p {
+  font-size: 1.05rem;
+  line-height: 1.6;
+  color: var(--pencil);
+  margin-bottom: 28px;
+}
+
+.artwork-modal__details .btn-gold {
+  text-align: center;
+  text-decoration: none;
+  font-size: 0.95rem;
+  padding: 14px 20px;
+}
+
+/* ━━ 8-Day Curriculum Section ━━ */
+.workshop-curriculum {
+  margin: 72px 0;
+  padding: 56px 6%;
+  background: var(--paper-white);
+  border: 1px solid var(--gold-dim);
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.workshop-curriculum__header {
+  text-align: center;
+  max-width: 720px;
+  margin: 0 auto 48px;
+}
+
+.workshop-curriculum__intro {
+  font-size: 1.25rem;
+  color: var(--pencil);
+  margin-top: 12px;
+}
+
+/* Toggle Buttons between Cards View & Table View */
+.curriculum-view-toggle {
+  display: inline-flex;
+  gap: 8px;
+  padding: 4px;
+  background: var(--parchment);
+  border: 1px solid var(--gold-dim);
+  border-radius: 6px;
+  margin-top: 24px;
+}
+
+.curriculum-view-toggle button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 18px;
+  border: 0;
+  background: transparent;
+  color: var(--pencil);
+  font-family: var(--font-ui, sans-serif);
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.curriculum-view-toggle button.active {
+  background: var(--paper-white);
+  color: var(--sepia);
+  font-weight: 700;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+/* View Mode 1: Day Cards Grid */
+.curriculum-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px;
+  margin-bottom: 40px;
+}
+
+.day-card {
+  background: var(--parchment);
+  border: 1px solid var(--gold-dim);
+  padding: 24px;
+  transition: transform 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.day-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--sepia);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
+}
+
+.day-card-header {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-bottom: 16px;
+  margin-bottom: 16px;
+  border-bottom: 1px solid var(--gold-dim);
+}
+
+.day-card-badge {
+  display: inline-block;
+  align-self: flex-start;
+  padding: 4px 12px;
+  background: var(--sepia);
+  color: #FFFFFF;
+  font-family: var(--font-heading, serif);
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  border-radius: 3px;
+}
+
+.day-card-topic {
+  font-family: var(--font-heading, serif);
+  font-size: 1.25rem;
+  color: var(--charcoal);
+  margin: 0;
+  line-height: 1.2;
+}
+
+.day-card-body .points-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 10px;
+}
+
+.day-card-body .points-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 0.98rem;
+  line-height: 1.45;
+  color: var(--pencil);
+}
+
+.arrow-bullet {
+  color: var(--sepia);
+  font-weight: bold;
+  flex-shrink: 0;
+}
+
+/* View Mode 2: Schedule Table (Explicit Light & Dark Theme Support) */
+.workshop-table-wrapper {
+  overflow-x: auto;
+  margin-bottom: 40px;
+  border: 1px solid var(--gold-dim);
+}
+
+.workshop-schedule-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+}
+
+.workshop-schedule-table th {
+  background: var(--sepia);
+  color: #ffffff;
+  font-family: var(--font-ui, sans-serif);
+  font-size: 0.88rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  padding: 18px 22px;
+  border: 1px solid var(--gold-dim);
+}
+
+.workshop-schedule-table th.col-day { width: 14%; }
+.workshop-schedule-table th.col-topic { width: 32%; }
+.workshop-schedule-table th.col-cover { width: 54%; }
+
+.workshop-schedule-table td {
+  padding: 20px 22px;
+  border: 1px solid var(--gold-dim);
+  vertical-align: top;
+  font-size: 1rem;
+  color: var(--charcoal);
+}
+
+.workshop-schedule-table tbody tr:nth-child(even) {
+  background: var(--parchment);
+}
+
+.workshop-schedule-table tbody tr:nth-child(odd) {
+  background: var(--paper-white);
+}
+
+.workshop-schedule-table tbody tr:hover {
+  background: var(--gold-faint);
+}
+
+.col-day-cell {
+  background: var(--parchment) !important;
+  text-align: center;
+  vertical-align: middle !important;
+}
+
+.day-badge {
+  display: inline-block;
+  padding: 6px 14px;
+  background: var(--sepia);
+  color: #FFFFFF;
+  font-family: var(--font-heading, serif);
+  font-size: 1.05rem;
+  font-weight: 700;
+  border-radius: 4px;
+}
+
+.col-topic-cell strong {
+  font-family: var(--font-heading, serif);
+  font-size: 1.15rem;
+  color: var(--charcoal);
+}
+
+/* Note Callout */
+.workshop-curriculum__note {
+  padding: 24px 28px;
+  background: var(--gold-faint);
+  border-left: 4px solid var(--sepia);
+  font-size: 1.05rem;
+  line-height: 1.6;
+  color: var(--charcoal);
+}
+
+.workshop-curriculum__note p {
+  margin: 0;
+}
+
+/* ━━ Registration Section ━━ */
+.workshop-registration {
+  display: grid;
+  grid-template-columns: 0.9fr 1.1fr;
+  background: var(--paper-white);
+  border: 1px solid var(--gold-dim);
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.workshop-registration__summary {
+  padding: 64px 10%;
+  background: var(--gold-faint);
+  border-right: 1px solid var(--gold-dim);
+}
+
+.workshop-price-tag {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 28px 0 32px;
+}
+
+.workshop-price-tag .price-old {
+  font-size: 1.3rem;
+  color: var(--pencil);
+  text-decoration: line-through;
+  opacity: 0.7;
+}
+
+.workshop-price-tag .price-current {
+  color: var(--sepia);
+  font: 700 3.2rem var(--font-heading, serif);
+  letter-spacing: -0.02em;
+}
+
+.workshop-price-tag small {
+  display: block;
+  width: 100%;
+  font-family: var(--font-ui, sans-serif);
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--pencil);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.workshop-trust-list {
+  display: grid;
+  gap: 18px;
+}
+
+.workshop-trust-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--charcoal);
+  font-size: 1rem;
+}
+
+.workshop-trust-item svg {
+  color: var(--sepia);
+  flex-shrink: 0;
+}
+
+/* Registration Form */
+.workshop-form {
+  padding: 64px 10%;
+  display: grid;
+  gap: 22px;
+}
+
+.workshop-form .form-heading {
+  font-family: var(--font-heading, serif);
+  font-size: 1.75rem;
+  margin: 0;
+  color: var(--charcoal);
+}
+
+.workshop-form .form-subheading {
+  font-size: 1rem;
+  color: var(--pencil);
+  margin: -12px 0 8px;
+}
+
+.workshop-form label {
+  display: grid;
+  gap: 8px;
+  font: 600 0.75rem var(--font-ui, sans-serif);
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--pencil);
+}
+
+.workshop-form input {
+  border: 0;
+  border-bottom: 1.5px solid var(--gold-dim);
+  background: transparent;
+  color: var(--charcoal);
+  padding: 14px 0;
+  outline: none;
+  font: 1.15rem var(--font-body, sans-serif);
+  transition: border-color 0.25s ease;
+}
+
+.workshop-form input:focus {
+  border-color: var(--sepia);
+}
+
+.workshop-form input::placeholder {
+  color: var(--pencil);
+  opacity: 0.5;
+}
+
+.workshop-form__submit {
+  margin-top: 14px;
+  width: 100%;
+  padding: 18px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.workshop-form__note {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--pencil);
+  font-size: 0.85rem;
+  line-height: 1.45;
+  margin-top: 4px;
+}
+
+.workshop-status {
+  padding: 16px;
+  font-size: 1rem;
+  line-height: 1.4;
+  border-radius: 4px;
+}
+
+.workshop-status--success {
+  color: #276738;
+  background: rgba(39, 103, 56, 0.12);
+  border: 1px solid rgba(39, 103, 56, 0.25);
+}
+
+.workshop-status--error {
+  color: #b54838;
+  background: rgba(181, 72, 56, 0.12);
+  border: 1px solid rgba(181, 72, 56, 0.25);
+}
+
+/* Success Card */
+.workshop-success-card {
+  align-self: center;
+  margin: 34px 10%;
+  padding: 48px 36px;
+  text-align: center;
+  background: var(--paper-white);
+  border: 1px solid rgba(39, 103, 56, 0.3);
+  color: var(--charcoal);
+}
+
+.workshop-success-card > svg {
+  margin-bottom: 16px;
+  color: #276738;
+}
+
+.workshop-success-card h3 {
+  margin: 0 0 14px;
+  font: 600 clamp(1.8rem, 3.5vw, 2.5rem)/1.1 var(--font-heading, serif);
+}
+
+.workshop-success-card__event {
+  display: grid;
+  gap: 6px;
+  margin: 28px 0;
+  padding: 20px;
+  background: var(--gold-faint);
+  border: 1px solid var(--gold-dim);
+  font-family: var(--font-ui, sans-serif);
+  font-size: 0.9rem;
+}
+
+.workshop-success-card__event strong {
+  color: var(--sepia);
+}
+
+/* ━━ Specific Dark Theme Adjustments ([data-theme='dark']) ━━ */
+[data-theme='dark'] .workshop-hero__art-card {
+  background: #262626;
+  border-color: rgba(197, 160, 89, 0.3);
+}
+
+[data-theme='dark'] .day-card {
+  background: #1f1f1f;
+  border-color: rgba(197, 160, 89, 0.25);
+}
+
+[data-theme='dark'] .day-card-topic {
+  color: #F5F5F5;
+}
+
+[data-theme='dark'] .day-card-body .points-list li {
+  color: #B0B0B0;
+}
+
+[data-theme='dark'] .workshop-schedule-table th {
+  background: #997833;
+  color: #FFFFFF;
+}
+
+[data-theme='dark'] .workshop-schedule-table td {
+  color: #E5E5E5;
+}
+
+[data-theme='dark'] .col-day-cell {
+  background: #181818 !important;
+}
+
+[data-theme='dark'] .day-badge {
+  background: #D4AF37;
+  color: #121212;
+}
+
+[data-theme='dark'] .workshop-registration__summary {
+  background: rgba(197, 160, 89, 0.08);
+}
+
+[data-theme='dark'] .carousel-container {
+  background: #1c1c1c;
+}
+
+[data-theme='dark'] .carousel-slide__image-box {
+  background: rgba(0, 0, 0, 0.3);
+}
+
+/* ━━ Responsive Breakpoints ━━ */
+@media (max-width: 992px) {
+  .workshop-hero {
+    grid-template-columns: 1fr;
+    padding: 44px 5%;
+  }
+
+  .workshop-hero__art {
+    height: 380px;
+  }
+
+  .workshop-highlights {
+    grid-template-columns: 1fr;
+  }
+
+  .carousel-slide {
+    grid-template-columns: 1fr;
+  }
+
+  .carousel-slide__image-box {
+    height: 360px;
+    border-right: none;
+    border-bottom: 1px solid var(--gold-dim);
+  }
+
+  .carousel-slide__info {
+    padding: 32px 24px;
+  }
+
+  .carousel-nav-btn--prev { left: 10px; }
+  .carousel-nav-btn--next { right: 10px; }
+
+  .artwork-modal__content {
+    grid-template-columns: 1fr;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+
+  .artwork-modal__image {
+    max-height: 320px;
+  }
+
+  .artwork-modal__details {
+    padding: 28px 24px;
+  }
+
+  .workshop-registration {
+    grid-template-columns: 1fr;
+  }
+
+  .workshop-registration__summary {
+    border-right: none;
+    border-bottom: 1px solid var(--gold-dim);
+  }
+}
+
+@media (max-width: 600px) {
+  .workshop-page {
+    padding: 100px 4% 60px;
+  }
+
+  .workshop-hero h1 {
+    font-size: 2.1rem;
+  }
+
+  .workshop-meta-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .carousel-slide__image-box {
+    height: 280px;
+    padding: 12px;
+  }
+
+  .carousel-nav-btn {
+    width: 42px;
+    height: 42px;
+  }
+
+  .workshop-schedule-table th,
+  .workshop-schedule-table td {
+    padding: 14px 16px;
+    font-size: 0.9rem;
+  }
+
+  .col-day-cell {
+    width: 20%;
+  }
+
+  .curriculum-view-toggle {
+    width: 100%;
+    justify-content: center;
+  }
+}
