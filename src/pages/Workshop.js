@@ -339,7 +339,7 @@ export default function Workshop() {
                   controls
                   playsInline
                   preload="metadata"
-                  poster="/assets/sir/IMG_0145.JPG.jpeg"
+                  poster="/assets/sir/IMG_0171.PNG"
                   className="workshop-reel-video"
                 />
               </div>
