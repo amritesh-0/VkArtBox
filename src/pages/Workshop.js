@@ -247,7 +247,7 @@ export default function Workshop() {
           </div>
 
           <h1>{workshopTitle}</h1>
-          
+
           <p className="workshop-hero__subtitle">
             The fundamental structure and composition of Realistic Drawing.
           </p>
@@ -320,6 +320,82 @@ export default function Workshop() {
         </div>
       </section>
 
+      {/* 📹 Masterclass Video Overview / What You Will Learn Section */}
+      <section className="workshop-video-section" id="video-overview">
+        <div className="workshop-video-container">
+          <div className="workshop-video-header">
+            <h2 className="section-title">What You Will Learn in 8 Days</h2>
+            <p className="workshop-video-intro">
+              Watch this video overview by lead instructor <strong>Vikash Kumar</strong> to discover what you'll master throughout the 8-Day Portrait Masterclass.
+            </p>
+          </div>
+
+          <div className="workshop-video-grid">
+            {/* Mobile Reel Phone Frame Container */}
+            <div className="video-reel-frame-wrapper">
+              <div className="video-reel-phone-frame">
+                <video
+                  src="https://firebasestorage.googleapis.com/v0/b/vkartbox-web.firebasestorage.app/o/IMG_0162.MP4?alt=media&token=0685a865-bb38-4e3e-871e-9e1eadd80dda"
+                  controls
+                  playsInline
+                  preload="metadata"
+                  poster="/assets/sir/IMG_0145.JPG.jpeg"
+                  className="workshop-reel-video"
+                />
+              </div>
+            </div>
+
+            {/* Video Overview Details & Key Takeaways */}
+            <div className="workshop-video-details">
+              <h3>Inside the 8-Day Intensive Program</h3>
+              <p className="video-details-lead">
+                Whether you are a beginner taking your first steps or an experienced artist refining portrait accuracy, this step-by-step masterclass is designed for real skill progression.
+              </p>
+
+              <div className="video-takeaways-list">
+                <div className="takeaway-item">
+                  <div className="takeaway-icon"><CheckCircle2 size={20} /></div>
+                  <div>
+                    <strong>Full Tool & Pressure Mastery</strong>
+                    <p>Learn how to handle graphite grades (HB to 8B), charcoal pencils, paper stumps, and kneaded erasers.</p>
+                  </div>
+                </div>
+
+                <div className="takeaway-item">
+                  <div className="takeaway-icon"><CheckCircle2 size={20} /></div>
+                  <div>
+                    <strong>Proportion & Loomis Grid Method</strong>
+                    <p>Never struggle with facial symmetry or feature placement again using exact proportion rules.</p>
+                  </div>
+                </div>
+
+                <div className="takeaway-item">
+                  <div className="takeaway-icon"><CheckCircle2 size={20} /></div>
+                  <div>
+                    <strong>Realistic Facial Feature Rendering</strong>
+                    <p>Construct realistic eyes, nose contours, lips, ears, skin textures, and hair volume step-by-step.</p>
+                  </div>
+                </div>
+
+                <div className="takeaway-item">
+                  <div className="takeaway-icon"><CheckCircle2 size={20} /></div>
+                  <div>
+                    <strong>Shadow Mapping & Depth Layering</strong>
+                    <p>Master core shadows, reflected light, cast shadows, and smooth value gradients for 3D realism.</p>
+                  </div>
+                </div>
+              </div>
+
+              <div className="video-details-action">
+                <a href="#registration" className="btn-gold">
+                  Reserve Your Seat · ₹{workshopPrice} <ArrowRight size={18} />
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Highlights / Features Cards */}
       <section className="workshop-highlights">
         <div className="workshop-highlight-item">
@@ -357,13 +433,13 @@ export default function Workshop() {
 
         {/* Carousel Showcase Container */}
         <div className="showcase-carousel-wrapper">
-          <div 
+          <div
             className="carousel-container"
             onTouchStart={handleTouchStart}
             onTouchMove={handleTouchMove}
             onTouchEnd={handleTouchEnd}
           >
-            <button 
+            <button
               className="carousel-nav-btn carousel-nav-btn--prev"
               onClick={prevSlide}
               aria-label="Previous artwork slide"
@@ -372,14 +448,14 @@ export default function Workshop() {
             </button>
 
             <div className="carousel-slide">
-              <div 
+              <div
                 className="carousel-slide__image-box"
                 onClick={() => setActiveImage(activeArtwork)}
               >
-                <img 
-                  src={activeArtwork.src} 
-                  alt={activeArtwork.title} 
-                  className="carousel-slide__img" 
+                <img
+                  src={activeArtwork.src}
+                  alt={activeArtwork.title}
+                  className="carousel-slide__img"
                 />
                 <div className="carousel-slide__zoom-hint">
                   <ZoomIn size={18} /> Click for full view
@@ -399,7 +475,7 @@ export default function Workshop() {
               </div>
             </div>
 
-            <button 
+            <button
               className="carousel-nav-btn carousel-nav-btn--next"
               onClick={nextSlide}
               aria-label="Next artwork slide"
@@ -423,7 +499,7 @@ export default function Workshop() {
           {/* Thumbnail Bar for Instant Access */}
           <div className="carousel-thumbnails">
             {artworkGallery.map((art, index) => (
-              <div 
+              <div
                 key={index}
                 className={`carousel-thumb ${index === currentIndex ? 'active' : ''}`}
                 onClick={() => setCurrentIndex(index)}
@@ -468,16 +544,16 @@ export default function Workshop() {
 
           {/* Toggle between Grid View & Table View */}
           <div className="curriculum-view-toggle">
-            <button 
+            <button
               type="button"
-              className={viewMode === 'grid' ? 'active' : ''} 
+              className={viewMode === 'grid' ? 'active' : ''}
               onClick={() => setViewMode('grid')}
             >
               <Layers size={16} /> Day Cards
             </button>
-            <button 
+            <button
               type="button"
-              className={viewMode === 'table' ? 'active' : ''} 
+              className={viewMode === 'table' ? 'active' : ''}
               onClick={() => setViewMode('table')}
             >
               <BookOpen size={16} /> Summary Table
@@ -556,7 +632,7 @@ export default function Workshop() {
         <div className="workshop-registration__summary">
           <span className="section-eyebrow">Enrollment Open</span>
           <h2 className="section-title">Join the<br /><em>live workshop.</em></h2>
-          
+
           <div className="workshop-price-tag">
             <span className="price-old">₹{originalPrice}</span>
             <span className="price-current">₹{workshopPrice}</span>
@@ -589,7 +665,7 @@ export default function Workshop() {
           <form className="workshop-form" onSubmit={joinWorkshop}>
             <h3 className="form-heading">Reserve Your Spot</h3>
             <p className="form-subheading">Fill in your contact details to proceed to secure checkout.</p>
-            
+
             <label>
               Full name
               <input name="name" value={form.name} onChange={updateField} required autoComplete="name" placeholder="e.g. Rahul Sharma" />
@@ -602,17 +678,17 @@ export default function Workshop() {
               Phone number
               <input name="phone" type="tel" value={form.phone} onChange={updateField} required autoComplete="tel" placeholder="+91 98765 43210" />
             </label>
-            
+
             <button className="btn-gold workshop-form__submit" type="submit" disabled={isPaying}>
               {isPaying ? 'Opening secure payment window…' : `Enroll Now · ₹${workshopPrice}`}
             </button>
-            
+
             {status.message && (
               <p className={`workshop-status workshop-status--${status.type}`} role="status">
                 {status.message}
               </p>
             )}
-            
+
             <p className="workshop-form__note">
               <ShieldCheck size={14} inline /> Instant confirmation & receipt sent to your email after payment.
             </p>

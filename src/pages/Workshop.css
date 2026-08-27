@@ -1188,7 +1188,149 @@
   background: rgba(0, 0, 0, 0.3);
 }
 
+/* ━━ 📹 Masterclass Video Overview Section ━━ */
+.workshop-video-section {
+  padding: 88px 5%;
+  background: var(--gold-faint);
+  border-top: 1px solid var(--gold-dim);
+  border-bottom: 1px solid var(--gold-dim);
+}
+
+.workshop-video-container {
+  max-width: 1160px;
+  margin: 0 auto;
+}
+
+.workshop-video-header {
+  text-align: center;
+  max-width: 680px;
+  margin: 0 auto 52px;
+}
+
+.workshop-video-intro {
+  font-size: 1.15rem;
+  color: var(--graphite);
+  margin-top: 14px;
+  line-height: 1.6;
+}
+
+.workshop-video-grid {
+  display: grid;
+  grid-template-columns: 340px 1fr;
+  gap: 56px;
+  align-items: center;
+}
+
+.video-reel-frame-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+.video-reel-phone-badge {
+  background: var(--sepia);
+  color: #ffffff;
+  font-family: var(--font-ui, sans-serif);
+  font-size: 0.8rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 6px 18px;
+  border-radius: 20px;
+  margin-bottom: 16px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
+}
+
+.video-reel-phone-frame {
+  width: 100%;
+  max-width: 320px;
+  aspect-ratio: 9 / 16;
+  border-radius: 24px;
+  overflow: hidden;
+  border: 3px solid var(--gold-dim);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.16);
+  background: #000000;
+  position: relative;
+}
+
+.workshop-reel-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.workshop-video-details h3 {
+  font-family: var(--font-heading, serif);
+  font-size: 2.1rem;
+  color: var(--charcoal);
+  margin-bottom: 14px;
+}
+
+.video-details-lead {
+  font-size: 1.1rem;
+  color: var(--graphite);
+  line-height: 1.65;
+  margin-bottom: 32px;
+}
+
+.video-takeaways-list {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  margin-bottom: 36px;
+}
+
+.takeaway-item {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+}
+
+.takeaway-icon {
+  flex-shrink: 0;
+  color: var(--sepia);
+  margin-top: 2px;
+}
+
+.takeaway-item strong {
+  display: block;
+  font-family: var(--font-ui, sans-serif);
+  font-size: 0.98rem;
+  color: var(--charcoal);
+  margin-bottom: 4px;
+}
+
+.takeaway-item p {
+  font-size: 0.9rem;
+  color: var(--pencil);
+  line-height: 1.5;
+  margin: 0;
+}
+
+.video-details-action {
+  margin-top: 12px;
+}
+
 @media (max-width: 992px) {
+  .workshop-video-grid {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  .video-takeaways-list {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .video-reel-phone-frame {
+    max-width: 290px;
+    margin: 0 auto;
+  }
   .workshop-hero {
     grid-template-columns: 1fr;
     padding: 44px 5%;
