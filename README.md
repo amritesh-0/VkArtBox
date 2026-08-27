@@ -82,6 +82,14 @@ REACT_APP_RAZORPAY_KEY_ID=
 RAZORPAY_KEY_ID=
 RAZORPAY_KEY_SECRET=
 
+# Resend confirmation email, sent only after a captured payment is verified.
+# WORKSHOP_EMAIL_FROM must be a verified sender/domain in Resend.
+RESEND_API_KEY=
+WORKSHOP_EMAIL_FROM="VK Artbox <workshops@your-verified-domain.com>"
+# Optional overrides for the instructor photo used in the email.
+PUBLIC_SITE_URL=https://www.vkartbox.com
+WORKSHOP_EMAIL_IMAGE_URL=
+
 # Service account used only by the payment API to store paid registrations.
 # Prefer the single-line JSON value copied from Firebase service-account credentials.
 FIREBASE_SERVICE_ACCOUNT=
@@ -100,6 +108,7 @@ Notes:
 - `REACT_APP_*` variables are used by the public site
 - `REACT_APP_RAZORPAY_KEY_ID` is Razorpay's public Key ID and is safe to expose to the browser
 - `RAZORPAY_KEY_ID` and `RAZORPAY_KEY_SECRET` are used only by Vercel's payment API functions; never prefix the secret with `REACT_APP_`
+- `RESEND_API_KEY` and `WORKSHOP_EMAIL_FROM` are used only by `/api/verify-payment`. Create the Resend key and verify the sender domain in Resend, then add both variables to the public-site Vercel project.
 - `FIREBASE_SERVICE_ACCOUNT` (or the three `FIREBASE_*` variables) is required by `/api/verify-payment` to save a paid registration securely. Do not expose it with a `REACT_APP_` prefix.
 - `/api/update-workshop` requires a Firebase ID token with the `admin: true` custom claim; without one it intentionally rejects updates. Set `ADMIN_APP_ORIGIN` to permit the separately hosted dashboard to call it.
 - The admin dashboard and Firebase Firestore/Storage rules require the `admin: true` custom claim. Grant it with `FIREBASE_SERVICE_ACCOUNT='…' npm run grant:admin -- admin@example.com`, then have that user sign out and back in.

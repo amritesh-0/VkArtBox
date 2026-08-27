@@ -210,7 +210,12 @@ export default function Workshop() {
             });
             const verification = await verificationResponse.json();
             if (!verificationResponse.ok || !verification.verified) throw new Error(verification.message || 'Payment verification failed.');
-            setStatus({ type: 'success', message: 'Your seat is confirmed! We have sent the workshop access details to your email.' });
+            setStatus({
+              type: 'success',
+              message: verification.emailSent
+                ? 'Your seat is confirmed! We have sent your workshop confirmation to your email.'
+                : 'Your seat is confirmed! Your payment is complete; we will send the workshop details to your email shortly.'
+            });
           } catch (error) {
             setStatus({ type: 'error', message: error.message || 'Payment was received but could not be verified. Please contact us with your payment ID.' });
           } finally {
