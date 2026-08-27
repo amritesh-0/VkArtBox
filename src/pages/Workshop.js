@@ -239,7 +239,7 @@ export default function Workshop() {
         <div className="workshop-hero__content">
           <div className="workshop-badge-row">
             <span className="workshop-badge">
-              <Sparkles size={15} /> 8-Day Live Online Masterclass
+              8-Day Live Online Masterclass
             </span>
             <span className="workshop-badge-discount">
               50% OFF LIMITED TIME
