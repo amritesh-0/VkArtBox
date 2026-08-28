@@ -263,6 +263,7 @@ export default function Workshop() {
               <div>
                 <small>START DATE</small>
                 <strong>12th Sept 2026</strong>
+                <span className="meta-pill-subnote">Saturday & Sunday (4 Weeks)</span>
               </div>
             </div>
             <div className="meta-pill">
@@ -286,6 +287,10 @@ export default function Workshop() {
                 <strong>Completion Certificate</strong>
               </div>
             </div>
+          </div>
+
+          <div className="workshop-schedule-banner">
+            <CalendarDays size={16} /> <span><strong>Schedule Note:</strong> Classes will be on weekends (Saturday & Sunday) over 4 Weeks (8 Days Total).</span>
           </div>
 
           <div className="workshop-hero__actions">
@@ -643,7 +648,7 @@ export default function Workshop() {
             <div className="workshop-trust-item"><ShieldCheck size={20} /> 100% Secure Payment via Razorpay</div>
             <div className="workshop-trust-item"><UserCheck size={20} /> Live Guidance by Vikash Kumar</div>
             <div className="workshop-trust-item"><Award size={20} /> Certificate Provided Upon Completion</div>
-            <div className="workshop-trust-item"><CalendarDays size={20} /> Starts 12th Sept 2026 (2–5 PM or 11 AM)</div>
+            <div className="workshop-trust-item"><CalendarDays size={20} /> Starts 12th Sept 2026 · Weekends (Saturday & Sunday) for 4 Weeks</div>
           </div>
         </div>
 

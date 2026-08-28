@@ -145,6 +145,37 @@
   color: var(--charcoal);
 }
 
+.meta-pill-subnote {
+  display: block;
+  font-family: var(--font-ui, sans-serif);
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--sepia);
+  margin-top: 2px;
+}
+
+.workshop-schedule-banner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 18px;
+  background: var(--gold-faint);
+  border: 1px solid var(--gold-dim);
+  border-left: 3px solid var(--sepia);
+  border-radius: 6px;
+  margin-top: 18px;
+  margin-bottom: 24px;
+  font-family: var(--font-ui, sans-serif);
+  font-size: 0.88rem;
+  color: var(--charcoal);
+  line-height: 1.4;
+}
+
+.workshop-schedule-banner svg {
+  color: var(--sepia);
+  flex-shrink: 0;
+}
+
 /* Hero Actions */
 .workshop-hero__actions {
   display: flex;
