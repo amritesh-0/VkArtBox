@@ -198,7 +198,7 @@ export default function Workshop() {
       const key = process.env.REACT_APP_RAZORPAY_KEY_ID;
       if (!key) throw new Error('Razorpay Key ID has not been configured.');
 
-      // The form has been accepted by the server and the visitor is now moving
+      // form has been accepted by the server and the visitor is now moving
       // into Razorpay. Neither event is emitted on a page load.
       trackMetaEvent('CompleteRegistration');
       trackMetaEvent('InitiateCheckout', { value: workshopPrice, currency: 'INR' });
