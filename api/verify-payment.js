@@ -99,7 +99,8 @@ module.exports = async (req, res) => {
     ]);
     const attendee = order.notes || {};
     const targetId = attendee.workshop_id || attendee.webinar_id;
-    if (!Number.isInteger(order.amount) || order.amount <= 0 || order.currency !== 'INR' || !targetId || !attendee.event || !attendee.attendee_name || !attendee.attendee_email || !attendee.attendee_phone) {
+    const workshopAmount = 249900;
+    if (order.amount !== workshopAmount || order.currency !== 'INR' || !targetId || !attendee.event || !attendee.attendee_name || !attendee.attendee_email || !attendee.attendee_phone) {
       return res.status(400).json({ verified: false, message: 'This payment order is not a valid workshop registration.' });
     }
 
@@ -177,6 +178,6 @@ module.exports = async (req, res) => {
       }
     }
 
-    return res.status(200).json({ verified: true, emailSent });
+    return res.status(200).json({ verified: true, emailSent, paymentId: razorpay_payment_id });
   } catch (error) { return res.status(500).json({ verified: false, message: error.message || 'Unable to verify payment.' }); }
 };

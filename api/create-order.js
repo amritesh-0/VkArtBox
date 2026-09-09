@@ -41,7 +41,7 @@ module.exports = async (req, res) => {
     }
     
     let title = 'VKartbox Basic Graphite & Charcoal Workshop — 2026 Sept';
-    let price = 2499;
+    const price = 2499;
     let eventDate = '12th Sept 2026';
     let eventTime = '2:00 PM - 5:00 PM IST';
 
@@ -53,7 +53,6 @@ module.exports = async (req, res) => {
       if (snap && snap.exists) {
         const item = snap.data();
         if (item?.title) title = item.title;
-        if (Number.isFinite(Number(item?.price)) && Number(item.price) > 0) price = Number(item.price);
         if (item?.date) eventDate = item.date;
         if (item?.time) eventTime = item.time;
       }

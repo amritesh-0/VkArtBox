@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { CalendarDays, CheckCircle2, Clock3, MapPin, ShieldCheck, Award, UserCheck, Sparkles, BookOpen, Layers, Check, ArrowRight, Eye, X, ZoomIn, ChevronLeft, ChevronRight } from 'lucide-react';
 import './Workshop.css';
+import { trackMetaEvent, trackPurchaseOnce } from '../lib/metaPixel';
 
 function loadRazorpay() {
   return new Promise((resolve) => {
@@ -135,6 +136,7 @@ export default function Workshop() {
   const [isPaying, setIsPaying] = useState(false);
   const [viewMode, setViewMode] = useState('grid');
   const [activeImage, setActiveImage] = useState(null);
+  const trackedPurchaseIds = useRef(new Set());
 
   // Carousel State
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -144,6 +146,11 @@ export default function Workshop() {
   const workshopTitle = "VKartbox Basic Graphite & Charcoal Workshop — 2026 Sept";
   const workshopPrice = 2499;
   const originalPrice = 4999;
+
+  // ViewContent belongs to this workshop route only, not to every site page.
+  useEffect(() => {
+    trackMetaEvent('ViewContent');
+  }, []);
 
   const updateField = (event) => setForm((current) => ({ ...current, [event.target.name]: event.target.value }));
 
@@ -191,6 +198,11 @@ export default function Workshop() {
       const key = process.env.REACT_APP_RAZORPAY_KEY_ID;
       if (!key) throw new Error('Razorpay Key ID has not been configured.');
 
+      // The form has been accepted by the server and the visitor is now moving
+      // into Razorpay. Neither event is emitted on a page load.
+      trackMetaEvent('CompleteRegistration');
+      trackMetaEvent('InitiateCheckout', { value: workshopPrice, currency: 'INR' });
+
       const payment = new window.Razorpay({
         key,
         amount: orderData.amount,
@@ -210,6 +222,13 @@ export default function Workshop() {
             });
             const verification = await verificationResponse.json();
             if (!verificationResponse.ok || !verification.verified) throw new Error(verification.message || 'Payment verification failed.');
+            // Purchase is deliberately emitted only after our server verifies
+            // Razorpay's captured payment, amount, currency and order binding.
+            const paymentId = verification.paymentId || response.razorpay_payment_id;
+            if (!trackedPurchaseIds.current.has(paymentId)) {
+              trackedPurchaseIds.current.add(paymentId);
+              trackPurchaseOnce(paymentId, workshopPrice, 'INR');
+            }
             setStatus({
               type: 'success',
               message: verification.emailSent
