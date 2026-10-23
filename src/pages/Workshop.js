@@ -134,7 +134,7 @@ const curriculumData = [
 
 const workshopDefaults = {
   'workshop-default': { id: 'workshop-default', title: 'VKartbox Basic Graphite & Charcoal Workshop — 2026 Sept', price: 2499, originalPrice: 4999, duration: '8-Day Live Online Masterclass', isLive: true },
-  'workshop-starter-drawing': { id: 'workshop-starter-drawing', title: 'A 2-Day Basic Drawing Starter Workshop', price: 999, duration: '2-Day Live Online Workshop', isLive: false },
+  'workshop-starter-drawing': { id: 'workshop-starter-drawing', title: 'A 2-Day Basic Drawing Starter Workshop', price: 999, duration: '2-Day Live Online Workshop', date: '31st Oct & 1st Nov 2026 (Saturday & Sunday)', time: '11:30 AM IST', isLive: false },
 };
 
 function StarterWorkshop({ workshop, form, updateField, joinWorkshop, isPaying, status }) {
@@ -146,7 +146,8 @@ function StarterWorkshop({ workshop, form, updateField, joinWorkshop, isPaying, 
         <p className="workshop-hero__subtitle">Always wanted to learn drawing but didn&apos;t know where to begin?</p>
         <div className="workshop-instructor-pill"><UserCheck size={18} className="instructor-icon" /><span>Guided by <strong>Vikash Kumar</strong></span></div>
         <div className="workshop-meta-grid" aria-label="Workshop details">
-          <div className="meta-pill"><CalendarDays size={18} /><div><small>DURATION</small><strong>2 Days</strong><span className="meta-pill-subnote">A clear, supportive start</span></div></div>
+          <div className="meta-pill"><CalendarDays size={18} /><div><small>DATES</small><strong>31st Oct &amp; 1st Nov</strong><span className="meta-pill-subnote">Saturday &amp; Sunday</span></div></div>
+          <div className="meta-pill"><Clock3 size={18} /><div><small>TIME</small><strong>11:30 AM IST</strong></div></div>
           <div className="meta-pill"><MapPin size={18} /><div><small>MODE</small><strong>Live Online</strong></div></div>
           <div className="meta-pill"><BookOpen size={18} /><div><small>INCLUDED</small><strong>PDFs + practice material</strong></div></div>
         </div>
@@ -162,7 +163,8 @@ function StarterWorkshop({ workshop, form, updateField, joinWorkshop, isPaying, 
 
 export default function Workshop() {
   const [form, setForm] = useState({ name: '', email: '', phone: '' });
-  const [activeWorkshop, setActiveWorkshop] = useState(workshopDefaults['workshop-default']);
+  const [activeWorkshop, setActiveWorkshop] = useState(null);
+  const [isLoadingWorkshop, setIsLoadingWorkshop] = useState(true);
   const [status, setStatus] = useState({ type: '', message: '' });
   const [isPaying, setIsPaying] = useState(false);
   const [viewMode, setViewMode] = useState('grid');
@@ -174,9 +176,9 @@ export default function Workshop() {
   const [touchStart, setTouchStart] = useState(null);
   const [touchEnd, setTouchEnd] = useState(null);
 
-  const workshopTitle = activeWorkshop.title;
-  const workshopPrice = activeWorkshop.price;
-  const originalPrice = activeWorkshop.originalPrice || 4999;
+  const workshopTitle = activeWorkshop?.title || '';
+  const workshopPrice = activeWorkshop?.price || 0;
+  const originalPrice = activeWorkshop?.originalPrice || 4999;
 
   // ViewContent belongs to this workshop route only, not to every site page.
   useEffect(() => {
@@ -184,7 +186,11 @@ export default function Workshop() {
   }, []);
 
   useEffect(() => {
-    if (!db) return undefined;
+    if (!db) {
+      setActiveWorkshop(workshopDefaults['workshop-default']);
+      setIsLoadingWorkshop(false);
+      return undefined;
+    }
     let isMounted = true;
     getDocs(collection(db, 'workshops')).then((snapshot) => {
       const savedWorkshops = snapshot.docs.map((docSnap) => ({ id: docSnap.id, ...docSnap.data() }));
@@ -192,13 +198,22 @@ export default function Workshop() {
       if (isMounted && live.length === 1 && workshopDefaults[live[0].id]) {
         const fallback = workshopDefaults[live[0].id];
         const savedPrice = Number(live[0].price);
-        setActiveWorkshop({ ...fallback, ...live[0], id: fallback.id, price: Number.isInteger(savedPrice) && savedPrice > 0 ? savedPrice : fallback.price });
+        setActiveWorkshop({ ...fallback, title: typeof live[0].title === 'string' && live[0].title.trim() ? live[0].title.trim() : fallback.title, isLive: true, price: Number.isInteger(savedPrice) && savedPrice > 0 ? savedPrice : fallback.price });
       }
     }).catch(() => {
-      // The default preserves the current workshop if public settings are unavailable.
+      if (isMounted) setActiveWorkshop(workshopDefaults['workshop-default']);
+    }).finally(() => {
+      if (isMounted) {
+        setActiveWorkshop((current) => current || workshopDefaults['workshop-default']);
+        setIsLoadingWorkshop(false);
+      }
     });
     return () => { isMounted = false; };
   }, []);
+
+  if (isLoadingWorkshop || !activeWorkshop) {
+    return <main className="workshop-page"><section className="workshop-hero"><div className="workshop-hero__content"><span className="section-eyebrow">VK Artbox</span><h1>Loading workshop details…</h1><p className="workshop-hero__subtitle">Please wait while we load the current workshop.</p></div></section></main>;
+  }
 
   const updateField = (event) => setForm((current) => ({ ...current, [event.target.name]: event.target.value }));
 

@@ -16,8 +16,8 @@ const WORKSHOPS = {
     price: 999,
     originalPrice: null,
     duration: '2-Day Live Online Workshop',
-    date: 'Dates to be announced',
-    time: 'Time to be announced',
+    date: '31st Oct & 1st Nov 2026 (Saturday & Sunday)',
+    time: '11:30 AM IST',
     mode: 'Live Online Workshop',
     isLive: false,
   },
@@ -35,7 +35,12 @@ async function getLiveWorkshop(db) {
   if (live.length === 1 && WORKSHOPS[live[0].id]) {
     const base = WORKSHOPS[live[0].id];
     const price = Number(live[0].price);
-    return { ...base, ...live[0], id: base.id, price: isSafePrice(price) ? price : base.price };
+    return {
+      ...base,
+      title: typeof live[0].title === 'string' && live[0].title.trim() ? live[0].title.trim() : base.title,
+      price: isSafePrice(price) ? price : base.price,
+      isLive: true,
+    };
   }
   // Existing installations have no settings document until the first admin save.
   // Preserve the original workshop as the safe migration default only in that case.
