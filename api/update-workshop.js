@@ -55,44 +55,45 @@ module.exports = async (req, res) => {
   try {
     await requireAdmin(req);
     const { getAdminDb, FieldValue } = require('./firebase-admin');
-    const { title, price, workshopId = 'workshop-default' } = await readBody(req);
+    const { WORKSHOPS, isSafePrice } = require('./workshop-catalog');
+    const { workshops, activeWorkshopId } = await readBody(req);
 
-    if (title !== undefined && (typeof title !== 'string' || !title.trim())) {
-      return res.status(400).json({ message: 'Title must be a non-empty string.' });
+    if (!Array.isArray(workshops) || workshops.length !== Object.keys(WORKSHOPS).length || !WORKSHOPS[activeWorkshopId]) {
+      return res.status(400).json({ message: 'Please provide both workshops and one valid live workshop.' });
     }
 
-    const numericPrice = price !== undefined ? Number(price) : undefined;
-    if (numericPrice !== undefined && (!Number.isFinite(numericPrice) || numericPrice <= 0)) {
-      return res.status(400).json({ message: 'Price must be a positive number.' });
+    const receivedIds = new Set(workshops.map((workshop) => workshop?.id));
+    if (receivedIds.size !== Object.keys(WORKSHOPS).length || Object.keys(WORKSHOPS).some((id) => !receivedIds.has(id))) {
+      return res.status(400).json({ message: 'Workshop catalogue is invalid.' });
     }
 
-    if (title === undefined && numericPrice === undefined) {
-      return res.status(400).json({ message: 'Please provide at least a title or a price to update.' });
-    }
-
-    const updatePayload = {
-      updatedAt: FieldValue.serverTimestamp()
-    };
-
-    if (title !== undefined) updatePayload.title = title.trim();
-    if (numericPrice !== undefined) updatePayload.price = numericPrice;
-
-    const docRef = getAdminDb().collection('workshops').doc(workshopId);
-    await docRef.set(updatePayload, { merge: true });
-
-    // Also mirror to webinars collection if used
-    const webinarRef = getAdminDb().collection('webinars').doc(workshopId);
-    await webinarRef.set(updatePayload, { merge: true });
-
-    return res.status(200).json({
-      success: true,
-      message: 'Workshop title and price updated successfully.',
-      data: {
-        workshopId,
-        title: updatePayload.title,
-        price: updatePayload.price
+    const db = getAdminDb();
+    const batch = db.batch();
+    const responseWorkshops = [];
+    for (const submitted of workshops) {
+      const base = WORKSHOPS[submitted.id];
+      const title = typeof submitted.title === 'string' ? submitted.title.trim() : '';
+      const price = Number(submitted.price);
+      if (!title || title.length > 160 || !isSafePrice(price)) {
+        return res.status(400).json({ message: `Please enter a valid title and price for ${base.title}.` });
       }
-    });
+      const data = {
+        id: base.id,
+        title,
+        price,
+        originalPrice: base.originalPrice || null,
+        duration: base.duration,
+        date: base.date,
+        time: base.time,
+        mode: base.mode,
+        isLive: base.id === activeWorkshopId,
+        updatedAt: FieldValue.serverTimestamp(),
+      };
+      batch.set(db.collection('workshops').doc(base.id), data, { merge: true });
+      responseWorkshops.push({ ...data, updatedAt: undefined });
+    }
+    await batch.commit();
+    return res.status(200).json({ success: true, message: 'Live workshop and pricing updated successfully.', data: { activeWorkshopId, workshops: responseWorkshops } });
   } catch (error) {
     if (error.message === 'Unauthorized') return res.status(401).json({ message: 'Admin authentication is required.' });
     if (error.message === 'Forbidden') return res.status(403).json({ message: 'Admin access is required.' });

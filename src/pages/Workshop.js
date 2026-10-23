@@ -2,6 +2,8 @@ import React, { useEffect, useRef, useState } from 'react';
 import { CalendarDays, CheckCircle2, Clock3, MapPin, ShieldCheck, Award, UserCheck, Sparkles, BookOpen, Layers, Check, ArrowRight, Eye, X, ZoomIn, ChevronLeft, ChevronRight } from 'lucide-react';
 import './Workshop.css';
 import { trackMetaEvent, trackPurchaseOnce } from '../lib/metaPixel';
+import { collection, getDocs } from 'firebase/firestore';
+import { db } from '../firebase';
 
 function loadRazorpay() {
   return new Promise((resolve) => {
@@ -130,8 +132,37 @@ const curriculumData = [
   }
 ];
 
+const workshopDefaults = {
+  'workshop-default': { id: 'workshop-default', title: 'VKartbox Basic Graphite & Charcoal Workshop — 2026 Sept', price: 2499, originalPrice: 4999, duration: '8-Day Live Online Masterclass', isLive: true },
+  'workshop-starter-drawing': { id: 'workshop-starter-drawing', title: 'A 2-Day Basic Drawing Starter Workshop', price: 999, duration: '2-Day Live Online Workshop', isLive: false },
+};
+
+function StarterWorkshop({ workshop, form, updateField, joinWorkshop, isPaying, status }) {
+  return <main className="workshop-page">
+    <section className="workshop-hero">
+      <div className="workshop-hero__content">
+        <div className="workshop-badge-row"><span className="workshop-badge">2-Day Live Online Workshop</span><span className="workshop-badge-discount">BEGINNER FRIENDLY</span></div>
+        <h1>{workshop.title}</h1>
+        <p className="workshop-hero__subtitle">Always wanted to learn drawing but didn&apos;t know where to begin?</p>
+        <div className="workshop-instructor-pill"><UserCheck size={18} className="instructor-icon" /><span>Guided by <strong>Vikash Kumar</strong></span></div>
+        <div className="workshop-meta-grid" aria-label="Workshop details">
+          <div className="meta-pill"><CalendarDays size={18} /><div><small>DURATION</small><strong>2 Days</strong><span className="meta-pill-subnote">A clear, supportive start</span></div></div>
+          <div className="meta-pill"><MapPin size={18} /><div><small>MODE</small><strong>Live Online</strong></div></div>
+          <div className="meta-pill"><BookOpen size={18} /><div><small>INCLUDED</small><strong>PDFs + practice material</strong></div></div>
+        </div>
+        <div className="workshop-hero__actions"><a className="btn-gold workshop-hero__cta" href="#registration">Join the Workshop · ₹{workshop.price} <ArrowRight size={18} /></a></div>
+      </div>
+      <div className="workshop-hero__art" aria-hidden="true"><div className="workshop-hero__art-card"><div className="hero-artwork-frame hero-instructor-frame"><img src="/assets/sir/IMG_0145.JPG.jpeg" alt="" /></div><div className="art-card-top-tag">VK Artbox</div><p className="workshop-hero__art-title">DRAWING STARTER</p><p className="workshop-hero__art-sub">BUILD YOUR FOUNDATION</p><div className="workshop-hero__art-divider" /><p className="workshop-hero__art-author">Live guidance by <strong>Vikash Kumar</strong></p><span className="workshop-hero__art-price">₹{workshop.price}</span></div></div>
+    </section>
+    <section className="workshop-video-section"><div className="workshop-video-container"><div className="workshop-video-grid"><div className="video-reel-frame-wrapper"><div className="video-reel-phone-frame"><video src="https://firebasestorage.googleapis.com/v0/b/vkartbox-web.firebasestorage.app/o/IMG_2093.MP4?alt=media&token=fbe7b0e4-e70f-4ad6-b1b1-57ab3b104292" controls playsInline preload="metadata" className="workshop-reel-video" /></div></div><div className="workshop-video-details"><h2 className="section-title">Start drawing with confidence.</h2><p className="video-details-lead">This workshop helps you build a strong foundation through simple concepts, guided practice, and the right way of approaching a drawing. No prior experience required.</p><div className="video-takeaways-list">{['Drawing fundamentals', 'Understanding shapes & forms', 'Proportion & perspective', 'Pencil techniques & control', 'Guided drawing exercises'].map((item) => <div className="takeaway-item" key={item}><div className="takeaway-icon"><CheckCircle2 size={20} /></div><strong>{item}</strong></div>)}</div></div></div></div></section>
+    <section className="workshop-highlights"><div className="workshop-highlight-item"><div className="highlight-icon-box"><Sparkles size={24} /></div><h3>Simple concepts</h3><p>Learn the fundamentals in a clear, approachable way.</p></div><div className="workshop-highlight-item"><div className="highlight-icon-box"><Layers size={24} /></div><h3>Guided practice</h3><p>Put each concept into practice with focused exercises.</p></div><div className="workshop-highlight-item"><div className="highlight-icon-box"><BookOpen size={24} /></div><h3>Keep learning</h3><p>Take home structured learning PDFs and practice material for your drawing journey.</p></div></section>
+    <section className="workshop-registration" id="registration"><div className="workshop-registration__summary"><span className="section-eyebrow">Ready to start drawing?</span><h2 className="section-title">Join the VK Artbox<br /><em>2-Day Starter Workshop.</em></h2><div className="workshop-price-tag"><span className="price-current">₹{workshop.price}</span><small>Per attendee · 2-day workshop</small></div><div className="workshop-trust-list"><div className="workshop-trust-item"><ShieldCheck size={20} /> 100% Secure Payment via Razorpay</div><div className="workshop-trust-item"><BookOpen size={20} /> Learning PDFs + practice material included</div><div className="workshop-trust-item"><UserCheck size={20} /> No prior drawing experience required</div></div></div>{status.type === 'success' ? <div className="workshop-success-card" role="status"><CheckCircle2 size={48} /><p className="section-eyebrow">Registration Confirmed</p><h3>You’re officially enrolled!</h3><p>{status.message}</p></div> : <form className="workshop-form" onSubmit={joinWorkshop}><h3 className="form-heading">Reserve Your Spot</h3><p className="form-subheading">Fill in your contact details to proceed to secure checkout.</p><label>Full name<input name="name" value={form.name} onChange={updateField} required autoComplete="name" /></label><label>Email address<input name="email" type="email" value={form.email} onChange={updateField} required autoComplete="email" /></label><label>Phone number<input name="phone" type="tel" value={form.phone} onChange={updateField} required autoComplete="tel" /></label><button className="btn-gold workshop-form__submit" type="submit" disabled={isPaying}>{isPaying ? 'Opening secure payment window…' : `Join Now · ₹${workshop.price}`}</button>{status.message && <p className={`workshop-status workshop-status--${status.type}`} role="status">{status.message}</p>}<p className="workshop-form__note"><ShieldCheck size={14} /> Instant confirmation after payment.</p></form>}</section>
+  </main>;
+}
+
 export default function Workshop() {
   const [form, setForm] = useState({ name: '', email: '', phone: '' });
+  const [activeWorkshop, setActiveWorkshop] = useState(workshopDefaults['workshop-default']);
   const [status, setStatus] = useState({ type: '', message: '' });
   const [isPaying, setIsPaying] = useState(false);
   const [viewMode, setViewMode] = useState('grid');
@@ -143,13 +174,30 @@ export default function Workshop() {
   const [touchStart, setTouchStart] = useState(null);
   const [touchEnd, setTouchEnd] = useState(null);
 
-  const workshopTitle = "VKartbox Basic Graphite & Charcoal Workshop — 2026 Sept";
-  const workshopPrice = 2499;
-  const originalPrice = 4999;
+  const workshopTitle = activeWorkshop.title;
+  const workshopPrice = activeWorkshop.price;
+  const originalPrice = activeWorkshop.originalPrice || 4999;
 
   // ViewContent belongs to this workshop route only, not to every site page.
   useEffect(() => {
     trackMetaEvent('ViewContent');
+  }, []);
+
+  useEffect(() => {
+    if (!db) return undefined;
+    let isMounted = true;
+    getDocs(collection(db, 'workshops')).then((snapshot) => {
+      const savedWorkshops = snapshot.docs.map((docSnap) => ({ id: docSnap.id, ...docSnap.data() }));
+      const live = savedWorkshops.filter((workshop) => workshop.isLive === true);
+      if (isMounted && live.length === 1 && workshopDefaults[live[0].id]) {
+        const fallback = workshopDefaults[live[0].id];
+        const savedPrice = Number(live[0].price);
+        setActiveWorkshop({ ...fallback, ...live[0], id: fallback.id, price: Number.isInteger(savedPrice) && savedPrice > 0 ? savedPrice : fallback.price });
+      }
+    }).catch(() => {
+      // The default preserves the current workshop if public settings are unavailable.
+    });
+    return () => { isMounted = false; };
   }, []);
 
   const updateField = (event) => setForm((current) => ({ ...current, [event.target.name]: event.target.value }));
@@ -189,7 +237,7 @@ export default function Workshop() {
       const orderResponse = await fetch('/api/create-order', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...form, workshopId: 'workshop-default' })
+        body: JSON.stringify({ ...form, workshopId: activeWorkshop.id })
       });
 
       const orderData = await orderResponse.json();
@@ -201,7 +249,7 @@ export default function Workshop() {
       // form has been accepted by the server and the visitor is now moving
       // into Razorpay. Neither event is emitted on a page load.
       trackMetaEvent('CompleteRegistration');
-      trackMetaEvent('InitiateCheckout', { value: workshopPrice, currency: 'INR' });
+      trackMetaEvent('InitiateCheckout', { value: orderData.amount / 100, currency: orderData.currency });
 
       const payment = new window.Razorpay({
         key,
@@ -227,7 +275,7 @@ export default function Workshop() {
             const paymentId = verification.paymentId || response.razorpay_payment_id;
             if (!trackedPurchaseIds.current.has(paymentId)) {
               trackedPurchaseIds.current.add(paymentId);
-              trackPurchaseOnce(paymentId, workshopPrice, 'INR');
+              trackPurchaseOnce(paymentId, orderData.amount / 100, orderData.currency);
             }
             setStatus({
               type: 'success',
@@ -250,6 +298,10 @@ export default function Workshop() {
   };
 
   const activeArtwork = artworkGallery[currentIndex];
+
+  if (activeWorkshop.id === 'workshop-starter-drawing') {
+    return <StarterWorkshop workshop={activeWorkshop} form={form} updateField={updateField} joinWorkshop={joinWorkshop} isPaying={isPaying} status={status} />;
+  }
 
   return (
     <main className="workshop-page">

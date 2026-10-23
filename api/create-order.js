@@ -1,5 +1,6 @@
 const https = require('https');
 const { getAdminDb } = require('./firebase-admin');
+const { getLiveWorkshop } = require('./workshop-catalog');
 
 function readBody(req) {
   if (typeof req.body === 'object' && req.body) return Promise.resolve(req.body);
@@ -27,38 +28,19 @@ module.exports = async (req, res) => {
   if (req.method !== 'POST') return res.status(405).json({ message: 'Method not allowed.' });
   if (!process.env.RAZORPAY_KEY_ID || !process.env.RAZORPAY_KEY_SECRET) return res.status(500).json({ message: 'Razorpay is not configured on the server.' });
   try {
-    const { name, email, phone, workshopId, webinarId } = await readBody(req);
-    if (![name, email, phone].every((value) => typeof value === 'string' && value.trim())) return res.status(400).json({ message: 'Name, email, and phone are required.' });
-    
-    const rawId = workshopId || webinarId || 'workshop-default';
-    const targetId = typeof rawId === 'string' && rawId.trim() ? rawId.trim() : 'workshop-default';
-
-    // This endpoint currently sells one public workshop.  Do not accept an
-    // arbitrary item ID (or price/title) from the browser: those values decide
-    // what a customer is charged and must be owned by the server.
-    if (targetId !== 'workshop-default') {
-      return res.status(404).json({ message: 'Workshop not found.' });
+    const { name, email, phone, workshopId } = await readBody(req);
+    const cleanName = typeof name === 'string' ? name.trim() : '';
+    const cleanEmail = typeof email === 'string' ? email.trim().toLowerCase() : '';
+    const cleanPhone = typeof phone === 'string' ? phone.trim() : '';
+    if (!cleanName || cleanName.length > 120 || !/^\S+@\S+\.\S+$/.test(cleanEmail) || cleanEmail.length > 254 || !cleanPhone || cleanPhone.length > 40) {
+      return res.status(400).json({ message: 'Please provide a valid name, email address, and phone number.' });
     }
-    
-    let title = 'VKartbox Basic Graphite & Charcoal Workshop — 2026 Sept';
-    const price = 2499;
-    let eventDate = '12th Sept 2026';
-    let eventTime = '2:00 PM - 5:00 PM IST';
 
-    try {
-      const workshopSnapshot = await getAdminDb().collection('workshops').doc(targetId).get();
-      const webinarSnapshot = !workshopSnapshot.exists ? await getAdminDb().collection('webinars').doc(targetId).get() : null;
-      const snap = workshopSnapshot.exists ? workshopSnapshot : webinarSnapshot;
-
-      if (snap && snap.exists) {
-        const item = snap.data();
-        if (item?.title) title = item.title;
-        if (item?.date) eventDate = item.date;
-        if (item?.time) eventTime = item.time;
-      }
-    } catch (err) {
-      console.warn('Could not fetch workshop snapshot, using static workshop defaults:', err.message);
-    }
+    const liveWorkshop = await getLiveWorkshop(getAdminDb());
+    if (!liveWorkshop) return res.status(409).json({ message: 'There is no live workshop available for registration.' });
+    // The browser may only request the currently live server-owned workshop.
+    if (workshopId !== liveWorkshop.id) return res.status(409).json({ message: 'This workshop is no longer available. Please refresh and try again.' });
+    const { id: targetId, title, price, date: eventDate, time: eventTime } = liveWorkshop;
 
     const amount = Math.round(price * 100);
     const order = await razorpayRequest('/v1/orders', {
@@ -66,14 +48,14 @@ module.exports = async (req, res) => {
       currency: 'INR',
       receipt: `workshop_${Date.now()}`,
       notes: {
-        attendee_name: name.trim(),
-        attendee_email: email.trim(),
-        attendee_phone: phone.trim(),
+        attendee_name: cleanName,
+        attendee_email: cleanEmail,
+        attendee_phone: cleanPhone,
         workshop_id: targetId,
-        webinar_id: targetId,
         event: title,
         event_date: eventDate,
         event_time: eventTime,
+        workshop_amount: String(amount),
       },
     });
     return res.status(200).json({ id: order.id, amount: order.amount, currency: order.currency });
