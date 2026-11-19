@@ -133,7 +133,7 @@ const curriculumData = [
 ];
 
 const workshopDefaults = {
-  'workshop-default': { id: 'workshop-default', title: 'VKartbox Basic Graphite & Charcoal Workshop — 2026 Sept', price: 2499, originalPrice: 4999, duration: '8-Day Live Online Masterclass', isLive: true },
+  'workshop-default': { id: 'workshop-default', title: 'VKartbox Basic Graphite & Charcoal Workshop — 2026 Dec', price: 2499, originalPrice: 4999, duration: '8-Day Live Online Masterclass', date: '5th Dec 2026', time: '11:00 AM – 1:00 PM IST', isLive: true },
   'workshop-starter-drawing': { id: 'workshop-starter-drawing', title: 'A 2-Day Basic Drawing Starter Workshop', price: 999, duration: '2-Day Live Online Workshop', date: '31st Oct & 1st Nov 2026 (Saturday & Sunday)', time: '11:30 AM IST', isLive: false },
 };
 
@@ -348,7 +348,7 @@ export default function Workshop() {
               <CalendarDays size={18} />
               <div>
                 <small>START DATE</small>
-                <strong>12th Sept 2026</strong>
+                <strong>5th Dec 2026</strong>
                 <span className="meta-pill-subnote">Saturday & Sunday (4 Weeks)</span>
               </div>
             </div>
@@ -356,7 +356,7 @@ export default function Workshop() {
               <Clock3 size={18} />
               <div>
                 <small>TIMING</small>
-                <strong>2:00 PM – 5:00 PM (or 11 AM)</strong>
+                <strong>11:00 AM – 1:00 PM IST</strong>
               </div>
             </div>
             <div className="meta-pill">
@@ -426,7 +426,7 @@ export default function Workshop() {
             <div className="video-reel-frame-wrapper">
               <div className="video-reel-phone-frame">
                 <video
-                  src="https://firebasestorage.googleapis.com/v0/b/vkartbox-web.firebasestorage.app/o/IMG_0162.MP4?alt=media&token=0685a865-bb38-4e3e-871e-9e1eadd80dda"
+                  src="https://firebasestorage.googleapis.com/v0/b/vkartbox-web.firebasestorage.app/o/IMG_2006.MP4?alt=media&token=e5f2cafd-58ad-42d1-a097-630e81f5623c"
                   controls
                   playsInline
                   preload="metadata"
@@ -734,7 +734,7 @@ export default function Workshop() {
             <div className="workshop-trust-item"><ShieldCheck size={20} /> 100% Secure Payment via Razorpay</div>
             <div className="workshop-trust-item"><UserCheck size={20} /> Live Guidance by Vikash Kumar</div>
             <div className="workshop-trust-item"><Award size={20} /> Certificate Provided Upon Completion</div>
-            <div className="workshop-trust-item"><CalendarDays size={20} /> Starts 12th Sept 2026 · Weekends (Saturday & Sunday) for 4 Weeks</div>
+            <div className="workshop-trust-item"><CalendarDays size={20} /> Starts 5th Dec 2026 · Weekends (Saturday & Sunday) for 4 Weeks</div>
           </div>
         </div>
 
@@ -746,7 +746,7 @@ export default function Workshop() {
             <p>{status.message}</p>
             <div className="workshop-success-card__event">
               <strong>{workshopTitle}</strong>
-              <span>Starts 12th Sept 2026 · 2:00 PM – 5:00 PM IST</span>
+              <span>Starts 5th Dec 2026 · 11:00 AM – 1:00 PM IST</span>
             </div>
             <p className="workshop-success-card__note">
               A confirmation email has been sent to <strong>{form.email}</strong> with access instructions and class links.

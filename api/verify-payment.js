@@ -67,7 +67,7 @@ async function sendConfirmationEmail({ name, email, event, eventDate, eventTime 
 
   const participantName = escapeHtml(name);
   const workshopName = escapeHtml(event || 'VK Artbox Workshop');
-  const date = escapeHtml(eventDate || '12 September 2026');
+  const date = escapeHtml(eventDate || '5 December 2026');
   const time = escapeHtml(eventTime || 'To be confirmed');
   const siteUrl = (process.env.PUBLIC_SITE_URL || 'https://www.vkartbox.com').replace(/\/$/, '');
   const instructorImage = process.env.WORKSHOP_EMAIL_IMAGE_URL || `${siteUrl}/assets/sir/IMG_0145.JPG.jpeg`;
