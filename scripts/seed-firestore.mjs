@@ -15,15 +15,25 @@ import {
 import { getAuth, signInWithEmailAndPassword, signOut } from 'firebase/auth';
 import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from 'firebase/storage';
 
+// Firebase config is loaded from environment variables to avoid hardcoding
+// credentials in source control. Set these in your .env or shell environment.
 const firebaseConfig = {
-    apiKey: "AIzaSyAjSxTBKs85-S7eyPjapcj5q-qn6BJ2qp4",
-    authDomain: "vkartbox-web.firebaseapp.com",
-    projectId: "vkartbox-web",
-    storageBucket: "vkartbox-web.firebasestorage.app",
-    messagingSenderId: "222198316821",
-    appId: "1:222198316821:web:38f4016e0ac5f089bbb31c",
-    measurementId: "G-9RRN2HSV5V",
+    apiKey: process.env.FIREBASE_API_KEY,
+    authDomain: process.env.FIREBASE_AUTH_DOMAIN,
+    projectId: process.env.FIREBASE_PROJECT_ID,
+    storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
+    messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
+    appId: process.env.FIREBASE_APP_ID,
+    measurementId: process.env.FIREBASE_MEASUREMENT_ID || '',
 };
+
+if (!firebaseConfig.apiKey || !firebaseConfig.projectId) {
+    throw new Error(
+        'Missing Firebase config. Set FIREBASE_API_KEY, FIREBASE_AUTH_DOMAIN, '
+        + 'FIREBASE_PROJECT_ID, FIREBASE_STORAGE_BUCKET, FIREBASE_MESSAGING_SENDER_ID, '
+        + 'and FIREBASE_APP_ID as environment variables.'
+    );
+}
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);

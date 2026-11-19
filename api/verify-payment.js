@@ -3,10 +3,27 @@ const https = require('https');
 const { FieldValue, getAdminDb } = require('./firebase-admin');
 const { WORKSHOPS } = require('./workshop-catalog');
 
+const MAX_BODY_BYTES = 4096; // 4 KB — Razorpay callback payload is small
 
 function readBody(req) {
   if (typeof req.body === 'object' && req.body) return Promise.resolve(req.body);
-  return new Promise((resolve, reject) => { let raw = ''; req.on('data', (chunk) => { raw += chunk; }); req.on('end', () => { try { resolve(JSON.parse(raw)); } catch { reject(new Error('Invalid request body.')); } }); });
+  return new Promise((resolve, reject) => {
+    let raw = '';
+    let bytes = 0;
+    req.on('data', (chunk) => {
+      bytes += chunk.length;
+      if (bytes > MAX_BODY_BYTES) {
+        req.destroy();
+        return reject(new Error('Request body too large.'));
+      }
+      raw += chunk;
+    });
+    req.on('end', () => {
+      try { resolve(JSON.parse(raw)); }
+      catch { reject(new Error('Invalid request body.')); }
+    });
+    req.on('error', reject);
+  });
 }
 
 function razorpayGet(path) {
@@ -17,7 +34,7 @@ function razorpayGet(path) {
       response.on('data', (chunk) => { output += chunk; });
       response.on('end', () => {
         let parsed = {};
-        try { parsed = output ? JSON.parse(output) : {}; } catch { return reject(new Error('Invalid response from Razorpay.')); }
+        try { parsed = output ? JSON.parse(output) : {}; } catch { return reject(new Error('Invalid response from payment gateway.')); }
         return response.statusCode >= 200 && response.statusCode < 300
           ? resolve(parsed)
           : reject(new Error(parsed.error?.description || 'Unable to retrieve the payment order.'));
@@ -71,21 +88,45 @@ async function sendConfirmationEmail({ name, email, event, eventDate, eventTime 
   const time = escapeHtml(eventTime || 'To be confirmed');
   const siteUrl = (process.env.PUBLIC_SITE_URL || 'https://www.vkartbox.com').replace(/\/$/, '');
   const instructorImage = process.env.WORKSHOP_EMAIL_IMAGE_URL || `${siteUrl}/assets/sir/IMG_0145.JPG.jpeg`;
-  const text = `Hi ${name},\n\nYour registration for ${event || 'the VK Artbox Workshop'} with Vikash Kumar is confirmed.\n\nWorkshop details\nWorkshop: ${event || 'VK Artbox Workshop'}\nDate: ${eventDate || 'To be announced'}\nTime: ${eventTime || 'To be announced'}\nMode: Online\n\nThe complete workshop details and joining link will be shared with you soon.\n\nWarmly,\nTeam VK Artbox`;
-  const html = `<!doctype html><html><body style="margin:0;background:#f7f4ee;color:#29221b;font-family:Arial,sans-serif"><table role="presentation" width="100%" cellspacing="0" cellpadding="0"><tr><td align="center" style="padding:32px 16px"><table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:620px;background:#fff;border:1px solid #e5ded3;border-radius:12px;overflow:hidden"><tr><td><img src="${escapeHtml(instructorImage)}" alt="Vikash Kumar, workshop instructor" width="620" style="display:block;width:100%;height:auto" /></td></tr><tr><td style="padding:32px"><h1 style="margin:0 0 20px;font-size:26px;color:#7d5a17">Your workshop registration is confirmed 🎉</h1><p>Hi ${participantName},</p><p>We’re happy to confirm your registration for <strong>${workshopName}</strong> with <strong>Vikash Kumar</strong>.</p><h2 style="font-size:20px;color:#7d5a17">Workshop Details</h2><table role="presentation" cellspacing="0" cellpadding="7" style="width:100%;background:#faf7f0;border-radius:8px"><tr><td><strong>Workshop</strong></td><td>${workshopName}</td></tr><tr><td><strong>Date</strong></td><td>${date}</td></tr><tr><td><strong>Time</strong></td><td>${time}</td></tr><tr><td><strong>Mode</strong></td><td>Online</td></tr></table><p>The complete workshop details and joining link will be shared with you soon. We can’t wait to create, learn, and explore together.</p><p>Warmly,<br /><strong>Team VK Artbox</strong></p></td></tr></table></td></tr></table></body></html>`;
+
+  // Both plain-text and HTML templates use escaped values to prevent injection.
+  const escapedEvent = escapeHtml(event || 'the VK Artbox Workshop');
+  const escapedDate = escapeHtml(eventDate || 'To be announced');
+  const escapedTime = escapeHtml(eventTime || 'To be announced');
+
+  const text = `Hi ${participantName},\n\nYour registration for ${escapedEvent} with Vikash Kumar is confirmed.\n\nWorkshop details\nWorkshop: ${escapedEvent}\nDate: ${escapedDate}\nTime: ${escapedTime}\nMode: Online\n\nThe complete workshop details and joining link will be shared with you soon.\n\nWarmly,\nTeam VK Artbox`;
+  const html = `<!doctype html><html><body style="margin:0;background:#f7f4ee;color:#29221b;font-family:Arial,sans-serif"><table role="presentation" width="100%" cellspacing="0" cellpadding="0"><tr><td align="center" style="padding:32px 16px"><table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="max-width:620px;background:#fff;border:1px solid #e5ded3;border-radius:12px;overflow:hidden"><tr><td><img src="${escapeHtml(instructorImage)}" alt="Vikash Kumar, workshop instructor" width="620" style="display:block;width:100%;height:auto" /></td></tr><tr><td style="padding:32px"><h1 style="margin:0 0 20px;font-size:26px;color:#7d5a17">Your workshop registration is confirmed 🎉</h1><p>Hi ${participantName},</p><p>We're happy to confirm your registration for <strong>${workshopName}</strong> with <strong>Vikash Kumar</strong>.</p><h2 style="font-size:20px;color:#7d5a17">Workshop Details</h2><table role="presentation" cellspacing="0" cellpadding="7" style="width:100%;background:#faf7f0;border-radius:8px"><tr><td><strong>Workshop</strong></td><td>${workshopName}</td></tr><tr><td><strong>Date</strong></td><td>${date}</td></tr><tr><td><strong>Time</strong></td><td>${time}</td></tr><tr><td><strong>Mode</strong></td><td>Online</td></tr></table><p>The complete workshop details and joining link will be shared with you soon. We can't wait to create, learn, and explore together.</p><p>Warmly,<br /><strong>Team VK Artbox</strong></p></td></tr></table></td></tr></table></body></html>`;
 
   return resendRequest({
     from: process.env.WORKSHOP_EMAIL_FROM,
     to: [email],
-    subject: `Registration confirmed — ${event || 'VK Artbox Workshop'}`,
+    subject: `Registration confirmed — ${escapedEvent}`,
     html,
     text,
   });
 }
 
+function setPaymentCorsHeaders(req, res) {
+  const requestOrigin = (req.headers.origin || '').replace(/\/$/, '');
+  const allowedOrigins = new Set([
+    'https://www.vkartbox.com',
+    'https://vkartbox.com',
+    ...(process.env.PUBLIC_SITE_ORIGINS || '').split(',').map((o) => o.trim().replace(/\/$/, '')).filter(Boolean),
+  ]);
+  if (allowedOrigins.has(requestOrigin)) {
+    res.setHeader('Access-Control-Allow-Origin', requestOrigin);
+    res.setHeader('Vary', 'Origin');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+    res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+    res.setHeader('Access-Control-Max-Age', '86400');
+  }
+}
+
 module.exports = async (req, res) => {
+  setPaymentCorsHeaders(req, res);
+  if (req.method === 'OPTIONS') return res.status(204).end();
   if (req.method !== 'POST') return res.status(405).json({ message: 'Method not allowed.' });
-  if (!process.env.RAZORPAY_KEY_ID || !process.env.RAZORPAY_KEY_SECRET) return res.status(500).json({ message: 'Razorpay is not configured on the server.' });
+  if (!process.env.RAZORPAY_KEY_ID || !process.env.RAZORPAY_KEY_SECRET) return res.status(500).json({ message: 'Payment gateway is not configured.' });
   try {
     const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = await readBody(req);
     if (![razorpay_order_id, razorpay_payment_id, razorpay_signature].every(Boolean)) return res.status(400).json({ message: 'Incomplete payment response.' });
@@ -169,5 +210,8 @@ module.exports = async (req, res) => {
     }
 
     return res.status(200).json({ verified: true, emailSent, paymentId: razorpay_payment_id });
-  } catch (error) { return res.status(500).json({ verified: false, message: error.message || 'Unable to verify payment.' }); }
+  } catch (error) {
+    console.error('verify-payment error:', error);
+    return res.status(500).json({ verified: false, message: 'Unable to verify payment. Please contact support with your payment ID.' });
+  }
 };

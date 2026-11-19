@@ -30,11 +30,21 @@ function setAdminCorsHeaders(req, res) {
   }
 }
 
+const MAX_BODY_BYTES = 8192; // 8 KB — workshop settings payload is small
+
 function readBody(req) {
   if (typeof req.body === 'object' && req.body) return Promise.resolve(req.body);
   return new Promise((resolve, reject) => {
     let raw = '';
-    req.on('data', (chunk) => { raw += chunk; });
+    let bytes = 0;
+    req.on('data', (chunk) => {
+      bytes += chunk.length;
+      if (bytes > MAX_BODY_BYTES) {
+        req.destroy();
+        return reject(new Error('Request body too large.'));
+      }
+      raw += chunk;
+    });
     req.on('end', () => {
       try {
         resolve(raw ? JSON.parse(raw) : {});
@@ -42,6 +52,7 @@ function readBody(req) {
         reject(new Error('Invalid request body.'));
       }
     });
+    req.on('error', reject);
   });
 }
 
@@ -98,6 +109,6 @@ module.exports = async (req, res) => {
     if (error.message === 'Unauthorized') return res.status(401).json({ message: 'Admin authentication is required.' });
     if (error.message === 'Forbidden') return res.status(403).json({ message: 'Admin access is required.' });
     console.error('Error updating workshop title/price:', error);
-    return res.status(500).json({ message: error.message || 'Unable to update workshop details.' });
+    return res.status(500).json({ message: 'Unable to update workshop details. Please try again.' });
   }
 };

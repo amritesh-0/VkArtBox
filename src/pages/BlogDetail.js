@@ -5,6 +5,20 @@ import { db } from '../firebase';
 import { SOCIAL_LINKS, SocialIcon } from '../components/SocialLinks';
 import './BlogDetail.css';
 
+// Sanitize HTML to prevent XSS from stored blog content.
+// Strips all <script>, <iframe>, <object>, <embed>, <form> tags and
+// dangerous event-handler attributes (onerror, onclick, etc.)
+function sanitizeHtml(html) {
+  if (!html) return '';
+  return html
+    .replace(/<\s*script[\s>][\s\S]*?<\s*\/\s*script\s*>/gi, '')
+    .replace(/<\s*script[\s>][^]*$/gi, '')
+    .replace(/<\s*(iframe|object|embed|form|link|meta|base)[\s>][\s\S]*?<\s*\/\s*\1\s*>/gi, '')
+    .replace(/<\s*(iframe|object|embed|form|link|meta|base)\b[^>]*\/?>/gi, '')
+    .replace(/\s+on\w+\s*=\s*("[^"]*"|'[^']*'|[^\s>]+)/gi, '')
+    .replace(/javascript\s*:/gi, 'blocked:');
+}
+
 export default function BlogDetail() {
     const { id } = useParams();
     const navigate = useNavigate();
@@ -224,7 +238,7 @@ export default function BlogDetail() {
                             {post.content && (
                                 <div
                                     className="blog-detail__content"
-                                    dangerouslySetInnerHTML={{ __html: post.content }}
+                                    dangerouslySetInnerHTML={{ __html: sanitizeHtml(post.content) }}
                                 />
                             )}
                         </article>

@@ -2,12 +2,26 @@ const https = require('https');
 const { getAdminDb } = require('./firebase-admin');
 const { getLiveWorkshop } = require('./workshop-catalog');
 
+const MAX_BODY_BYTES = 4096; // 4 KB — more than enough for name + email + phone + workshopId
+
 function readBody(req) {
   if (typeof req.body === 'object' && req.body) return Promise.resolve(req.body);
   return new Promise((resolve, reject) => {
     let raw = '';
-    req.on('data', (chunk) => { raw += chunk; });
-    req.on('end', () => { try { resolve(raw ? JSON.parse(raw) : {}); } catch { reject(new Error('Invalid request body.')); } });
+    let bytes = 0;
+    req.on('data', (chunk) => {
+      bytes += chunk.length;
+      if (bytes > MAX_BODY_BYTES) {
+        req.destroy();
+        return reject(new Error('Request body too large.'));
+      }
+      raw += chunk;
+    });
+    req.on('end', () => {
+      try { resolve(raw ? JSON.parse(raw) : {}); }
+      catch { reject(new Error('Invalid request body.')); }
+    });
+    req.on('error', reject);
   });
 }
 
@@ -18,15 +32,39 @@ function razorpayRequest(path, payload) {
     const request = https.request({ hostname: 'api.razorpay.com', path, method: 'POST', headers: { Authorization: `Basic ${token}`, 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(data) } }, (response) => {
       let output = '';
       response.on('data', (chunk) => { output += chunk; });
-      response.on('end', () => { const parsed = output ? JSON.parse(output) : {}; response.statusCode >= 200 && response.statusCode < 300 ? resolve(parsed) : reject(new Error(parsed.error?.description || 'Razorpay order creation failed.')); });
+      response.on('end', () => {
+        let parsed = {};
+        try { parsed = output ? JSON.parse(output) : {}; } catch { return reject(new Error('Invalid response from payment gateway.')); }
+        response.statusCode >= 200 && response.statusCode < 300
+          ? resolve(parsed)
+          : reject(new Error(parsed.error?.description || 'Payment gateway order creation failed.'));
+      });
     });
     request.on('error', reject); request.write(data); request.end();
   });
 }
 
+function setPaymentCorsHeaders(req, res) {
+  const requestOrigin = (req.headers.origin || '').replace(/\/$/, '');
+  const allowedOrigins = new Set([
+    'https://www.vkartbox.com',
+    'https://vkartbox.com',
+    ...(process.env.PUBLIC_SITE_ORIGINS || '').split(',').map((o) => o.trim().replace(/\/$/, '')).filter(Boolean),
+  ]);
+  if (allowedOrigins.has(requestOrigin)) {
+    res.setHeader('Access-Control-Allow-Origin', requestOrigin);
+    res.setHeader('Vary', 'Origin');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+    res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+    res.setHeader('Access-Control-Max-Age', '86400');
+  }
+}
+
 module.exports = async (req, res) => {
+  setPaymentCorsHeaders(req, res);
+  if (req.method === 'OPTIONS') return res.status(204).end();
   if (req.method !== 'POST') return res.status(405).json({ message: 'Method not allowed.' });
-  if (!process.env.RAZORPAY_KEY_ID || !process.env.RAZORPAY_KEY_SECRET) return res.status(500).json({ message: 'Razorpay is not configured on the server.' });
+  if (!process.env.RAZORPAY_KEY_ID || !process.env.RAZORPAY_KEY_SECRET) return res.status(500).json({ message: 'Payment gateway is not configured.' });
   try {
     const { name, email, phone, workshopId } = await readBody(req);
     const cleanName = typeof name === 'string' ? name.trim() : '';
@@ -59,5 +97,8 @@ module.exports = async (req, res) => {
       },
     });
     return res.status(200).json({ id: order.id, amount: order.amount, currency: order.currency });
-  } catch (error) { return res.status(500).json({ message: error.message || 'Unable to create payment order.' }); }
+  } catch (error) {
+    console.error('create-order error:', error);
+    return res.status(500).json({ message: 'Unable to create payment order. Please try again.' });
+  }
 };
