@@ -129,11 +129,29 @@ const curriculumData = [
     points: [
       'Applying shading on the face and different facial features'
     ]
+  },
+  {
+    day: 'Day 9',
+    topic: 'Hair & Texture Detailing',
+    points: [
+      'Drawing realistic hair flow and volume',
+      'Beard stubble and fine strand rendering',
+      'Highlights and eraser detailing'
+    ]
+  },
+  {
+    day: 'Day 10',
+    topic: 'Complete Portrait Project & Review',
+    points: [
+      'Putting all techniques together for a full portrait',
+      'Final contrast, blending, and polish',
+      'Personal critique, Q&A, and certification'
+    ]
   }
 ];
 
 const workshopDefaults = {
-  'workshop-default': { id: 'workshop-default', title: 'VKartbox Basic Graphite & Charcoal Workshop — 2026 Dec', price: 2499, originalPrice: 4999, duration: '8-Day Live Online Masterclass', date: '5th Dec 2026', time: '11:00 AM – 1:00 PM IST', isLive: true },
+  'workshop-default': { id: 'workshop-default', title: 'VKartbox Basic Graphite & Charcoal Workshop — 2026 Dec', price: 2999, originalPrice: 5999, duration: '10-Day Live Online Masterclass', date: '5th Dec 2026', time: '11:00 AM – 1:00 PM IST', isLive: true },
   'workshop-starter-drawing': { id: 'workshop-starter-drawing', title: 'A 2-Day Basic Drawing Starter Workshop', price: 999, duration: '2-Day Live Online Workshop', date: '31st Oct & 1st Nov 2026 (Saturday & Sunday)', time: '11:30 AM IST', isLive: false },
 };
 
@@ -178,7 +196,7 @@ export default function Workshop() {
 
   const workshopTitle = activeWorkshop?.title || '';
   const workshopPrice = activeWorkshop?.price || 0;
-  const originalPrice = activeWorkshop?.originalPrice || 4999;
+  const originalPrice = activeWorkshop?.originalPrice || 5999;
 
   // ViewContent belongs to this workshop route only, not to every site page.
   useEffect(() => {
@@ -325,7 +343,7 @@ export default function Workshop() {
         <div className="workshop-hero__content">
           <div className="workshop-badge-row">
             <span className="workshop-badge">
-              8-Day Live Online Masterclass
+              10-Day Live Online Masterclass
             </span>
             <span className="workshop-badge-discount">
               50% OFF LIMITED TIME
@@ -349,7 +367,7 @@ export default function Workshop() {
               <div>
                 <small>START DATE</small>
                 <strong>5th Dec 2026</strong>
-                <span className="meta-pill-subnote">Saturday & Sunday (4 Weeks)</span>
+                <span className="meta-pill-subnote">Saturday & Sunday (5 Weeks)</span>
               </div>
             </div>
             <div className="meta-pill">
@@ -376,7 +394,7 @@ export default function Workshop() {
           </div>
 
           <div className="workshop-schedule-banner">
-            <CalendarDays size={16} /> <span><strong>Schedule Note:</strong> Classes will be on weekends (Saturday & Sunday) over 4 Weeks (8 Days Total).</span>
+            <CalendarDays size={16} /> <span><strong>Schedule Note:</strong> Classes will be on weekends (Saturday & Sunday) over 5 Weeks (10 Days Total).</span>
           </div>
 
           <div className="workshop-hero__actions">
@@ -405,7 +423,7 @@ export default function Workshop() {
               <span className="workshop-hero__art-price">₹{workshopPrice}</span>
             </div>
             <div className="art-card-footer">
-              <Check size={14} /> 8 Days Full Curriculum
+              <Check size={14} /> 10 Days Full Curriculum
             </div>
           </div>
         </div>
@@ -415,9 +433,9 @@ export default function Workshop() {
       <section className="workshop-video-section" id="video-overview">
         <div className="workshop-video-container">
           <div className="workshop-video-header">
-            <h2 className="section-title">What You Will Learn in 8 Days</h2>
+            <h2 className="section-title">What You Will Learn in 10 Days</h2>
             <p className="workshop-video-intro">
-              Watch this video overview by lead instructor <strong>Vikash Kumar</strong> to discover what you'll master throughout the 8-Day Portrait Masterclass.
+              Watch this video overview by lead instructor <strong>Vikash Kumar</strong> to discover what you'll master throughout the 10-Day Portrait Masterclass.
             </p>
           </div>
 
@@ -438,7 +456,7 @@ export default function Workshop() {
 
             {/* Video Overview Details & Key Takeaways */}
             <div className="workshop-video-details">
-              <h3>Inside the 8-Day Intensive Program</h3>
+              <h3>Inside the 10-Day Intensive Program</h3>
               <p className="video-details-lead">
                 Whether you are a beginner taking your first steps or an experienced artist refining portrait accuracy, this step-by-step masterclass is designed for real skill progression.
               </p>
@@ -518,7 +536,7 @@ export default function Workshop() {
           <span className="section-eyebrow"><Eye size={16} inline /> Masterclass Artwork Showcase</span>
           <h2 className="section-title">See What You'll Learn & Create</h2>
           <p className="workshop-showcase__intro">
-            Swipe or click through real artwork examples created using the exact 8-Day Graphite & Charcoal techniques taught by Vikash Kumar.
+            Swipe or click through real artwork examples created using the exact 10-Day Graphite & Charcoal techniques taught by Vikash Kumar.
           </p>
         </div>
 
@@ -624,11 +642,11 @@ export default function Workshop() {
         </div>
       )}
 
-      {/* 8-Day Curriculum Summary Section */}
+      {/* 10-Day Curriculum Summary Section */}
       <section className="workshop-curriculum" id="curriculum">
         <div className="workshop-curriculum__header">
           <span className="section-eyebrow">Complete Roadmap</span>
-          <h2 className="section-title">8-Day Portrait Drawing Curriculum</h2>
+          <h2 className="section-title">10-Day Portrait Drawing Curriculum</h2>
           <p className="workshop-curriculum__intro">
             A step-by-step structured path from basic tool handling to rendering complete realistic portraits.
           </p>
@@ -713,7 +731,7 @@ export default function Workshop() {
 
         <div className="workshop-curriculum__note">
           <p>
-            <strong>Note:</strong> This 8-day plan builds from foundational tool handling through to full facial shading, giving beginners a structured path from basic pencil control to a complete rendered portrait.
+            <strong>Note:</strong> This 10-day plan builds from foundational tool handling through to full facial shading, giving beginners a structured path from basic pencil control to a complete rendered portrait.
           </p>
         </div>
       </section>
@@ -727,14 +745,14 @@ export default function Workshop() {
           <div className="workshop-price-tag">
             <span className="price-old">₹{originalPrice}</span>
             <span className="price-current">₹{workshopPrice}</span>
-            <small>Per Attendee (Full 8 Days)</small>
+            <small>Per Attendee (Full 10 Days)</small>
           </div>
 
           <div className="workshop-trust-list">
             <div className="workshop-trust-item"><ShieldCheck size={20} /> 100% Secure Payment via Razorpay</div>
             <div className="workshop-trust-item"><UserCheck size={20} /> Live Guidance by Vikash Kumar</div>
             <div className="workshop-trust-item"><Award size={20} /> Certificate Provided Upon Completion</div>
-            <div className="workshop-trust-item"><CalendarDays size={20} /> Starts 5th Dec 2026 · Weekends (Saturday & Sunday) for 4 Weeks</div>
+            <div className="workshop-trust-item"><CalendarDays size={20} /> Starts 5th Dec 2026 · Weekends (Saturday & Sunday) for 5 Weeks</div>
           </div>
         </div>
 

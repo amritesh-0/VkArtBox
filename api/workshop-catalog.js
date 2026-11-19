@@ -2,9 +2,9 @@ const WORKSHOPS = {
   'workshop-default': {
     id: 'workshop-default',
     title: 'VKartbox Basic Graphite & Charcoal Workshop — 2026 Dec',
-    price: 2499,
-    originalPrice: 4999,
-    duration: '8-Day Live Online Masterclass',
+    price: 2999,
+    originalPrice: 5999,
+    duration: '10-Day Live Online Masterclass',
     date: '5th Dec 2026',
     time: '11:00 AM - 1:00 PM IST',
     mode: 'Live Online Classes',

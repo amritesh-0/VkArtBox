@@ -5,7 +5,7 @@ import toast from 'react-hot-toast';
 import { auth, db } from '../firebase';
 
 const defaultWorkshops = [
-    { id: 'workshop-default', title: 'VKartbox Basic Graphite & Charcoal Workshop — 2026 Dec', price: 2499, duration: '8-Day Live Online Masterclass', isLive: true },
+    { id: 'workshop-default', title: 'VKartbox Basic Graphite & Charcoal Workshop — 2026 Dec', price: 2999, duration: '10-Day Live Online Masterclass', isLive: true },
     { id: 'workshop-starter-drawing', title: 'A 2-Day Basic Drawing Starter Workshop', price: 999, duration: '2-Day Live Online Workshop', isLive: false },
 ];
 
