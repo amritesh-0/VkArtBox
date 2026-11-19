@@ -349,16 +349,8 @@
   opacity: 0.2;
   border-radius: 50%;
 }
-
-.workshop-hero__circle--one {
-  width: 340px;
-  height: 340px;
-}
-
-.workshop-hero__circle--two {
-  width: 240px;
-  height: 240px;
-}
+.workshop-hero__circle--one { width: 340px; height: 340px; }
+.workshop-hero__circle--two { width: 240px; height: 240px; }
 
 /* ━━ Highlights Section ━━ */
 .workshop-highlights {
@@ -472,13 +464,8 @@
   transform: translateY(-50%) scale(1.08);
 }
 
-.carousel-nav-btn--prev {
-  left: 18px;
-}
-
-.carousel-nav-btn--next {
-  right: 18px;
-}
+.carousel-nav-btn--prev { left: 18px; }
+.carousel-nav-btn--next { right: 18px; }
 
 .carousel-slide {
   display: grid;
@@ -489,15 +476,8 @@
 }
 
 @keyframes slideFade {
-  from {
-    opacity: 0.4;
-    transform: scale(0.99);
-  }
-
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
+  from { opacity: 0.4; transform: scale(0.99); }
+  to { opacity: 1; transform: scale(1); }
 }
 
 /* Image Box - Full Uncropped View */
@@ -519,8 +499,7 @@
   max-height: 100%;
   width: auto;
   height: auto;
-  object-fit: contain;
-  /* Guarantees complete artwork visibility without cropping */
+  object-fit: contain; /* Guarantees complete artwork visibility without cropping */
   filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.15));
   transition: transform 0.3s ease;
 }
@@ -693,13 +672,8 @@
 }
 
 @keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-
-  to {
-    opacity: 1;
-  }
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 .artwork-modal__content {
@@ -947,17 +921,9 @@
   border: 1px solid var(--gold-dim);
 }
 
-.workshop-schedule-table th.col-day {
-  width: 14%;
-}
-
-.workshop-schedule-table th.col-topic {
-  width: 32%;
-}
-
-.workshop-schedule-table th.col-cover {
-  width: 54%;
-}
+.workshop-schedule-table th.col-day { width: 14%; }
+.workshop-schedule-table th.col-topic { width: 32%; }
+.workshop-schedule-table th.col-cover { width: 54%; }
 
 .workshop-schedule-table td {
   padding: 20px 22px;
@@ -1179,7 +1145,7 @@
   color: var(--charcoal);
 }
 
-.workshop-success-card>svg {
+.workshop-success-card > svg {
   margin-bottom: 16px;
   color: #276738;
 }
@@ -1396,7 +1362,6 @@
     max-width: 290px;
     margin: 0 auto;
   }
-
   .workshop-hero {
     grid-template-columns: 1fr;
     padding: 44px 5%;
@@ -1449,13 +1414,8 @@
     padding: 32px 24px;
   }
 
-  .carousel-nav-btn--prev {
-    left: 10px;
-  }
-
-  .carousel-nav-btn--next {
-    right: 10px;
-  }
+  .carousel-nav-btn--prev { left: 10px; }
+  .carousel-nav-btn--next { right: 10px; }
 
   .artwork-modal__content {
     grid-template-columns: 1fr;
